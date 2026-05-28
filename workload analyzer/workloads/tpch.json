@@ -1,0 +1,775 @@
+{
+    "Table Schema": "tpch",
+    "Tables": [
+        {
+            "Table Name": "customer",
+            "Table Columns": [
+                {
+                    "Column Name": "c_custkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "c_address",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "c_nationkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_phone",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "c_acctbal",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_mktsegment",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "c_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 117,
+                    "Data Distribution": [
+                        0,
+                        117
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "lineitem",
+            "Table Columns": [
+                {
+                    "Column Name": "l_orderkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_partkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_suppkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_linenumber",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_quantity",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_extendedprice",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_discount",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_returnflag",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "l_linestatus",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "l_shipdate",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_commitdate",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_receiptdate",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "l_shipinstruct",
+                    "Data Type": "char",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "l_shipmode",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "l_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 44,
+                    "Data Distribution": [
+                        0,
+                        44
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625,
+                0.0625
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "nation",
+            "Table Columns": [
+                {
+                    "Column Name": "n_nationkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "n_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "n_regionkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "n_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 152,
+                    "Data Distribution": [
+                        0,
+                        152
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.25,
+                0.25,
+                0.25,
+                0.25
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "orders",
+            "Table Columns": [
+                {
+                    "Column Name": "o_orderkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "o_custkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "o_orderstatus",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "o_totalprice",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "o_orderdate",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "o_orderpriority",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "o_clerk",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "o_shippriority",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "o_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 79,
+                    "Data Distribution": [
+                        0,
+                        79
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "part",
+            "Table Columns": [
+                {
+                    "Column Name": "p_partkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 55,
+                    "Data Distribution": [
+                        0,
+                        55
+                    ]
+                },
+                {
+                    "Column Name": "p_mfgr",
+                    "Data Type": "char",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "p_brand",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "p_type",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "p_size",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_container",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "p_retailprice",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 23,
+                    "Data Distribution": [
+                        0,
+                        23
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "partsupp",
+            "Table Columns": [
+                {
+                    "Column Name": "ps_partkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ps_suppkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ps_availqty",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ps_supplycost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ps_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 199,
+                    "Data Distribution": [
+                        0,
+                        199
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "region",
+            "Table Columns": [
+                {
+                    "Column Name": "r_regionkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "r_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "r_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 152,
+                    "Data Distribution": [
+                        0,
+                        152
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "supplier",
+            "Table Columns": [
+                {
+                    "Column Name": "s_suppkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 25,
+                    "Data Distribution": [
+                        0,
+                        25
+                    ]
+                },
+                {
+                    "Column Name": "s_address",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "s_nationkey",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_phone",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "s_acctbal",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_comment",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 101,
+                    "Data Distribution": [
+                        0,
+                        101
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        }
+    ]
+}

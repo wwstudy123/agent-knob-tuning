@@ -1,0 +1,4795 @@
+{
+    "Table Schema": "tpcds",
+    "Tables": [
+        {
+            "Table Name": "call_center",
+            "Table Columns": [
+                {
+                    "Column Name": "cc_call_center_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_call_center_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "cc_rec_start_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_rec_end_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_closed_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_open_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cc_class",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cc_employees",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_sq_ft",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_hours",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "cc_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "cc_mkt_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_mkt_class",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cc_mkt_desc",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "cc_market_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "cc_division",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_division_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cc_company",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_company_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cc_street_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "cc_street_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "cc_street_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "cc_suite_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "cc_city",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "cc_county",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "cc_state",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "cc_zip",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "cc_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "cc_gmt_offset",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cc_tax_percentage",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903,
+                0.03225806451612903
+            ],
+            "Primary Key": {
+                "Name": "cc_call_center_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "catalog_page",
+            "Table Columns": [
+                {
+                    "Column Name": "cp_catalog_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cp_catalog_page_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "cp_start_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cp_end_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cp_department",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "cp_catalog_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cp_catalog_page_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cp_description",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "cp_type",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111
+            ],
+            "Primary Key": {
+                "Name": "cp_catalog_page_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "catalog_returns",
+            "Table Columns": [
+                {
+                    "Column Name": "cr_returned_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_returned_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_refunded_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_refunded_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_refunded_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_refunded_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_returning_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_returning_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_returning_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_returning_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_call_center_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_catalog_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_ship_mode_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_warehouse_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_reason_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_order_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_return_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_return_amount",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_return_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_return_amt_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_fee",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_return_ship_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_refunded_cash",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_reversed_charge",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_store_credit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cr_net_loss",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035,
+                0.037037037037037035
+            ],
+            "Primary Key": {
+                "Name": "cr_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "catalog_sales",
+            "Table Columns": [
+                {
+                    "Column Name": "cs_sold_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_sold_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_bill_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_bill_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_bill_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_bill_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_call_center_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_catalog_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ship_mode_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_warehouse_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_promo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_order_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_discount_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_coupon_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_ext_ship_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_net_paid",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_net_paid_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_net_paid_inc_ship",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_net_paid_inc_ship_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cs_net_profit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353
+            ],
+            "Primary Key": {
+                "Name": "cs_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "customer",
+            "Table Columns": [
+                {
+                    "Column Name": "c_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_customer_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "c_current_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_current_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_current_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_first_shipto_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_first_sales_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_salutation",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "c_first_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "c_last_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "c_preferred_cust_flag",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "c_birth_day",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_birth_month",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_birth_year",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "c_birth_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "c_login",
+                    "Data Type": "char",
+                    "Data Type Mod": 13,
+                    "Data Distribution": [
+                        0,
+                        13
+                    ]
+                },
+                {
+                    "Column Name": "c_email_address",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "c_last_review_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555,
+                0.05555555555555555
+            ],
+            "Primary Key": {
+                "Name": "c_customer_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "customer_address",
+            "Table Columns": [
+                {
+                    "Column Name": "ca_address_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ca_address_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "ca_street_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "ca_street_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "ca_street_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "ca_suite_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "ca_city",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "ca_county",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "ca_state",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "ca_zip",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "ca_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "ca_gmt_offset",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ca_location_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693,
+                0.07692307692307693
+            ],
+            "Primary Key": {
+                "Name": "ca_address_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "customer_demographics",
+            "Table Columns": [
+                {
+                    "Column Name": "cd_demo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cd_gender",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "cd_marital_status",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "cd_education_status",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "cd_purchase_estimate",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cd_credit_rating",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "cd_dep_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cd_dep_employed_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "cd_dep_college_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111
+            ],
+            "Primary Key": {
+                "Name": "cd_demo_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "date_dim",
+            "Table Columns": [
+                {
+                    "Column Name": "d_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_date_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "d_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_month_seq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_week_seq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_quarter_seq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_year",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_dow",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_moy",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_dom",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_qoy",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_fy_year",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_fy_quarter_seq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_fy_week_seq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_day_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 9,
+                    "Data Distribution": [
+                        0,
+                        9
+                    ]
+                },
+                {
+                    "Column Name": "d_quarter_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 6,
+                    "Data Distribution": [
+                        0,
+                        6
+                    ]
+                },
+                {
+                    "Column Name": "d_holiday",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_weekend",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_following_holiday",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_first_dom",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_last_dom",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_same_day_ly",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_same_day_lq",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "d_current_day",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_current_week",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_current_month",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_current_quarter",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "d_current_year",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571,
+                0.03571428571428571
+            ],
+            "Primary Key": {
+                "Name": "d_date_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "dbgen_version",
+            "Table Columns": [
+                {
+                    "Column Name": "dv_version",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "dv_create_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "dv_create_time",
+                    "Data Type": "time",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "dv_cmdline_args",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 200,
+                    "Data Distribution": [
+                        0,
+                        200
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.25,
+                0.25,
+                0.25,
+                0.25
+            ],
+            "Primary Key": {
+                "Name": "",
+                "Data Type": ""
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "household_demographics",
+            "Table Columns": [
+                {
+                    "Column Name": "hd_demo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "hd_income_band_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "hd_buy_potential",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "hd_dep_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "hd_vehicle_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "hd_demo_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "income_band",
+            "Table Columns": [
+                {
+                    "Column Name": "ib_income_band_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ib_lower_bound",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ib_upper_bound",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+            ],
+            "Primary Key": {
+                "Name": "ib_income_band_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "inventory",
+            "Table Columns": [
+                {
+                    "Column Name": "inv_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "inv_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "inv_warehouse_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "inv_quantity_on_hand",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.25,
+                0.25,
+                0.25,
+                0.25
+            ],
+            "Primary Key": {
+                "Name": "inv_date_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "item",
+            "Table Columns": [
+                {
+                    "Column Name": "i_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_item_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "i_rec_start_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_rec_end_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_item_desc",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 200,
+                    "Data Distribution": [
+                        0,
+                        200
+                    ]
+                },
+                {
+                    "Column Name": "i_current_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_brand_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_brand",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "i_class_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_class",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "i_category_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_category",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "i_manufact_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_manufact",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "i_size",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "i_formulation",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "i_color",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "i_units",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "i_container",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "i_manager_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "i_product_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456,
+                0.045454545454545456
+            ],
+            "Primary Key": {
+                "Name": "i_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "promotion",
+            "Table Columns": [
+                {
+                    "Column Name": "p_promo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_promo_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "p_start_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_end_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_response_target",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "p_promo_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_dmail",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_email",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_catalog",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_tv",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_radio",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_press",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_event",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_demo",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "p_channel_details",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "p_purpose",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "p_discount_active",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842,
+                0.05263157894736842
+            ],
+            "Primary Key": {
+                "Name": "p_promo_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "reason",
+            "Table Columns": [
+                {
+                    "Column Name": "r_reason_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "r_reason_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "r_reason_desc",
+                    "Data Type": "char",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+            ],
+            "Primary Key": {
+                "Name": "r_reason_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "ship_mode",
+            "Table Columns": [
+                {
+                    "Column Name": "sm_ship_mode_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sm_ship_mode_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "sm_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "sm_code",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "sm_carrier",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "sm_contract",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.16666666666666666,
+                0.16666666666666666,
+                0.16666666666666666,
+                0.16666666666666666,
+                0.16666666666666666,
+                0.16666666666666666
+            ],
+            "Primary Key": {
+                "Name": "sm_ship_mode_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "store",
+            "Table Columns": [
+                {
+                    "Column Name": "s_store_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_store_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "s_rec_start_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_rec_end_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_closed_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_store_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "s_number_employees",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_floor_space",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_hours",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "s_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "s_market_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_geography_class",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "s_market_desc",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "s_market_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "s_division_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_division_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "s_company_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_company_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "s_street_number",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "s_street_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "s_street_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "s_suite_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "s_city",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "s_county",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "s_state",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "s_zip",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "s_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "s_gmt_offset",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "s_tax_precentage",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655,
+                0.034482758620689655
+            ],
+            "Primary Key": {
+                "Name": "s_store_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "store_returns",
+            "Table Columns": [
+                {
+                    "Column Name": "sr_returned_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_store_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_reason_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_ticket_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_amt_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_fee",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_return_ship_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_refunded_cash",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_reversed_charge",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_store_credit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "sr_net_loss",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05,
+                0.05
+            ],
+            "Primary Key": {
+                "Name": "sr_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "store_sales",
+            "Table Columns": [
+                {
+                    "Column Name": "ss_sold_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_sold_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_store_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_promo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ticket_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ext_discount_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ext_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ext_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ext_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_ext_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_coupon_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_net_paid",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_net_paid_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ss_net_profit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216,
+                0.043478260869565216
+            ],
+            "Primary Key": {
+                "Name": "ss_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "time_dim",
+            "Table Columns": [
+                {
+                    "Column Name": "t_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "t_time_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "t_time",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "t_hour",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "t_minute",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "t_second",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "t_am_pm",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "t_shift",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "t_sub_shift",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "t_meal_time",
+                    "Data Type": "char",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1,
+                0.1
+            ],
+            "Primary Key": {
+                "Name": "t_time_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "warehouse",
+            "Table Columns": [
+                {
+                    "Column Name": "w_warehouse_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "w_warehouse_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "w_warehouse_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "w_warehouse_sq_ft",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "w_street_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "w_street_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "w_street_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "w_suite_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "w_city",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "w_county",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "w_state",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "w_zip",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "w_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "w_gmt_offset",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142
+            ],
+            "Primary Key": {
+                "Name": "w_warehouse_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "web_page",
+            "Table Columns": [
+                {
+                    "Column Name": "wp_web_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_web_page_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "wp_rec_start_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_rec_end_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_creation_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_access_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_autogen_flag",
+                    "Data Type": "char",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "wp_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_url",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "wp_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "wp_char_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_link_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_image_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wp_max_ad_count",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142,
+                0.07142857142857142
+            ],
+            "Primary Key": {
+                "Name": "wp_web_page_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "web_returns",
+            "Table Columns": [
+                {
+                    "Column Name": "wr_returned_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_returned_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_refunded_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_refunded_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_refunded_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_refunded_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_returning_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_returning_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_returning_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_returning_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_web_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_reason_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_order_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_return_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_return_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_return_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_return_amt_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_fee",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_return_ship_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_refunded_cash",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_reversed_charge",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_account_credit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "wr_net_loss",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664,
+                0.041666666666666664
+            ],
+            "Primary Key": {
+                "Name": "wr_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "web_sales",
+            "Table Columns": [
+                {
+                    "Column Name": "ws_sold_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_sold_time_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_item_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_bill_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_bill_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_bill_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_bill_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_customer_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_cdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_hdemo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_addr_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_web_page_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_web_site_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ship_mode_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_warehouse_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_promo_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_order_number",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_quantity",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_discount_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_sales_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_wholesale_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_list_price",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_coupon_amt",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_ext_ship_cost",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_net_paid",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_net_paid_inc_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_net_paid_inc_ship",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_net_paid_inc_ship_tax",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "ws_net_profit",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 7,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353,
+                0.029411764705882353
+            ],
+            "Primary Key": {
+                "Name": "ws_item_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "web_site",
+            "Table Columns": [
+                {
+                    "Column Name": "web_site_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_site_id",
+                    "Data Type": "char",
+                    "Data Type Mod": 16,
+                    "Data Distribution": [
+                        0,
+                        16
+                    ]
+                },
+                {
+                    "Column Name": "web_rec_start_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_rec_end_date",
+                    "Data Type": "date",
+                    "Data Type Mod": 0,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "web_open_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_close_date_sk",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_class",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "web_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "web_mkt_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_mkt_class",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "web_mkt_desc",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 100,
+                    "Data Distribution": [
+                        0,
+                        100
+                    ]
+                },
+                {
+                    "Column Name": "web_market_manager",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 40,
+                    "Data Distribution": [
+                        0,
+                        40
+                    ]
+                },
+                {
+                    "Column Name": "web_company_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_company_name",
+                    "Data Type": "char",
+                    "Data Type Mod": 50,
+                    "Data Distribution": [
+                        0,
+                        50
+                    ]
+                },
+                {
+                    "Column Name": "web_street_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "web_street_name",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "web_street_type",
+                    "Data Type": "char",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                },
+                {
+                    "Column Name": "web_suite_number",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "web_city",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 60,
+                    "Data Distribution": [
+                        0,
+                        60
+                    ]
+                },
+                {
+                    "Column Name": "web_county",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 30,
+                    "Data Distribution": [
+                        0,
+                        30
+                    ]
+                },
+                {
+                    "Column Name": "web_state",
+                    "Data Type": "char",
+                    "Data Type Mod": 2,
+                    "Data Distribution": [
+                        0,
+                        2
+                    ]
+                },
+                {
+                    "Column Name": "web_zip",
+                    "Data Type": "char",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        10
+                    ]
+                },
+                {
+                    "Column Name": "web_country",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 20,
+                    "Data Distribution": [
+                        0,
+                        20
+                    ]
+                },
+                {
+                    "Column Name": "web_gmt_offset",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "web_tax_percentage",
+                    "Data Type": "decimal",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464,
+                0.038461538461538464
+            ],
+            "Primary Key": {
+                "Name": "web_site_sk",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        }
+    ]
+}
