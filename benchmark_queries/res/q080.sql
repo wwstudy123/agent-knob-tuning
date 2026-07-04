@@ -1,0 +1,1 @@
+SELECT min(id) as minimum_value_id FROM sbtest21 WHERE sbtest21.c = 'e9WSHuxgglyNeEZctzGSpCyYbnO7kEFIoK6l02iW7L4prsRGuIaHGWuEuMZPMWrcQOmzD8yy1nBiDzBhi0azPtGQes52aBBNL8Y4xH18XgdQuHBoA8rkeZ24' or sbtest21.id = 624369 LIMIT 10;

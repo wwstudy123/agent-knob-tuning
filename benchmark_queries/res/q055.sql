@@ -1,0 +1,1 @@
+DELETE FROM sbtest31 WHERE id = 322405;

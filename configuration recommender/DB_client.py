@@ -13,12 +13,12 @@ config.read('./config.ini')
 
 db_ip = config['configuration recommender']['DB_IP']
 ip_password = config['configuration recommender']['DB_IP_Password']
-config = {
-    'user': config['configuration recommender']['DB_User'],       
-    'password': config['configuration recommender']['DB_Password'],   
-    'host': config['configuration recommender']['DB_Host'],          
-    'database': config['configuration recommender']['DB_Name'],    
-    'port': config['configuration recommender']['DB_Port']
+db_config = {
+    'user': config['configuration recommender']['DB_User'],
+    'password': config['configuration recommender']['DB_Password'],
+    'host': config['configuration recommender']['DB_Host'],
+    'database': config['configuration recommender']['DB_Name'],
+    'port': int(config['configuration recommender']['DB_Port'])
 
 }
 
@@ -31,7 +31,7 @@ with open(config['range pruner']['output_file'], 'r') as f:
 
 def get_current_metric():
 
-    conn = pymysql.connect(**config)
+    conn = pymysql.connect(**db_config)
     cursor = conn.cursor()
 
     sql = "select name,count from information_schema.INNODB_METRICS where status = 'enabled'"
@@ -47,9 +47,10 @@ def get_current_metric():
 
 def get_current_knob():
 
-    conn = pymysql.connect(**config)
+    conn = pymysql.connect(**db_config)
     cursor = conn.cursor()
 
+    knobs = {}
     parameters = []
     for key in selected_knobs.keys():
         index = int(key.replace("knob", "")) - 1
@@ -117,11 +118,7 @@ def test_by_job(self,log_file):
 
     if state == 0:
         print('database has been restarted')
-        conn = pymysql.connect(host=config.get('host'),
-                    user=config.get('mysql_user'),
-                    passwd=config.get('mysql_password'),
-                    db=config.get('database'),
-                    port=config.get('port'))
+        conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
         # query file
         query_dir = ''
@@ -180,6 +177,7 @@ def test_by_tpcc(knob):
 
     if state == 0:
         print('database has been restarted')
+        os.makedirs('./configuration recommender/log', exist_ok=True)
         log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
         ip = ''
         username = ''
@@ -244,36 +242,43 @@ def test_by_sysbench(knob):
                     # Handle case where value is not in the enum_values list
                     print(f"Warning: {value} not found in enum values for {key}")
     
-    #set knobs and restart databases
+    #set knobs and restart databases (local execution, no SSH)
     set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
     for knobs in temp_config:
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/etc/my.cnf')
-    
-    head_command = 'sshpass -p {} ssh {} '.format(ip_password, db_ip)
-    set_knobs_command = head_command + '"' + set_knobs_command + '"' 
+        index = int(knobs.replace("knob", "")) - 1
+        knob_name = original_keys[index]
+        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name, temp_config[knobs], '/etc/my.cnf')
+
     state = os.system(set_knobs_command)
 
-    time.sleep(10)
+    time.sleep(2)
 
     print("success set knobs")
     #exit()
 
-    restart_knobs_command = head_command + '"service mysqld restart"' 
-    state = os.system(restart_knobs_command)
+    # Restart MySQL locally: shutdown then start via mysqld_safe
+    mysql_admin = '/workspace/setup/mysql/bin/mysqladmin -u root -p123456 -S /tmp/mysql.sock shutdown'
+    os.system(mysql_admin)
+    time.sleep(3)
+
+    mysql_start = 'cd /workspace/setup/mysql && /bin/sh bin/mysqld_safe --basedir=/workspace/setup/mysql --datadir=/workspace/setup/mysql/data > /dev/null 2>&1 &'
+    os.system(mysql_start)
+    time.sleep(10)
+
+    state = 0
 
     if state == 0:
         print('database has been restarted')
+        os.makedirs('./configuration recommender/log', exist_ok=True)
         log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
-        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-host={} --mysql-port={} --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
-                            config.get('host'),
-                            config.get('port'),
-                            config.get('user'),
-                            config.get('password'),
-                            config.get('database')
+        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-socket=/tmp/mysql.sock --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
+                            db_config.get('user'),
+                            db_config.get('password'),
+                            db_config.get('database')
                             )
-        
-        os.system(command_run + ' > {} '.format(log_file))
-        
+
+        os.system(command_run + ' > "{}" '.format(log_file))
+
         qps = sum([float(line.split()[8]) for line in open(log_file,'r').readlines() if 'qps' in line][-int(120/60):]) / (int(120/60))
         tps = float(qps/20.0)
         return tps
@@ -316,11 +321,7 @@ def test_by_tpcds(self,log_file):
 
     if state == 0:
         print('database has been restarted')
-        conn = pymysql.connect(host=config.get('host'),
-                    user=config.get('mysql_user'),
-                    passwd=config.get('mysql_password'),
-                    db=config.get('database'),
-                    port=config.get('port'))
+        conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
         # query file
         query_dir = ''

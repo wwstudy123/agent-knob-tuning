@@ -1,0 +1,1 @@
+SELECT pad,id FROM sbtest23 WHERE sbtest23.pad = 'MDX1G8P8nGcSE33h8cREXY4aBZkFUGPt1ec91mfPqg1GiGAa9E7tXXDhzODH' or sbtest23.pad = 'KywzpYdvzY73KpKxFwuDlYGl7ZEpuxORato67lBDVRxK1Gv4P0kRWxuzVsaN' LIMIT 10;

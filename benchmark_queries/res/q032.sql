@@ -1,0 +1,1 @@
+SELECT sbtest41.c,sbtest41.pad,sbtest3.pad FROM sbtest3,sbtest41 WHERE sbtest3.id = sbtest41.id and sbtest41.id > 165781 and sbtest3.pad = 'OvcwGfgu9kVYVls1lDbPrhXbsaatGSN0dKGr5IOHNvfC1GPU93Sy7xgyGtgX' LIMIT 10;

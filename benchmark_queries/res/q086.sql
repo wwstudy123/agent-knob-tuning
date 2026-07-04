@@ -1,0 +1,1 @@
+SELECT count(c) as count_value_c FROM sbtest10 WHERE sbtest10.k = 383575 or sbtest10.c = 'a7iuci0m2GzzZVvhObBQsvRnFB0eE9GUBAmxOfOxYg5fyCb9uwU10RvyeuL1ixZvXON5LKMAw1bQMEteASwNbu2ER2TwNmNbqfzn9nWNIYStdCQNgtQrR9rR' LIMIT 10;

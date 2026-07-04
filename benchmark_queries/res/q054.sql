@@ -1,0 +1,1 @@
+SELECT c,count(pad) as count_value_pad FROM sbtest48 WHERE sbtest48.c = 'WaKrpcD2BrIPqNL2OVvSmRVeM4DwRbPM9cqLDiVGlvxRd7Mya2bpKph5Tm5iDUdnbDKzFzsOVZrfZ4c5wMZeow8A5NMBtalDEAcr8FTNgwWm2kulCr085TqF' GROUP BY c;

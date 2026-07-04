@@ -1,7 +1,14 @@
-from openai import OpenAI
 import configparser
 import re
 import json
+import os
+
+# Auto-detect: use Anthropic SDK if env vars are set, otherwise OpenAI SDK
+_use_anthropic = bool(os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"))
+if _use_anthropic:
+    import anthropic
+else:
+    from openai import OpenAI
 
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -88,22 +95,14 @@ def extract_knob_intervals_with_ids(text):
     return knobs
 
 def call_open_source_llm(model,knob_list):
-    client = OpenAI(
-        api_key=config['knob selector']['api_key'], 
-        base_url=config['knob selector']['base_url']
-    )
-
-    messages = [
-    {"role": "system", "content": "You are an experienced database administrators, skilled in database knob tuning."},
-    {
-        "role": "user",
-        "content": """
-            Task Overview: 
-            Given the knob name along with its suggestion and tuning task information, your job is to offer intervals for each knob that may lead to the best performance of the system and meet the hardware resource constraints. 
-            In addition, if there is a special value (e.g., 0, -1, etc.), please mark it with “special value”.
+    system_prompt = "You are an experienced database administrators, skilled in database knob tuning."
+    user_content = """
+            Task Overview:
+            Given the knob name along with its suggestion and tuning task information, your job is to offer intervals for each knob that may lead to the best performance of the system and meet the hardware resource constraints.
+            In addition, if there is a special value (e.g., 0, -1, etc.), please mark it with "special value".
             Knobs:
             {knob}
-            Workload and Database information: 
+            Workload and Database information:
             - Workload Features: {workload_features}
             - Database Kernel: {database_kernel}
             - Database Scale: {database_scale}
@@ -114,26 +113,51 @@ def call_open_source_llm(model,knob_list):
                 "max_value": MAX_VALUE,
                 "step": STEP_SIZE,
                 "special_value": SPECIAL_VALUE
-            }} 
-            Now let us think step by step.        
-        """.format(knob=knobs,  workload_features = workload_features, database_kernel=database_kernel, hardware=hardware, database_scale=database_scale)
-    }
-    ]
+            }}
+            Now let us think step by step.
+        """.format(knob=knobs, workload_features=workload_features, database_kernel=database_kernel, hardware=hardware, database_scale=database_scale)
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature = 0
-    )
+    if _use_anthropic:
+        client = anthropic.Anthropic(
+            api_key=os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"),
+            base_url=os.environ.get("ANTHROPIC_BASE_URL"),
+        )
+        response = client.messages.create(
+            model=model,
+            max_tokens=4096,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_content}],
+            temperature=0
+        )
+        # Find the text block (skip thinking blocks)
+        content_text = ""
+        for block in response.content:
+            if block.type == "text":
+                content_text = block.text
+                break
+    else:
+        client = OpenAI(
+            api_key=config['knob selector']['api_key'],
+            base_url=config['knob selector']['base_url']
+        )
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content}
+        ]
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=0
+        )
+        content_text = completion.choices[0].message.content
 
-    for choice in completion.choices:
-        print(choice.message)
-        print("--------------------------")
-        result = extract_knob_intervals_with_ids(choice.message.content)
-        output = config['range pruner']['output_file']
-        with open(output,"w") as f:
-            json.dump(result, f, indent=2)
-            f.close()
+    print(content_text)
+    print("--------------------------")
+    result = extract_knob_intervals_with_ids(content_text)
+    output = config['range pruner']['output_file']
+    with open(output,"w") as f:
+        json.dump(result, f, indent=2)
+        f.close()
 
 
 if __name__ == '__main__':

@@ -1,0 +1,1 @@
+SELECT avg(sbtest22.k) as average_value_k FROM sbtest22,sbtest1 WHERE sbtest22.id = sbtest1.id and sbtest1.k = 379618 and sbtest22.pad = '8e24S6PXVRz155dmegSutGvY7sExaArgu06fSctD15VxGbVE8dDxYfN8vPg3' LIMIT 10;

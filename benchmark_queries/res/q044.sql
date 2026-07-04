@@ -1,0 +1,1 @@
+SELECT sbtest26.pad,sbtest26.c FROM sbtest21,sbtest26 WHERE sbtest21.id = sbtest26.id and sbtest26.c = 'pSVG1hoDxDaIxCu9nGsEgldd1n1rvmwcSqxrSvm2bVY9DqfF1WqQ6Kkx08DgUD904iocr3Wm6qgLPgYPTeHM5ZOzT2Db7iQGKgoS50IhNSFVsfO4690iP4P4' and sbtest26.c = 'otveCH04V9sIMcSghdCNITBNgL9Uz9gRKW1GEwEgaTPI6h8q15U0CdGTZiqSO7bbF9OTzHwamMtC9Abz8Hp6wkcU2TQdApEKYH534ItAfPZaiV2UAEltPymC' LIMIT 10;

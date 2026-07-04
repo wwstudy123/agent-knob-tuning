@@ -1,0 +1,1 @@
+SELECT count(sbtest25.pad) as count_value_pad,max(sbtest25.id) as maximum_value_id,count(sbtest19.pad) as count_value_pad FROM sbtest19,sbtest25 WHERE sbtest19.id = sbtest25.id and sbtest25.k < 814355 LIMIT 10;

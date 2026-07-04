@@ -1,0 +1,1 @@
+SELECT count(sbtest20.pad) as count_value_pad,count(sbtest16.pad) as count_value_pad,avg(sbtest20.k) as average_value_k FROM sbtest16,sbtest20 WHERE sbtest16.id = sbtest20.id and sbtest20.pad = 'gYpGB1oQyTvwwC6w8kyY7Dl6ZYOzkq7i77Gr4UepH1EO4d5mCQQdXVBUyOng' LIMIT 10;

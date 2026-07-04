@@ -1,0 +1,1 @@
+SELECT sbtest38.pad FROM sbtest38,sbtest6 WHERE sbtest38.id = sbtest6.id and sbtest6.c = 'FR1zETyL27zf8987TLueU9irM4eDFoLykmM5pwtrdlygGXiAqAOi0Qgb1BuNXqO3leQ4yFpAgCQ1ZFkcrwfUukgxpUw9ygumxEL6m08h5tV7wRKxwLIg06Ni' LIMIT 10;

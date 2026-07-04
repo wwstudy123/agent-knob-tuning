@@ -1,0 +1,1 @@
+SELECT min(sbtest14.id) as minimum_value_id,min(sbtest15.k) as minimum_value_k,count(sbtest15.pad) as count_value_pad FROM sbtest15,sbtest14 WHERE sbtest15.id = sbtest14.id and sbtest14.id > 111866 LIMIT 10;

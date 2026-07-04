@@ -1,0 +1,1 @@
+SELECT min(sbtest4.id) as minimum_value_id,count(sbtest33.c) as count_value_c,count(sbtest33.pad) as count_value_pad FROM sbtest33,sbtest4 WHERE sbtest33.id = sbtest4.id and sbtest33.id > 659246 and sbtest4.pad = 'Swb2vsPiArg2efwMZW2y9AqvP2mqLTtLdany61xxhSGtGQ3acU01Wv72hxhh' LIMIT 10;

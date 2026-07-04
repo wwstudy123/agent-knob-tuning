@@ -1,0 +1,1 @@
+SELECT k FROM sbtest50 WHERE sbtest50.c = 'Mavctw0eO6UVYmIwmsGbN0XPW2A6HvcBgBqPKsGsbgwxESqgcO66iGuEdLB1qOgKLNNt9vVGnZtIDWS6CxagiaYNOtxoPDXYeHskSb9u5VS3zyz4larnFuIw';

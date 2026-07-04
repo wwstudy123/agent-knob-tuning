@@ -1,0 +1,1 @@
+SELECT min(sbtest27.id) as minimum_value_id FROM sbtest50,sbtest27 WHERE sbtest50.id = sbtest27.id and sbtest50.pad = '1HctUc5dP0Fe7tYMHSCbKOd8QNkq3xZa4rspGxCfZDGyzyG7K6PU86g9Sgfd' and sbtest50.c = 'yBkq73WdIIoTWQvrG4aStF0kK5N35l6lapU63HENkgTgILOoGyit5DMrkQq5WkNAe9VNCSVG6onfNPRFmCZrG0vedgqGeOe49Oa6Nwd4Cxq2YAtV4Uy6MSDG' LIMIT 10;

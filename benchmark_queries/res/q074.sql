@@ -1,0 +1,1 @@
+SELECT avg(sbtest43.id) as average_value_id,avg(sbtest13.k) as average_value_k FROM sbtest43,sbtest13 WHERE sbtest43.id = sbtest13.id and sbtest43.pad = 'DLZioV2S6XY8E7wxFmeceXngeQIugNyiGG3egQ3Ziea5TdzqK9Dg55lka503' LIMIT 10;

@@ -1,11 +1,17 @@
 from flask import Flask, request, jsonify
-from openai import OpenAI
 import json
 import re
 import os,sys
 import heapq
 from config_rank import sort_list
 import configparser
+
+# Auto-detect: use Anthropic SDK if env vars are set, otherwise OpenAI SDK
+_use_anthropic = bool(os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"))
+if _use_anthropic:
+    import anthropic
+else:
+    from openai import OpenAI
 
 config = configparser.ConfigParser()
 config.read('./config.ini')
@@ -66,53 +72,74 @@ def remove_comments(json_string):
     json_string = re.sub(r',\s*]', ']', json_string)
     return json_string
 
-def call_open_source_llm(model, messages,filename):
+def call_open_source_llm(model, messages, filename):
 
-    client = OpenAI(
-        api_key=config['knob selector']['api_key'], 
-        base_url=config['knob selector']['base_url']
-    )
+    if _use_anthropic:
+        client = anthropic.Anthropic(
+            api_key=os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"),
+            base_url=os.environ.get("ANTHROPIC_BASE_URL"),
+        )
+        system_prompt = messages[0]["content"]
+        user_messages = messages[1:]
 
-    completion = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        temperature = 1,
-        top_p = 0.98
-    )
+        response = client.messages.create(
+            model=model,
+            max_tokens=4096,
+            system=system_prompt,
+            messages=user_messages,
+            temperature=1,
+            top_p=0.98
+        )
+        # Find the text block (skip thinking blocks)
+        content_text = ""
+        for block in response.content:
+            if block.type == "text":
+                content_text = block.text
+                break
+    else:
+        client = OpenAI(
+            api_key=config['knob selector']['api_key'],
+            base_url=config['knob selector']['base_url']
+        )
+        completion = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=1,
+            top_p=0.98
+        )
+        content_text = completion.choices[0].message.content
 
-    for choice in completion.choices:
+    pattern = r'\{[^{}]+\}'
+    match = re.search(pattern, content_text, re.DOTALL)
 
-        pattern = r'\{[^{}]+\}'
-        match = re.search(pattern, choice.message.content, re.DOTALL)
+    if match:
+        json_str = match.group(0)
+        json_str = replace_units(json_str)
+        config_dict = extract_key_value_pairs(json_str)
+        #json_str = remove_comments(json_str)
+        #config_dict = json.loads(json_str)
+        print(config_dict)
+        if not config_dict:
+            return
+        config_dict = json.dumps(config_dict)
+        with open(filename, 'r') as f:
+            data_str = f.read()
 
-        if match:
-            json_str = match.group(0)
-            json_str = replace_units(json_str)
-            config_dict = extract_key_value_pairs(json_str)
-            #json_str = remove_comments(json_str)
-            #config_dict = json.loads(json_str)
-            print(config_dict)
-            if not config_dict:
-                return
-            config_dict = json.dumps(config_dict)
-            with open(filename, 'r') as f:
-                data_str = f.read()
+        # Split the data into individual JSON strings
+        json_strings = data_str.strip().split('\n')
 
-            # Split the data into individual JSON strings
-            json_strings = data_str.strip().split('\n')
+        # # Prepare the final structured JSON format
+        # for json_str in json_strings:
+        #     d = json.loads(json_str)
+        if config_dict in json_strings :
+            return
+        with open(filename, 'a') as f:
+            print("sucess recommendation!")
+            f.write('\n')
+            f.write(config_dict)
 
-            # # Prepare the final structured JSON format
-            # for json_str in json_strings:
-            #     d = json.loads(json_str)
-            if config_dict in json_strings :
-                return
-            with open(filename, 'a') as f:
-                print("sucess recommendation!")
-                f.write('\n')
-                f.write(config_dict)
-
-        else:
-            print("No JSON configuration found in the input.")
+    else:
+        print("No JSON configuration found in the input.")
 
 history_top = []
 app = Flask(__name__)
