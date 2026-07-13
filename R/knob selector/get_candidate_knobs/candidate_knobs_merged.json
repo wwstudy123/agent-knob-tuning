@@ -1,0 +1,983 @@
+{
+  "innodb_thread_concurrency": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 1000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the maximum number of threads permitted inside of InnoDB. A value of 0 (the default) is interpreted as infinite concurrency (no limit). This variable is intended for performance tuning on high concurrency systems. InnoDB tries to keep the number of threads inside InnoDB less than or equal to the innodb_thread_concurrency limit. Threads waiting for locks are not counted in the number of concurrently executing threads. The correct setting depends on workload and computing environment. Consider setting this variable if your MySQL instance shares CPU resources with other applications or if your workload or number of concurrent users is growing. Test a range of values to determine the setting that provides the best performance. innodb_thread_concurrency is a dynamic variable, which permits experimenting with different settings on a live test system. If a particular setting performs poorly, you can quickly set innodb_thread_concurrency back to 0. Use the following guidelines to help find and maintain an appropriate setting: A value of 0 disables the queries inside InnoDB and queries in queue counters in the ROW OPERATIONS section of SHOW ENGINE INNODB STATUS output. For related information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+    "rank": 4
+  },
+  "innodb_doublewrite": {
+    "default": "ON",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "When enabled (the default), InnoDB stores all data twice, first to the doublewrite buffer, then to the actual data files. This variable can be turned off with --skip-innodb-doublewrite for benchmarks or cases when top performance is needed rather than concern for data integrity or possible failures. If system tablespace data files ( ibdata* files) are located on Fusion-io devices that support atomic writes, doublewrite buffering is automatically disabled and Fusion-io atomic writes are used for all data files. Because the doublewrite buffer setting is global, doublewrite buffering is also disabled for data files residing on non-Fusion-io hardware. This feature is only supported on Fusion-io hardware and only enabled for Fusion-io NVMFS on Linux. To take full advantage of this feature, an innodb_flush_method setting of O_DIRECT is recommended. For related information, see Section 14.6.5, “Doublewrite Buffer”.",
+    "rank": 5
+  },
+  "innodb_random_read_ahead": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Enables the random read-ahead technique for optimizing InnoDB I/O. For details about performance considerations for different types of read-ahead requests, see Section 14.8.3.4, “Configuring InnoDB Buffer Pool Prefetching (Read-Ahead)”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 9
+  },
+  "innodb_buffer_pool_size": {
+    "default": 13958643712,
+    "dynamic": "Yes",
+    "max": 11811160064,
+    "min": 5368709120, 
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The size in bytes of the buffer pool, the memory area where InnoDB caches table and index data. The default value is 134217728 bytes (128MB). The maximum value depends on the CPU architecture; the maximum is 4294967295 (232-1) on 32-bit systems and 18446744073709551615 (264-1) on 64-bit systems. On 32-bit systems, the CPU architecture and operating system may impose a lower practical maximum size than the stated maximum. When the size of the buffer pool is greater than 1GB, setting innodb_buffer_pool_instances to a value greater than 1 can improve the scalability on a busy server. A larger buffer pool requires less disk I/O to access the same table data more than once. On a dedicated database server, you might set the buffer pool size to 80% of the machine's physical memory size. Be aware of the following potential issues when configuring buffer pool size, and be prepared to scale back the size of the buffer pool if necessary. When you increase or decrease buffer pool size, the operation is performed in chunks. Chunk size is defined by the innodb_buffer_pool_chunk_size variable, which has a default of 128 MB. Buffer pool size must always be equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . If you alter the buffer pool size to a value that is not equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances , buffer pool size is automatically adjusted to a value that is equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . innodb_buffer_pool_size can be set dynamically, which allows you to resize the buffer pool without restarting the server. The Innodb_buffer_pool_resize_status status variable reports the status of online buffer pool resizing operations. See Section 14.8.3.1, “Configuring InnoDB Buffer Pool Size” for more information.",
+    "rank": 10
+  },
+  "innodb_max_dirty_pages_pct_lwm": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 99,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines a low water mark representing the percentage of dirty pages at which preflushing is enabled to control the dirty page ratio. The default of 0 disables the pre-flushing behavior entirely. The configured value should always be lower than the innodb_max_dirty_pages_pct value. For more information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”.",
+    "rank": 11
+  },
+  "innodb_purge_threads": {
+    "default": 4,
+    "dynamic": "No",
+    "max": 32,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of background threads devoted to the InnoDB purge operation. Increasing the value creates additional purge threads, which can improve efficiency on systems where DML operations are performed on multiple tables. For related information, see Section 14.8.10, “Purge Configuration”.",
+    "rank": 12
+  },
+  "innodb_compression_failure_threshold_pct": {
+    "default": 5,
+    "dynamic": "Yes",
+    "max": 100,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the compression failure rate threshold for a table, as a percentage, at which point MySQL begins adding padding within compressed pages to avoid expensive compression failures. When this threshold is passed, MySQL begins to leave additional free space within each new compressed page, dynamically adjusting the amount of free space up to the percentage of page size specified by innodb_compression_pad_pct_max . A value of zero disables the mechanism that monitors compression efficiency and dynamically adjusts the padding amount. For more information, see Section 14.9.1.6, “Compression for OLTP Workloads”.",
+    "rank": 14
+  },
+  "innodb_change_buffering": {
+    "default": "all",
+    "dynamic": "Yes",
+    "enum_values": [
+      "none",
+      "inserts",
+      "deletes",
+      "changes",
+      "purges",
+      "all"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Whether InnoDB performs change buffering, an optimization that delays write operations to secondary indexes so that the I/O operations can be performed sequentially. Permitted values are described in the following table. For more information, see Section 14.5.2, “Change Buffer”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 15
+  },
+  "innodb_online_alter_log_max_size": {
+    "default": 134217728,
+    "dynamic": "Yes",
+    "max": 18446700000000000000,
+    "min": 65536,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Specifies an upper limit in bytes on the size of the temporary log files used during online DDL operations for InnoDB tables. There is one such log file for each index being created or table being altered. This log file stores data inserted, updated, or deleted in the table during the DDL operation. The temporary log file is extended when needed by the value of innodb_sort_buffer_size , up to the maximum specified by innodb_online_alter_log_max_size . If a temporary log file exceeds the upper size limit, the ALTER TABLE operation fails and all uncommitted concurrent DML operations are rolled back. Thus, a large value for this option allows more DML to happen during an online DDL operation, but also extends the period of time at the end of the DDL operation when the table is locked to apply the data from the log.",
+    "rank": 16
+  },
+  "innodb_purge_batch_size": {
+    "default": 300,
+    "dynamic": "Yes",
+    "max": 5000,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the number of undo log pages that purge parses and processes in one batch from the history list. In a multithreaded purge configuration, the coordinator purge thread divides innodb_purge_batch_size by innodb_purge_threads and assigns that number of pages to each purge thread. The innodb_purge_batch_size variable also defines the number of undo log pages that purge frees after every 128 iterations through the undo logs. The innodb_purge_batch_size option is intended for advanced performance tuning in combination with the innodb_purge_threads setting. Most users need not change innodb_purge_batch_size from its default value. For related information, see Section 14.8.10, “Purge Configuration”.",
+    "rank": 17
+  },
+  "innodb_lru_scan_depth": {
+    "default": 1024,
+    "dynamic": "Yes",
+    "max": 10240,
+    "min": 100,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "A parameter that influences the algorithms and heuristics for the flush operation for the InnoDB buffer pool. Primarily of interest to performance experts tuning I/O-intensive workloads. It specifies, per buffer pool instance, how far down the buffer pool LRU page list the page cleaner thread scans looking for dirty pages to flush. This is a background operation performed once per second. A setting smaller than the default is generally suitable for most workloads. A value that is much higher than necessary may impact performance. Only consider increasing the value if you have spare I/O capacity under a typical workload. Conversely, if a write-intensive workload saturates your I/O capacity, decrease the value, especially in the case of a large buffer pool. When tuning innodb_lru_scan_depth , start with a low value and configure the setting upward with the goal of rarely seeing zero free pages. Also, consider adjusting innodb_lru_scan_depth when changing the number of buffer pool instances, since innodb_lru_scan_depth * innodb_buffer_pool_instances defines the amount of work performed by the page cleaner thread each second. For related information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 19
+  },
+  "innodb_max_dirty_pages_pct": {
+    "default": 75,
+    "dynamic": "Yes",
+    "max": 99,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "InnoDB tries to flush data from the buffer pool so that the percentage of dirty pages does not exceed this value. The default value is 75. The innodb_max_dirty_pages_pct setting establishes a target for flushing activity. It does not affect the rate of flushing. For information about managing the rate of flushing, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”. For related information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 20
+  },
+  "innodb_write_io_threads": {
+    "default": 4,
+    "dynamic": "No",
+    "max": 64,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of I/O threads for write operations in InnoDB. The default value is 4. Its counterpart for read threads is innodb_read_io_threads . For more information, see Section 14.8.6, “Configuring the Number of Background InnoDB I/O Threads”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”. Also take into consideration the value of sync_binlog , which controls synchronization of the binary log to disk. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 21
+  },
+  "innodb_stats_transient_sample_pages": {
+    "default": 8,
+    "dynamic": "Yes",
+    "max": 100,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of index pages to sample when estimating cardinality and other statistics for an indexed column, such as those calculated by ANALYZE TABLE . The default value is 8. Increasing the value improves the accuracy of index statistics, which can improve the query execution plan, at the expense of increased I/O when opening an InnoDB table or recalculating statistics. For more information, see Section 14.8.11.2, “Configuring Non-Persistent Optimizer Statistics Parameters”. innodb_stats_transient_sample_pages only applies when innodb_stats_persistent is disabled for a table; when innodb_stats_persistent is enabled, innodb_stats_persistent_sample_pages applies instead. Takes the place of innodb_stats_sample_pages . For more information, see Section 14.8.11.2, “Configuring Non-Persistent Optimizer Statistics Parameters”.",
+    "rank": 22
+  },
+  "innodb_spin_wait_delay": {
+    "default": 6,
+    "dynamic": "Yes",
+    "max": 6000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The maximum delay between polls for a spin lock. The low-level implementation of this mechanism varies depending on the combination of hardware and operating system, so the delay does not correspond to a fixed time interval. For more information, see Section 14.8.9, “Configuring Spin Lock Polling”.",
+    "rank": 24
+  },
+  "innodb_compression_pad_pct_max": {
+    "default": 50,
+    "dynamic": "Yes",
+    "max": 75,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Specifies the maximum percentage that can be reserved as free space within each compressed page, allowing room to reorganize the data and modification log within the page when a compressed table or index is updated and the data might be recompressed. Only applies when innodb_compression_failure_threshold_pct is set to a nonzero value, and the rate of compression failures passes the cutoff point. For more information, see Section 14.9.1.6, “Compression for OLTP Workloads”.",
+    "rank": 25
+  },
+  "innodb_read_ahead_threshold": {
+    "default": 56,
+    "dynamic": "Yes",
+    "max": 64,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Controls the sensitivity of linear read-ahead that InnoDB uses to prefetch pages into the buffer pool. If InnoDB reads at least innodb_read_ahead_threshold pages sequentially from an extent (64 pages), it initiates an asynchronous read for the entire following extent. The permissible range of values is 0 to 64. A value of 0 disables read-ahead. For the default of 56, InnoDB must read at least 56 pages sequentially from an extent to initiate an asynchronous read for the following extent. Knowing how many pages are read through the read-ahead mechanism, and how many of these pages are evicted from the buffer pool without ever being accessed, can be useful when fine-tuning the innodb_read_ahead_threshold setting. SHOW ENGINE INNODB STATUS output displays counter information from the Innodb_buffer_pool_read_ahead and Innodb_buffer_pool_read_ahead_evicted global status variables, which report the number of pages brought into the buffer pool by read-ahead requests, and the number of such pages evicted from the buffer pool without ever being accessed, respectively. The status variables report global values since the last server restart. SHOW ENGINE INNODB STATUS also shows the rate at which the read-ahead pages are read and the rate at which such pages are evicted without being accessed. The per-second averages are based on the statistics collected since the last invocation of SHOW ENGINE INNODB STATUS and are displayed in the BUFFER POOL AND MEMORY section of the SHOW ENGINE INNODB STATUS output. For more information, see Section 14.8.3.4, “Configuring InnoDB Buffer Pool Prefetching (Read-Ahead)”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 26
+  },
+  "innodb_concurrency_tickets": {
+    "default": 5000,
+    "dynamic": "Yes",
+    "max": 4294967295,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Determines the number of threads that can enter InnoDB concurrently. A thread is placed in a queue when it tries to enter InnoDB if the number of threads has already reached the concurrency limit. When a thread is permitted to enter InnoDB, it is given a number of “ tickets” equal to the value of innodb_concurrency_tickets , and the thread can enter and leave InnoDB freely until it has used up its tickets. After that point, the thread again becomes subject to the concurrency check (and possible queuing) the next time it tries to enter InnoDB. The default value is 5000. With a small innodb_concurrency_tickets value, small transactions that only need to process a few rows compete fairly with larger transactions that process many rows. The disadvantage of a small innodb_concurrency_tickets value is that large transactions must loop through the queue many times before they can complete, which extends the amount of time required to complete their task. With a large innodb_concurrency_tickets value, large transactions spend less time waiting for a position at the end of the queue (controlled by innodb_thread_concurrency ) and more time retrieving rows. Large transactions also require fewer trips through the queue to complete their task. The disadvantage of a large innodb_concurrency_tickets value is that too many large transactions running at the same time can starve smaller transactions by making them wait a longer time before executing. With a nonzero innodb_thread_concurrency value, you may need to adjust the innodb_concurrency_tickets value up or down to find the optimal balance between larger and smaller transactions. The SHOW ENGINE INNODB STATUS report shows the number of tickets remaining for an executing transaction in its current pass through the queue. This data may also be obtained from the TRX_CONCURRENCY_TICKETS column of the Information Schema INNODB_TRX table. For more information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+    "rank": 27
+  },
+  "innodb_log_write_ahead_size": {
+    "default": 8192,
+    "dynamic": "Yes",
+    "max": 16384,
+    "min": 512,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the write-ahead block size for the redo log, in bytes. To avoid “read-on-write” , set innodb_log_write_ahead_size to match the operating system or file system cache block size. The default setting is 8192 bytes. Read-on-write occurs when redo log blocks are not entirely cached to the operating system or file system due to a mismatch between write-ahead block size for the redo log and operating system or file system cache block size. Valid values for innodb_log_write_ahead_size are multiples of the InnoDB log file block size (2n). The minimum value is the InnoDB log file block size (512). Write-ahead does not occur when the minimum value is specified. The maximum value is equal to the innodb_page_size value. If you specify a value for innodb_log_write_ahead_size that is larger than the innodb_page_size value, the innodb_log_write_ahead_size setting is truncated to the innodb_page_size value. Setting the innodb_log_write_ahead_size value too low in relation to the operating system or file system cache block size results in “read-on-write” . Setting the value too high may have a slight impact on fsync performance for log file writes due to several blocks being written at once. For related information, see Section 8.5.4, “Optimizing InnoDB Redo Logging”.",
+    "rank": 28
+  },
+  "innodb_change_buffer_max_size": {
+    "default": 25,
+    "dynamic": "Yes",
+    "max": 50,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Maximum size for the InnoDB change buffer, as a percentage of the total size of the buffer pool. You might increase this value for a MySQL server with heavy insert, update, and delete activity, or decrease it for a MySQL server with unchanging data used for reporting. For more information, see Section 14.5.2, “Change Buffer”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 29
+  },
+  "innodb_autoextend_increment": {
+    "default": 64,
+    "dynamic": "Yes",
+    "max": 1000,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The increment size (in megabytes) for extending the size of an auto-extending InnoDB system tablespace file when it becomes full. The default value is 64. For related information, see System Tablespace Data File Configuration, and Resizing the System Tablespace. The innodb_autoextend_increment setting does not affect file-per-table tablespace files or general tablespace files. These files are auto-extending regardless of the innodb_autoextend_increment setting. The initial extensions are by small amounts, after which extensions occur in increments of 4MB.",
+    "rank": 35
+  },
+  "innodb_sort_buffer_size": {
+    "default": 1048576,
+    "dynamic": "No",
+    "max": 67108864,
+    "min": 65536,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "This variable defines: For related information, see Section 14.13.3, “Online DDL Space Requirements”.",
+    "rank": 36
+  },
+  "innodb_adaptive_max_sleep_delay": {
+    "default": 150000,
+    "dynamic": "Yes",
+    "max": 1000000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Permits InnoDB to automatically adjust the value of innodb_thread_sleep_delay up or down according to the current workload. Any nonzero value enables automated, dynamic adjustment of the innodb_thread_sleep_delay value, up to the maximum value specified in the innodb_adaptive_max_sleep_delay option. The value represents the number of microseconds. This option can be useful in busy systems, with greater than 16 InnoDB threads. (In practice, it is most valuable for MySQL systems with hundreds or thousands of simultaneous connections.) For more information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+    "rank": 42
+  },
+  "innodb_ft_total_cache_size": {
+    "default": 640000000,
+    "dynamic": "No",
+    "max": 1600000000,
+    "min": 32000000,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The total memory allocated, in bytes, for the InnoDB full-text search index cache for all tables. Creating numerous tables, each with a FULLTEXT search index, could consume a significant portion of available memory. innodb_ft_total_cache_size defines a global memory limit for all full-text search indexes to help avoid excessive memory consumption. If the global limit is reached by an index operation, a forced sync is triggered. For more information, see InnoDB Full-Text Index Cache.",
+    "rank": 43
+  },
+  "innodb_flush_log_at_timeout": {
+    "default": 1,
+    "dynamic": "Yes",
+    "max": 2700,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Write and flush the logs every N seconds. innodb_flush_log_at_timeout allows the timeout period between flushes to be increased in order to reduce flushing and avoid impacting performance of binary log group commit. The default setting for innodb_flush_log_at_timeout is once per second.",
+    "rank": 46
+  },
+  "innodb_ft_sort_pll_degree": {
+    "default": 2,
+    "dynamic": "No",
+    "max": 16,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Number of threads used in parallel to index and tokenize text in an InnoDB FULLTEXT index when building a search index. For related information, see Section 14.6.2.4, “InnoDB Full-Text Indexes”, and innodb_sort_buffer_size .",
+    "rank": 49
+  },
+  "innodb_ft_min_token_size": {
+    "default": 3,
+    "dynamic": "No",
+    "max": 16,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Minimum length of words that are stored in an InnoDB FULLTEXT index. Increasing this value reduces the size of the index, thus speeding up queries, by omitting common words that are unlikely to be significant in a search context, such as the English words “a” and “to” . For content using a CJK (Chinese, Japanese, Korean) character set, specify a value of 1. For more information, see Section 12.9.6, “Fine-Tuning MySQL Full-Text Search”.",
+    "rank": 50
+  },
+  "innodb_read_io_threads": {
+    "default": 4,
+    "dynamic": "No",
+    "max": 64,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of I/O threads for read operations in InnoDB. Its counterpart for write threads is innodb_write_io_threads . For more information, see Section 14.8.6, “Configuring the Number of Background InnoDB I/O Threads”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 51
+  },
+  "innodb_table_locks": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global, Session",
+    "type": "enum",
+    "td": null,
+    "p": "If autocommit = 0 , InnoDB honors LOCK TABLES ; MySQL does not return from LOCK TABLES ... WRITE until all other threads have released all their locks to the table. The default value of innodb_table_locks is 1, which means that LOCK TABLES causes InnoDB to lock a table internally if autocommit = 0 . innodb_table_locks = 0 has no effect for tables locked explicitly with LOCK TABLES ... WRITE . It does have an effect for tables locked for read or write by LOCK TABLES ... WRITE implicitly (for example, through triggers) or by LOCK TABLES ... READ . For related information, see Section 14.7, “InnoDB Locking and Transaction Model”.",
+    "rank": 53
+  },
+  "innodb_ft_result_cache_limit": {
+    "default": 2000000000,
+    "dynamic": "Yes",
+    "max": 4294967295,
+    "min": 1000000,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The InnoDB full-text search query result cache limit (defined in bytes) per full-text search query or per thread. Intermediate and final InnoDB full-text search query results are handled in memory. Use innodb_ft_result_cache_limit to place a size limit on the full-text search query result cache to avoid excessive memory consumption in case of very large InnoDB full-text search query results (millions or hundreds of millions of rows, for example). Memory is allocated as required when a full-text search query is processed. If the result cache size limit is reached, an error is returned indicating that the query exceeds the maximum allowed memory. The maximum value of innodb_ft_result_cache_limit for all platform types and bit sizes is 2**32-1.",
+    "rank": 54
+  },
+  "innodb_purge_rseg_truncate_frequency": {
+    "default": 128,
+    "dynamic": "Yes",
+    "max": 128,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the frequency with which the purge system frees rollback segments in terms of the number of times that purge is invoked. An undo tablespace cannot be truncated until its rollback segments are freed. Normally, the purge system frees rollback segments once every 128 times that purge is invoked. The default value is 128. Reducing this value increases the frequency with which the purge thread frees rollback segments. innodb_purge_rseg_truncate_frequency is intended for use with innodb_undo_log_truncate . For more information, see Truncating Undo Tablespaces.",
+    "rank": 55
+  },
+  "innodb_thread_sleep_delay": {
+    "default": 10000,
+    "dynamic": "Yes",
+    "max": 1000000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines how long InnoDB threads sleep before joining the InnoDB queue, in microseconds. The default value is 10000. A value of 0 disables sleep. You can set innodb_adaptive_max_sleep_delay to the highest value you would allow for innodb_thread_sleep_delay , and InnoDB automatically adjusts innodb_thread_sleep_delay up or down depending on current thread-scheduling activity. This dynamic adjustment helps the thread scheduling mechanism to work smoothly during times when the system is lightly loaded or when it is operating near full capacity. For more information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+    "rank": 58
+  },
+  "innodb_adaptive_flushing_lwm": {
+    "default": 10,
+    "dynamic": "Yes",
+    "max": 70,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the low water mark representing percentage of redo log capacity at which adaptive flushing is enabled. For more information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”.",
+    "rank": 59
+  },
+  "innodb_io_capacity_max": {
+    "default": 400,
+    "dynamic": "Yes",
+    "max": 40000,
+    "min": 100,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "If flushing activity falls behind, InnoDB can flush more aggressively, at a higher rate of I/O operations per second (IOPS) than defined by the innodb_io_capacity variable. The innodb_io_capacity_max variable defines a maximum number of IOPS performed by InnoDB background tasks in such situations. For information about configuring the innodb_io_capacity_max variable, see Section 14.8.8, “Configuring InnoDB I/O Capacity”.",
+    "rank": 61
+  },
+  "innodb_max_purge_lag": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 4294967295,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the desired maximum purge lag. If this value is exceeded, a delay is imposed on INSERT , UPDATE , and DELETE operations to allow time for purge to catch up. The default value is 0, which means there is no maximum purge lag and no delay. For more information, see Section 14.8.10, “Purge Configuration”.",
+    "rank": 62
+  },
+  "innodb_log_file_size": {
+    "default": 50331648,
+    "dynamic": "No",
+    "max": 1073741824,
+    "min": 4194304,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The size in bytes of each log file in a log group. The combined size of log files ( innodb_log_file_size * innodb_log_files_in_group ) cannot exceed a maximum value that is slightly less than 512GB. A pair of 255 GB log files, for example, approaches the limit but does not exceed it. The default value is 48MB. Generally, the combined size of the log files should be large enough that the server can smooth out peaks and troughs in workload activity, which often means that there is enough redo log space to handle more than an hour of write activity. The larger the value, the less checkpoint flush activity is required in the buffer pool, saving disk I/O. Larger log files also make crash recovery slower. The minimum innodb_log_file_size value was increased from 1MB to 4MB in MySQL 5.7.11. For related information, see Redo Log File Configuration. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 75
+  },
+  "innodb_flush_neighbors": {
+    "default": 1,
+    "dynamic": "Yes",
+    "enum_values": [
+      "0",
+      "1",
+      "2"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies whether flushing a page from the InnoDB buffer pool also flushes other dirty pages in the same extent. When the table data is stored on a traditional HDD storage device, flushing such neighbor pages in one operation reduces I/O overhead (primarily for disk seek operations) compared to flushing individual pages at different times. For table data stored on SSD, seek time is not a significant factor and you can turn this setting off to spread out write operations. For related information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”.",
+    "rank": 80
+  },
+  "innodb_fill_factor": {
+    "default": 100,
+    "dynamic": "Yes",
+    "max": 100,
+    "min": 10,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "InnoDB performs a bulk load when creating or rebuilding indexes. This method of index creation is known as a “sorted index build” . innodb_fill_factor defines the percentage of space on each B-tree page that is filled during a sorted index build, with the remaining space reserved for future index growth. For example, setting innodb_fill_factor to 80 reserves 20 percent of the space on each B-tree page for future index growth. Actual percentages may vary. The innodb_fill_factor setting is interpreted as a hint rather than a hard limit. An innodb_fill_factor setting of 100 leaves 1/16 of the space in clustered index pages free for future index growth. innodb_fill_factor applies to both B-tree leaf and non-leaf pages. It does not apply to external pages used for TEXT or BLOB entries. For more information, see Section 14.6.2.3, “Sorted Index Builds”.",
+    "rank": 82
+  },
+  "innodb_compression_level": {
+    "default": 6,
+    "dynamic": "Yes",
+    "max": 9,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Specifies the level of zlib compression to use for InnoDB compressed tables and indexes. A higher value lets you fit more data onto a storage device, at the expense of more CPU overhead during compression. A lower value lets you reduce CPU overhead when storage space is not critical, or you expect the data is not especially compressible. For more information, see Section 14.9.1.6, “Compression for OLTP Workloads”.",
+    "rank": 85
+  },
+  "innodb_old_blocks_time": {
+    "default": 1000,
+    "dynamic": "Yes",
+    "max": 4294967295,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Non-zero values protect against the buffer pool being filled by data that is referenced only for a brief period, such as during a full table scan. Increasing this value offers more protection against full table scans interfering with data cached in the buffer pool. Specifies how long in milliseconds a block inserted into the old sublist must stay there after its first access before it can be moved to the new sublist. If the value is 0, a block inserted into the old sublist moves immediately to the new sublist the first time it is accessed, no matter how soon after insertion the access occurs. If the value is greater than 0, blocks remain in the old sublist until an access occurs at least that many milliseconds after the first access. For example, a value of 1000 causes blocks to stay in the old sublist for 1 second after the first access before they become eligible to move to the new sublist. The default value is 1000. This variable is often used in combination with innodb_old_blocks_pct . For more information, see Section 14.8.3.3, “Making the Buffer Pool Scan Resistant”. For information about buffer pool management, the LRU algorithm, and eviction policies, see Section 14.5.1, “Buffer Pool”.",
+    "rank": 90
+  },
+  "innodb_replication_delay": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 10000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The replication thread delay in milliseconds on a replica server if innodb_thread_concurrency is reached.",
+    "rank": 92
+  },
+  "innodb_page_cleaners": {
+    "default": 4,
+    "dynamic": "No",
+    "max": 8,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of page cleaner threads that flush dirty pages from buffer pool instances. Page cleaner threads perform flush list and LRU flushing. A single page cleaner thread was introduced in MySQL 5.6 to offload buffer pool flushing work from the InnoDB master thread. In MySQL 5.7, InnoDB provides support for multiple page cleaner threads. A value of 1 maintains the pre-MySQL 5.7 configuration in which there is a single page cleaner thread. When there are multiple page cleaner threads, buffer pool flushing tasks for each buffer pool instance are dispatched to idle page cleaner threads. The innodb_page_cleaners default value was changed from 1 to 4 in MySQL 5.7. If the number of page cleaner threads exceeds the number of buffer pool instances, innodb_page_cleaners is automatically set to the same value as innodb_buffer_pool_instances . If your workload is write-IO bound when flushing dirty pages from buffer pool instances to data files, and if your system hardware has available capacity, increasing the number of page cleaner threads may help improve write-IO throughput. Multithreaded page cleaner support is extended to shutdown and recovery phases in MySQL 5.7. The setpriority() system call is used on Linux platforms where it is supported, and where the mysqld execution user is authorized to give page_cleaner threads priority over other MySQL and InnoDB threads to help page flushing keep pace with the current workload. setpriority() support is indicated by this InnoDB startup message: For systems where server startup and shutdown is not managed by systemd, mysqld execution user authorization can be configured in /etc/security/limits.conf. For example, if mysqld is run under the mysql user, you can authorize the mysql user by adding these lines to /etc/security/limits.conf: For systemd managed systems, the same can be achieved by specifying LimitNICE=-20 in a localized systemd configuration file. For example, create a file named override.conf in /etc/systemd/system/mysqld.service.d/override.conf and add this entry: After creating or changing override.conf, reload the systemd configuration, then tell systemd to restart the MySQL service: For more information about using a localized systemd configuration file, see Configuring systemd for MySQL. After authorizing the mysqld execution user, use the cat command to verify the configured Nice limits for the mysqld process:",
+    "rank": 94
+  },
+  "innodb_sync_spin_loops": {
+    "default": 30,
+    "dynamic": "Yes",
+    "max": 30000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of times a thread waits for an InnoDB mutex to be freed before the thread is suspended.",
+    "rank": 95
+  },
+  "innodb_adaptive_hash_index_parts": {
+    "default": 8,
+    "dynamic": "No",
+    "max": 512,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Partitions the adaptive hash index search system. Each index is bound to a specific partition, with each partition protected by a separate latch. In earlier releases, the adaptive hash index search system was protected by a single latch (btr_search_latch) which could become a point of contention. With the introduction of the innodb_adaptive_hash_index_parts option, the search system is partitioned into 8 parts by default. The maximum setting is 512. For related information, see Section 14.5.3, “Adaptive Hash Index”.",
+    "rank": 100
+  },
+  "innodb_sync_array_size": {
+    "default": 1,
+    "dynamic": "No",
+    "max": 1024,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the size of the mutex/lock wait array. Increasing the value splits the internal data structure used to coordinate threads, for higher concurrency in workloads with large numbers of waiting threads. This setting must be configured when the MySQL instance is starting up, and cannot be changed afterward. Increasing the value is recommended for workloads that frequently produce a large number of waiting threads, typically greater than 768.",
+    "rank": 102
+  },
+  "innodb_api_disable_rowlock": {
+    "default": "OFF",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Use this option to disable row locks when InnoDB memcached performs DML operations. By default, innodb_api_disable_rowlock is disabled, which means that memcached requests row locks for get and set operations. When innodb_api_disable_rowlock is enabled, memcached requests a table lock instead of row locks. innodb_api_disable_rowlock is not dynamic. It must be specified on the mysqld command line or entered in the MySQL configuration file. Configuration takes effect when the plugin is installed, which occurs when the MySQL server is started. For more information, see Section 14.21.5.4, “Controlling Transactional Behavior of the InnoDB memcached Plugin”.",
+    "rank": 104
+  },
+  "innodb_ft_cache_size": {
+    "default": 8000000,
+    "dynamic": "No",
+    "max": 80000000,
+    "min": 1600000,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The memory allocated, in bytes, for the InnoDB FULLTEXT search index cache, which holds a parsed document in memory while creating an InnoDB FULLTEXT index. Index inserts and updates are only committed to disk when the innodb_ft_cache_size size limit is reached. innodb_ft_cache_size defines the cache size on a per table basis. To set a global limit for all tables, see innodb_ft_total_cache_size . For more information, see InnoDB Full-Text Index Cache.",
+    "rank": 108
+  },
+  "innodb_cmp_per_index_enabled": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Enables per-index compression-related statistics in the Information Schema INNODB_CMP_PER_INDEX table. Because these statistics can be expensive to gather, only enable this option on development, test, or replica instances during performance tuning related to InnoDB compressed tables. For more information, see Section 24.4.7, “The INFORMATION_SCHEMA INNODB_CMP_PER_INDEX and INNODB_CMP_PER_INDEX_RESET Tables”, and Section 14.9.1.4, “Monitoring InnoDB Table Compression at Runtime”.",
+    "rank": 111
+  },
+  "innodb_use_native_aio": {
+    "default": "ON",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies whether to use the Linux asynchronous I/O subsystem. This variable applies to Linux systems only, and cannot be changed while the server is running. Normally, you do not need to configure this option, because it is enabled by default. The asynchronous I/O capability that InnoDB has on Windows systems is available on Linux systems. (Other Unix-like systems continue to use synchronous I/O calls.) This feature improves the scalability of heavily I/O-bound systems, which typically show many pending reads/writes in SHOW ENGINE INNODB STATUS\\G output. Running with a large number of InnoDB I/O threads, and especially running multiple such instances on the same server machine, can exceed capacity limits on Linux systems. In this case, you may receive the following error: You can typically address this error by writing a higher limit to /proc/sys/fs/aio-max-nr. However, if a problem with the asynchronous I/O subsystem in the OS prevents InnoDB from starting, you can start the server with innodb_use_native_aio=0 . This option may also be disabled automatically during startup if InnoDB detects a potential problem such as a combination of tmpdir location, tmpfs file system, and Linux kernel that does not support AIO on tmpfs. For more information, see Section 14.8.7, “Using Asynchronous I/O on Linux”.",
+    "rank": 112
+  },
+  "innodb_max_purge_lag_delay": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 10000000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Specifies the maximum delay in microseconds for the delay imposed when the innodb_max_purge_lag threshold is exceeded. The specified innodb_max_purge_lag_delay value is an upper limit on the delay period calculated by the innodb_max_purge_lag formula. For more information, see Section 14.8.10, “Purge Configuration”.",
+    "rank": 113
+  },
+  "innodb_log_buffer_size": {
+    "default": 16777216,
+    "dynamic": "No",
+    "max": 4294967295,
+    "min": 262144,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The size in bytes of the buffer that InnoDB uses to write to the log files on disk. The default value changed from 8MB to 16MB with the introduction of 32KB and 64KB innodb_page_size values. A large log buffer enables large transactions to run without the need to write the log to disk before the transactions commit. Thus, if you have transactions that update, insert, or delete many rows, making the log buffer larger saves disk I/O. For related information, see Memory Configuration, and Section 8.5.4, “Optimizing InnoDB Redo Logging”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 114
+  },
+  "innodb_api_enable_mdl": {
+    "default": "OFF",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Locks the table used by the InnoDB memcached plugin, so that it cannot be dropped or altered by DDL through the SQL interface. For more information, see Section 14.21.5.4, “Controlling Transactional Behavior of the InnoDB memcached Plugin”.",
+    "rank": 115
+  },
+  "innodb_file_per_table": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "When innodb_file_per_table is enabled, tables are created in file-per-table tablespaces by default. When disabled, tables are created in the system tablespace by default. For information about file-per-table tablespaces, see Section 14.6.3.2, “File-Per-Table Tablespaces”. For information about the InnoDB system tablespace, see Section 14.6.3.1, “The System Tablespace”. The innodb_file_per_table variable can be configured at runtime using a SET GLOBAL statement, specified on the command line at startup, or specified in an option file. Configuration at runtime requires privileges sufficient to set global system variables (see Section 5.1.8.1, “System Variable Privileges”) and immediately affects the operation of all connections. When a table that resides in a file-per-table tablespace is truncated or dropped, the freed space is returned to the operating system. Truncating or dropping a table that resides in the system tablespace only frees space in the system tablespace. Freed space in the system tablespace can be used again for InnoDB data but is not returned to the operating system, as system tablespace data files never shrink. When innodb_file_per_table is enabled, a table-copying ALTER TABLE operation on a table that resides in the system tablespace implicitly re-creates the table in a file-per-table tablespace. To prevent this from occurring, disable innodb_file_per_table before executing table-copying ALTER TABLE operations on tables that reside in the system tablespace. The innodb_file_per-table setting does not affect the creation of temporary tables. Temporary tables are created in the temporary tablespace. See Section 14.6.3.5, “The Temporary Tablespace”.",
+    "rank": 119
+  },
+  "innodb_ft_num_word_optimize": {
+    "default": 2000,
+    "dynamic": "Yes",
+    "max": 10000,
+    "min": 1000,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Number of words to process during each OPTIMIZE TABLE operation on an InnoDB FULLTEXT index. Because a bulk insert or update operation to a table containing a full-text search index could require substantial index maintenance to incorporate all changes, you might do a series of OPTIMIZE TABLE statements, each picking up where the last left off. For more information, see Section 12.9.6, “Fine-Tuning MySQL Full-Text Search”.",
+    "rank": 130
+  },
+  "innodb_optimize_fulltext_only": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Changes the way OPTIMIZE TABLE operates on InnoDB tables. Intended to be enabled temporarily, during maintenance operations for InnoDB tables with FULLTEXT indexes. By default, OPTIMIZE TABLE reorganizes data in the clustered index of the table. When this option is enabled, OPTIMIZE TABLE skips the reorganization of table data, and instead processes newly added, deleted, and updated token data for InnoDB FULLTEXT indexes. For more information, see Optimizing InnoDB Full-Text Indexes.",
+    "rank": 132
+  },
+  "innodb_log_files_in_group": {
+    "default": 2,
+    "dynamic": "No",
+    "max": 10,
+    "min": 2,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of log files in the log group. InnoDB writes to the files in a circular fashion. The default (and recommended) value is 2. The location of the files is specified by innodb_log_group_home_dir . The combined size of log files ( innodb_log_file_size * innodb_log_files_in_group ) can be up to 512GB. For related information, see Redo Log File Configuration.",
+    "rank": 141
+  },
+  "innodb_max_undo_log_size": {
+    "default": 1073741824,
+    "dynamic": "Yes",
+    "max": 18446700000000000000,
+    "min": 10485760,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines a threshold size for undo tablespaces. If an undo tablespace exceeds the threshold, it can be marked for truncation when innodb_undo_log_truncate is enabled. The default value is 1073741824 bytes (1024 MiB). For more information, see Truncating Undo Tablespaces.",
+    "rank": 142
+  },
+  "innodb_ft_max_token_size": {
+    "default": 84,
+    "dynamic": "No",
+    "max": 84,
+    "min": 10,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Maximum character length of words that are stored in an InnoDB FULLTEXT index. Setting a limit on this value reduces the size of the index, thus speeding up queries, by omitting long keywords or arbitrary collections of letters that are not real words and are not likely to be search terms. For more information, see Section 12.9.6, “Fine-Tuning MySQL Full-Text Search”.",
+    "rank": 143
+  },
+  "innodb_stats_auto_recalc": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Causes InnoDB to automatically recalculate persistent statistics after the data in a table is changed substantially. The threshold value is 10% of the rows in the table. This setting applies to tables created when the innodb_stats_persistent option is enabled. Automatic statistics recalculation may also be configured by specifying STATS_AUTO_RECALC=1 in a CREATE TABLE or ALTER TABLE statement. The amount of data sampled to produce the statistics is controlled by the innodb_stats_persistent_sample_pages variable. For more information, see Section 14.8.11.1, “Configuring Persistent Optimizer Statistics Parameters”.",
+    "rank": 144
+  },
+  "innodb_open_files": {
+    "default": 2000,
+    "dynamic": "No",
+    "max": 655350,
+    "min": 10,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Specifies the maximum number of files that InnoDB can have open at one time. The minimum value is 10. If innodb_file_per_table is disabled, the default value is 300; otherwise, the default value is 300 or the table_open_cache setting, whichever is higher.",
+    "rank": 147
+  },
+  "innodb_stats_include_delete_marked": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "By default, InnoDB reads uncommitted data when calculating statistics. In the case of an uncommitted transaction that deletes rows from a table, InnoDB excludes records that are delete-marked when calculating row estimates and index statistics, which can lead to non-optimal execution plans for other transactions that are operating on the table concurrently using a transaction isolation level other than READ UNCOMMITTED . To avoid this scenario, innodb_stats_include_delete_marked can be enabled to ensure that InnoDB includes delete-marked records when calculating persistent optimizer statistics. When innodb_stats_include_delete_marked is enabled, ANALYZE TABLE considers delete-marked records when recalculating statistics. innodb_stats_include_delete_marked is a global setting that affects all InnoDB tables. It is only applicable to persistent optimizer statistics. For related information, see Section 14.8.11.1, “Configuring Persistent Optimizer Statistics Parameters”.",
+    "rank": 150
+  },
+  "innodb_api_bk_commit_interval": {
+    "default": 5,
+    "dynamic": "Yes",
+    "max": 1073741824,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "How often to auto-commit idle connections that use the InnoDB memcached interface, in seconds. For more information, see Section 14.21.5.4, “Controlling Transactional Behavior of the InnoDB memcached Plugin”.",
+    "rank": 154
+  },
+  "innodb_commit_concurrency": {
+    "default": 0,
+    "dynamic": "Yes",
+    "max": 1000,
+    "min": 0,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The number of threads that can commit at the same time. A value of 0 (the default) permits any number of transactions to commit simultaneously. The value of innodb_commit_concurrency cannot be changed at runtime from zero to nonzero or vice versa. The value can be changed from one nonzero value to another.",
+    "rank": 156
+  },
+  "innodb_stats_on_metadata": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "This option only applies when optimizer statistics are configured to be non-persistent. Optimizer statistics are not persisted to disk when innodb_stats_persistent is disabled or when individual tables are created or altered with STATS_PERSISTENT=0. For more information, see Section 14.8.11.2, “Configuring Non-Persistent Optimizer Statistics Parameters”. When innodb_stats_on_metadata is enabled, InnoDB updates non-persistent statistics when metadata statements such as SHOW TABLE STATUS or when accessing the Information Schema TABLES or STATISTICS tables. (These updates are similar to what happens for ANALYZE TABLE .) When disabled, InnoDB does not update statistics during these operations. Leaving the setting disabled can improve access speed for schemas that have a large number of tables or indexes. It can also improve the stability of execution plans for queries that involve InnoDB tables. To change the setting, issue the statement SET GLOBAL innodb_stats_on_metadata= mode , where mode is either ON or OFF (or 1 or 0). Changing the setting requires privileges sufficient to set global system variables (see Section 5.1.8.1, “System Variable Privileges”) and immediately affects the operation of all connections.",
+    "rank": 157
+  },
+  "innodb_io_capacity": {
+    "default": 200,
+    "dynamic": "Yes",
+    "max": 2000000,
+    "min": 100,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "The innodb_io_capacity variable defines the number of I/O operations per second (IOPS) available to InnoDB background tasks, such as flushing pages from the buffer pool and merging data from the change buffer. For information about configuring the innodb_io_capacity variable, see Section 14.8.8, “Configuring InnoDB I/O Capacity”.",
+    "rank": 159
+  },
+  "innodb_log_compressed_pages": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies whether images of re-compressed pages are written to the redo log. Re-compression may occur when changes are made to compressed data. innodb_log_compressed_pages is enabled by default to prevent corruption that could occur if a different version of the zlib compression algorithm is used during recovery. If you are certain that the zlib version is not subject to change, you can disable innodb_log_compressed_pages to reduce redo log generation for workloads that modify compressed data. To measure the effect of enabling or disabling innodb_log_compressed_pages , compare redo log generation for both settings under the same workload. Options for measuring redo log generation include observing the Log sequence number (LSN) in the LOG section of SHOW ENGINE INNODB STATUS output, or monitoring Innodb_os_log_written status for the number of bytes written to the redo log files. For related information, see Section 14.9.1.6, “Compression for OLTP Workloads”.",
+    "rank": 162
+  },
+  "innodb_undo_log_truncate": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "When enabled, undo tablespaces that exceed the threshold value defined by innodb_max_undo_log_size are marked for truncation. Only undo tablespaces can be truncated. Truncating undo logs that reside in the system tablespace is not supported. For truncation to occur, there must be at least two undo tablespaces and two redo-enabled undo logs configured to use undo tablespaces. This means that innodb_undo_tablespaces must be set to a value equal to or greater than 2, and innodb_rollback_segments must set to a value equal to or greater than 35. The innodb_purge_rseg_truncate_frequency variable can be used to expedite truncation of undo tablespaces. For more information, see Truncating Undo Tablespaces.",
+    "rank": 164
+  },
+  "innodb_flush_log_at_trx_commit": {
+    "default": 1,
+    "dynamic": "Yes",
+    "enum_values": [
+      "0",
+      "1",
+      "2"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Controls the balance between strict ACID compliance for commit operations and higher performance that is possible when commit-related I/O operations are rearranged and done in batches. You can achieve better performance by changing the default value but then you can lose transactions in a crash. For durability and consistency in a replication setup that uses InnoDB with transactions: For information on the combination of settings on a replica that is most resilient to unexpected halts, see Section 16.3.2, “Handling an Unexpected Halt of a Replica”.",
+    "rank": 165
+  },
+  "innodb_adaptive_flushing": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies whether to dynamically adjust the rate of flushing dirty pages in the InnoDB buffer pool based on the workload. Adjusting the flush rate dynamically is intended to avoid bursts of I/O activity. This setting is enabled by default. See Section 14.8.3.5, “Configuring Buffer Pool Flushing” for more information. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+    "rank": 166
+  },
+  "innodb_ft_enable_diag_print": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Whether to enable additional full-text search (FTS) diagnostic output. This option is primarily intended for advanced FTS debugging and is not of interest to most users. Output is printed to the error log and includes information such as:",
+    "rank": 167
+  },
+  "innodb_deadlock_detect": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "This option is used to disable deadlock detection. On high concurrency systems, deadlock detection can cause a slowdown when numerous threads wait for the same lock. At times, it may be more efficient to disable deadlock detection and rely on the innodb_lock_wait_timeout setting for transaction rollback when a deadlock occurs. For related information, see Section 14.7.5.2, “Deadlock Detection”.",
+    "rank": 168
+  },
+  "innodb_print_all_deadlocks": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "When this option is enabled, information about all deadlocks in InnoDB user transactions is recorded in the mysqld error log. Otherwise, you see information about only the last deadlock, using the SHOW ENGINE INNODB STATUS command. An occasional InnoDB deadlock is not necessarily an issue, because InnoDB detects the condition immediately and rolls back one of the transactions automatically. You might use this option to troubleshoot why deadlocks are occurring if an application does not have appropriate error-handling logic to detect the rollback and retry its operation. A large number of deadlocks might indicate the need to restructure transactions that issue DML or SELECT ... FOR UPDATE statements for multiple tables, so that each transaction accesses the tables in the same order, thus avoiding the deadlock condition. For related information, see Section 14.7.5, “Deadlocks in InnoDB”.",
+    "rank": 171
+  },
+  "innodb_flushing_avg_loops": {
+    "default": 30,
+    "dynamic": "Yes",
+    "max": 1000,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Number of iterations for which InnoDB keeps the previously calculated snapshot of the flushing state, controlling how quickly adaptive flushing responds to changing workloads. Increasing the value makes the rate of flush operations change smoothly and gradually as the workload changes. Decreasing the value makes adaptive flushing adjust quickly to workload changes, which can cause spikes in flushing activity if the workload increases and decreases suddenly. For related information, see Section 14.8.3.5, “Configuring Buffer Pool Flushing”.",
+    "rank": 174
+  },
+  "innodb_rollback_segments": {
+    "default": 128,
+    "dynamic": "Yes",
+    "max": 128,
+    "min": 1,
+    "scope": "Global",
+    "type": "integer",
+    "td": null,
+    "p": "Defines the number of rollback segments used by InnoDB for transactions that generate undo records. The number of transactions that each rollback segment supports depends on the InnoDB page size and the number of undo logs assigned to each transaction. For more information, see Section 14.6.7, “Undo Logs”. One rollback segment is always assigned to the system tablespace, and 32 rollback segments are reserved for use by temporary tables and reside in the temporary tablespace (ibtmp1). To allocate additional rollback segment, innodb_rollback_segments must be set to a value greater than 33. If you configure separate undo tablespaces, the rollback segment in the system tablespace is rendered inactive. When innodb_rollback_segments is set to 32 or less, InnoDB assigns one rollback segment to the system tablespace and 32 to the temporary tablespace. When innodb_rollback_segments is set to a value greater than 32, InnoDB assigns one rollback segment to the system tablespace, 32 to the temporary tablespace, and additional rollback segments to undo tablespaces, if present. If undo tablespaces are not present, additional rollback segments are assigned to the system tablespace. Although you can increase or decrease the number of rollback segments used by InnoDB, the number of rollback segments physically present in the system never decreases. Thus, you might start with a low value and gradually increase it to avoid allocating rollback segments that are not required. The innodb_rollback_segments default and maximum value is 128. For related information, see Section 14.3, “InnoDB Multi-Versioning”. For information about configuring separate undo tablespaces, see Section 14.6.3.4, “Undo Tablespaces”.",
+    "rank": 175
+  },
+  "innodb_default_row_format": {
+    "default": "DYNAMIC",
+    "dynamic": "Yes",
+    "enum_values": [
+      "DYNAMIC",
+      "COMPACT",
+      "REDUNDANT"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "The innodb_default_row_format option defines the default row format for InnoDB tables and user-created temporary tables. The default setting is DYNAMIC. Other permitted values are COMPACT and REDUNDANT. The COMPRESSED row format, which is not supported for use in the system tablespace, cannot be defined as the default. Newly created tables use the row format defined by innodb_default_row_format when a ROW_FORMAT option is not specified explicitly or when ROW_FORMAT=DEFAULT is used. When a ROW_FORMAT option is not specified explicitly or when ROW_FORMAT=DEFAULT is used, any operation that rebuilds a table also silently changes the row format of the table to the format defined by innodb_default_row_format . For more information, see Defining the Row Format of a Table. Internal InnoDB temporary tables created by the server to process queries use the DYNAMIC row format, regardless of the innodb_default_row_format setting.",
+    "rank": 176
+  },
+  "innodb_stats_persistent": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies whether InnoDB index statistics are persisted to disk. Otherwise, statistics may be recalculated frequently which can lead to variations in query execution plans. This setting is stored with each table when the table is created. You can set innodb_stats_persistent at the global level before creating a table, or use the STATS_PERSISTENT clause of the CREATE TABLE and ALTER TABLE statements to override the system-wide setting and configure persistent statistics for individual tables. For more information, see Section 14.8.11.1, “Configuring Persistent Optimizer Statistics Parameters”.",
+    "rank": 177
+  },
+  "innodb_disable_sort_file_cache": {
+    "default": "OFF",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Disables the operating system file system cache for merge-sort temporary files. The effect is to open such files with the equivalent of O_DIRECT.",
+    "rank": 182
+  },
+  "innodb_api_enable_binlog": {
+    "default": "OFF",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "Lets you use the InnoDB memcached plugin with the MySQL binary log. For more information, see Enabling the InnoDB memcached Binary Log.",
+    "rank": 186
+  },
+  "innodb_rollback_on_timeout": {
+    "default": "OFF",
+    "dynamic": "No",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "InnoDB rolls back only the last statement on a transaction timeout by default. If --innodb-rollback-on-timeout is specified, a transaction timeout causes InnoDB to abort and roll back the entire transaction. For more information, see Section 14.22.4, “InnoDB Error Handling”.",
+    "rank": 188
+  },
+  "innodb_ft_enable_stopword": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global, Session",
+    "type": "enum",
+    "td": null,
+    "p": "Specifies that a set of stopwords is associated with an InnoDB FULLTEXT index at the time the index is created. If the innodb_ft_user_stopword_table option is set, the stopwords are taken from that table. Else, if the innodb_ft_server_stopword_table option is set, the stopwords are taken from that table. Otherwise, a built-in set of default stopwords is used. For more information, see Section 12.9.4, “Full-Text Stopwords”.",
+    "rank": 190
+  },
+  "innodb_flush_sync": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "The innodb_flush_sync variable, which is enabled by default, causes the innodb_io_capacity setting to be ignored during bursts of I/O activity that occur at checkpoints. To adhere to the I/O rate defined by the innodb_io_capacity setting, disable innodb_flush_sync . For information about configuring the innodb_flush_sync variable, see Section 14.8.8, “Configuring InnoDB I/O Capacity”.",
+    "rank": 194
+  },
+  "innodb_stats_method": {
+    "default": "nulls_equal",
+    "dynamic": "Yes",
+    "enum_values": [
+      "nulls_equal",
+      "nulls_unequal",
+      "nulls_ignored"
+    ],
+    "scope": "Global",
+    "type": "enum",
+    "td": null,
+    "p": "How the server treats NULL values when collecting statistics about the distribution of index values for InnoDB tables. Permitted values are nulls_equal, nulls_unequal, and nulls_ignored. For nulls_equal, all NULL index values are considered equal and form a single value group with a size equal to the number of NULL values. For nulls_unequal, NULL values are considered unequal, and each NULL forms a distinct value group of size 1. For nulls_ignored, NULL values are ignored. The method used to generate table statistics influences how the optimizer chooses indexes for query execution, as described in Section 8.3.7, “InnoDB and MyISAM Index Statistics Collection”.",
+    "rank": 195
+  },
+  "innodb_strict_mode": {
+    "default": "ON",
+    "dynamic": "Yes",
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "scope": "Global, Session",
+    "type": "enum",
+    "td": null,
+    "p": "When innodb_strict_mode is enabled, InnoDB returns errors rather than warnings when checking for invalid or incompatible table options. It checks that KEY_BLOCK_SIZE, ROW_FORMAT, DATA DIRECTORY, TEMPORARY, and TABLESPACE options are compatible with each other and other settings. innodb_strict_mode=ON also enables a row size check when creating or altering a table, to prevent INSERT or UPDATE from failing due to the record being too large for the selected page size. You can enable or disable innodb_strict_mode on the command line when starting mysqld, or in a MySQL configuration file. You can also enable or disable innodb_strict_mode at runtime with the statement SET [GLOBAL|SESSION] innodb_strict_mode= mode , where mode is either ON or OFF. Changing the GLOBAL setting requires privileges sufficient to set global system variables (see Section 5.1.8.1, “System Variable Privileges”) and affects the operation of all clients that subsequently connect. Any client can change the SESSION setting for innodb_strict_mode , and the setting affects only that client.",
+    "rank": 196
+  }
+}

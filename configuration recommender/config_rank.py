@@ -13,11 +13,24 @@ with open(file_path, "r") as f:
 #print(DEFAULT_CONFIG)
 
 
+def _default_value_for_knob(meta):
+    value = meta.get('min_value')
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.lower() == 'null':
+            return None
+        try:
+            return json.loads(stripped)
+        except json.JSONDecodeError:
+            return stripped.strip('"')
+    return value
+
+
 def process_config_item(item):
     processed = {}
 
     for key in DEFAULT_CONFIG:
-        processed[key] = item.get(key, DEFAULT_CONFIG[key])
+        processed[key] = item.get(key, _default_value_for_knob(DEFAULT_CONFIG[key]))
     return processed
 
 process_config_item
@@ -25,7 +38,7 @@ process_config_item
 def sort_list(json_strings):
     raw_data = [json.loads(s) for s in json_strings]
     processed_data = [
-        {key: item.get(key, DEFAULT_CONFIG[key]) for key in DEFAULT_CONFIG}
+        {key: item.get(key, _default_value_for_knob(DEFAULT_CONFIG[key])) for key in DEFAULT_CONFIG}
         for item in raw_data
     ]
 
@@ -69,5 +82,5 @@ def sort_list(json_strings):
     sorted_pairs = sorted(zip(sum_ranks, processed_data), key=lambda x: x[0])
     sorted_processed_data = [item for _, item in sorted_pairs]
     
-    k = config['configuration recommender']['top_k']
+    k = int(config['configuration recommender']['top_k'])
     return sorted_processed_data[:k]

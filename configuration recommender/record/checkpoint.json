@@ -1,0 +1,33 @@
+{
+  "iteration": 0,
+  "best_knob": {
+    "table_open_cache_instances": 16,
+    "innodb_adaptive_flushing_lwm": 10,
+    "innodb_io_capacity_max": 4000,
+    "innodb_thread_concurrency": 0,
+    "innodb_concurrency_tickets": 5000,
+    "sort_buffer_size": 4194304,
+    "innodb_buffer_pool_size": 8589934592,
+    "innodb_flush_neighbors": 1,
+    "tmp_table_size": 134217728,
+    "innodb_sync_spin_loops": 30,
+    "innodb_purge_threads": 4,
+    "innodb_log_file_size": 50331648,
+    "innodb_write_io_threads": 16,
+    "thread_cache_size": 9,
+    "innodb_max_dirty_pages_pct": 75,
+    "innodb_adaptive_hash_index_parts": 8,
+    "innodb_page_cleaners": 4,
+    "table_open_cache": 4000,
+    "innodb_read_io_threads": 16,
+    "innodb_lru_scan_depth": 1024
+  },
+  "best_metric": [],
+  "best_throughput": 0,
+  "result": null,
+  "result_index": 0,
+  "data_list": [],
+  "saved_at": 1783925377,
+  "save_reason": "exception",
+  "last_error": "ReadTimeout: HTTPConnectionPool(host='127.0.0.1', port=4000): Read timed out. (read timeout=120)"
+}

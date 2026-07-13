@@ -8,9 +8,9 @@ output_file=./workload analyzer/workload_features
 
 [knob selector]
 #LLM configuration
-api_key=sk-ws-H.RXPDHXH.PJIt.MEQCICToZbVDl8fvf_UuUosmehC2w1zIwJSYqnWoOw2Ot1jVAiBZvgsw-d8MXA-6xIdXetGpK1m3uL9L6YdjSXxWXP9Hvw
-base_url=https://llm-hemytdofcdo4f00h.cn-beijing.maas.aliyuncs.com/apps/anthropic
-model=qwen3.5-plus-2026-04-20
+api_key=sk-xcEjKeeOmMaByDFWCot7r1GFCtWnXcyhRJ7NUN6RDfNSST37
+base_url=https://www.dmxapi.cn/v1
+model=gpt-5.4
 #candidata knobs file
 candidate_knobs=./knob selector/candidate_knobs
 #the number of selected parameters
@@ -26,13 +26,13 @@ output_file=./knob selector/selected_knobs
 #candidata knobs with detailed description
 knob_details=./range pruner/knob_details.json
 #LLM configuration
-model=qwen3.5-plus-2026-04-20
+model=gpt-5.4
 #knobs with pruned range
 output_file=./range pruner/pruned_knobs
 
 [configuration recommender]
 #LLM configuration
-model=qwen3.5-plus-2026-04-20
+model=gpt-5.4
 #tree-search configuration
 top_k=2
 node_count=3
@@ -59,6 +59,3 @@ iteration=100
 #benchmarks (TPCC,TPCDS,SYSBENCH,JOB)
 benchmark=SYSBENCH
 
-# SQL query directories for JOB / TPCDS benchmarks
-job_query_dir=./benchmark_queries/job
-tpcds_query_dir=./benchmark_queries/tpcds

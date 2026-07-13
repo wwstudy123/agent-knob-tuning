@@ -1,0 +1,12 @@
+.github/
+
+__pycache__/
+
+*.md
+!README.md
+
+important_chats/
+
+log/
+configuration recommender/log/sysbench_log/
+configuration recommender/log/mysql_log/
