@@ -12,6 +12,11 @@ from
 	part
 where
 	l_partkey = p_partkey
+<<<<<<< HEAD
 	and l_shipdate >= date '1993-08-01'
 	and l_shipdate < date '1993-08-01' + interval '1' month;
 limit -1;
+=======
+	and l_shipdate >= '1993-08-01'
+	and l_shipdate < '1993-08-01' + interval 1 month;
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

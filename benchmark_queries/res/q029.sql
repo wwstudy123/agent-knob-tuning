@@ -1,0 +1,1 @@
+SELECT sbtest20.pad FROM sbtest30,sbtest20 WHERE sbtest30.id = sbtest20.id and sbtest20.k < 740242 and sbtest20.c = '9YlKr00UAhbyFs3a8V8psvcBVn9HYLdinGRROb8hRdBC52Um1bgGCQgIftluuziwqWf9TigkautCmWXrkCToBYhKY0NQF9CkosbURpCGDgN4PwWQAoAuSegn' LIMIT 10;

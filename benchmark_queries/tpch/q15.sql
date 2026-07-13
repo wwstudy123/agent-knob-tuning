@@ -7,8 +7,13 @@ create view revenue0 (supplier_no, total_revenue) as
 	from
 		lineitem
 	where
+<<<<<<< HEAD
 		l_shipdate >= date '1996-10-01'
 		and l_shipdate < date '1996-10-01' + interval '3' month
+=======
+		l_shipdate >= '1996-10-01'
+		and l_shipdate < '1996-10-01' + interval 3 month
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 	group by
 		l_suppkey;
 
@@ -34,4 +39,7 @@ order by
 	s_suppkey;
 
 drop view revenue0;
+<<<<<<< HEAD
 limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

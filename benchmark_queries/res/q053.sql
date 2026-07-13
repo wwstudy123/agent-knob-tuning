@@ -1,0 +1,1 @@
+SELECT max(sbtest46.id) as maximum_value_id FROM sbtest27,sbtest46 WHERE sbtest27.id = sbtest46.id and sbtest27.c = 'ZB1HgTg1vziEiOgwA6iC7IhrNi2qDN1bkIrQISuVig7FM5S9AYHMOXZt7ybvLWNNT6DZC2lgqv7YnPyq6EZURZ6TGkqdRyHy2oOXrli92D53IMW47rLGfp2r' LIMIT 10;

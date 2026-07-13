@@ -1,0 +1,1 @@
+SELECT pad FROM sbtest47 WHERE sbtest47.id = 774895 or sbtest47.c = 'pGmCdaWahXVURsElEoCUSHiNY3NpAWKSyVaiG1xxK78BsxyGvBxzS5UQghbOKlMI9HGcfN2lKZTpNg4tE8zGiCce6SPEdtc59704tfLe5VWM1PQhlxWQgSOH' or sbtest47.pad = 'fEUa445lUdO6IXH8M9tnpMwugtCGd9QPNZk3eXgqryahnlnaFTg6YGk1Qpoe' LIMIT 10;

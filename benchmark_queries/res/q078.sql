@@ -1,0 +1,1 @@
+SELECT pad,k,count(c) as count_value_c FROM sbtest31 WHERE sbtest31.c = 'Xk45alpZezyxG0OUIGDRqh4AOigcPwzcg6694DpXuVVU5ot8Id68Xa8BmlKvzAg1oqu49xoGS2ZsGd7enA4BdKZGAbcsoWDq9oaYA35mSDG92O6ukykrcsLF' or sbtest31.id = 784618 GROUP BY pad,k LIMIT 10;

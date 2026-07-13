@@ -1,0 +1,1 @@
+SELECT max(id) as maximum_value_id FROM sbtest31 WHERE sbtest31.c = 'uBunt3hF5nB1DWGRXfKkK6I7mBX5MsNR7d28fZ089Udso5E9cDTyYPB8pAxu9o4Y8Iwq9ZFv1ZWGUsfVgUNwIqPbn0RLBzMrNSC4n7dkTyA2NDUYqBAqqNxH';

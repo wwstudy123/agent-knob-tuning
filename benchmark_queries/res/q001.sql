@@ -1,0 +1,1 @@
+SELECT pad,id,min(id) as minimum_value_id FROM sbtest14 WHERE sbtest14.id > 681720 or sbtest14.c = 'PisFZaWBQG5g0VZDEEMlkHSHTfawMhyQiwagIRoG7SxcX84RplBOMsAnGFtaxrUSwLTrOmL9Dt08NgDzuAxt7BnhIvnueOC5WXYOG0cv77RlPItlBeGb4yHr' GROUP BY pad,id LIMIT 10;

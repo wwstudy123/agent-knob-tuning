@@ -1,0 +1,1 @@
+SELECT count(sbtest21.c) as count_value_c,count(sbtest21.pad) as count_value_pad,count(sbtest30.pad) as count_value_pad FROM sbtest30,sbtest21 WHERE sbtest30.id = sbtest21.id and sbtest21.pad = 'kmzepOOKpcXGbGqumwVzdehhcawFko2MH4048cxUWUV7qfVAo7m2uP1vL4Oa' LIMIT 10;

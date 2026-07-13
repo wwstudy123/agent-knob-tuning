@@ -1,0 +1,1 @@
+SELECT avg(sbtest42.id) as average_value_id,count(sbtest18.c) as count_value_c,count(sbtest42.pad) as count_value_pad FROM sbtest42,sbtest18 WHERE sbtest42.id = sbtest18.id and sbtest42.k = 321312 LIMIT 10;

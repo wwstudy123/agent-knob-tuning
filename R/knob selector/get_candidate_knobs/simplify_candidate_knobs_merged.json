@@ -1,0 +1,568 @@
+{
+  "innodb_thread_concurrency": {
+    "max": 1000,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines the maximum number of threads permitted inside of InnoDB."
+  },
+  "innodb_doublewrite": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "When enabled (the default), InnoDB stores all data twice, first to the doublewrite buffer, then to the actual data files."
+  },
+  "innodb_random_read_ahead": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Enables the random read-ahead technique for optimizing InnoDB I/O."
+  },
+  "innodb_buffer_pool_size": {
+    "max": 11811160064,
+    "min": 5368709120, 
+    "type": "integer",
+    "description": "The size in bytes of the buffer pool, the memory area where InnoDB caches table and index data."
+  },
+  "innodb_max_dirty_pages_pct_lwm": {
+    "max": 99,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines a low water mark representing the percentage of dirty pages at which preflushing is enabled to control the dirty page ratio."
+  },
+  "innodb_purge_threads": {
+    "max": 32,
+    "min": 1,
+    "type": "integer",
+    "description": "The number of background threads devoted to the InnoDB purge operation."
+  },
+  "innodb_compression_failure_threshold_pct": {
+    "max": 100,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines the compression failure rate threshold for a table, as a percentage, at which point MySQL begins adding padding within compressed pages to avoid expensive compression failures."
+  },
+  "innodb_change_buffering": {
+    "enum_values": [
+      "none",
+      "inserts",
+      "deletes",
+      "changes",
+      "purges",
+      "all"
+    ],
+    "type": "enum",
+    "description": "Whether InnoDB performs change buffering, an optimization that delays write operations to secondary indexes so that the I/O operations can be performed sequentially."
+  },
+  "innodb_online_alter_log_max_size": {
+    "max": 18446700000000000000,
+    "min": 65536,
+    "type": "integer",
+    "description": "Specifies an upper limit in bytes on the size of the temporary log files used during online DDL operations for InnoDB tables."
+  },
+  "innodb_purge_batch_size": {
+    "max": 5000,
+    "min": 1,
+    "type": "integer",
+    "description": "Defines the number of undo log pages that purge parses and processes in one batch from the history list."
+  },
+  "innodb_lru_scan_depth": {
+    "max": 10240,
+    "min": 100,
+    "type": "integer",
+    "description": "A parameter that influences the algorithms and heuristics for the flush operation for the InnoDB buffer pool."
+  },
+  "innodb_max_dirty_pages_pct": {
+    "max": 99,
+    "min": 0,
+    "type": "integer",
+    "description": "InnoDB tries to flush data from the buffer pool so that the percentage of dirty pages does not exceed this value."
+  },
+  "innodb_write_io_threads": {
+    "max": 64,
+    "min": 1,
+    "type": "integer",
+    "description": "The number of I/O threads for write operations in InnoDB."
+  },
+  "innodb_stats_transient_sample_pages": {
+    "max": 100,
+    "min": 1,
+    "type": "integer",
+    "description": "The number of index pages to sample when estimating cardinality and other statistics for an indexed column, such as those calculated by ANALYZE TABLE ."
+  },
+  "innodb_spin_wait_delay": {
+    "max": 6000,
+    "min": 0,
+    "type": "integer",
+    "description": "The maximum delay between polls for a spin lock."
+  },
+  "innodb_compression_pad_pct_max": {
+    "max": 75,
+    "min": 0,
+    "type": "integer",
+    "description": "Specifies the maximum percentage that can be reserved as free space within each compressed page, allowing room to reorganize the data and modification log within the page when a compressed table or index is updated and the data might be recompressed."
+  },
+  "innodb_read_ahead_threshold": {
+    "max": 64,
+    "min": 0,
+    "type": "integer",
+    "description": "Controls the sensitivity of linear read-ahead that InnoDB uses to prefetch pages into the buffer pool."
+  },
+  "innodb_concurrency_tickets": {
+    "max": 4294967295,
+    "min": 1,
+    "type": "integer",
+    "description": "Determines the number of threads that can enter InnoDB concurrently."
+  },
+  "innodb_log_write_ahead_size": {
+    "max": 16384,
+    "min": 512,
+    "type": "integer",
+    "description": "Defines the write-ahead block size for the redo log, in bytes."
+  },
+  "innodb_change_buffer_max_size": {
+    "max": 50,
+    "min": 0,
+    "type": "integer",
+    "description": "Maximum size for the InnoDB change buffer, as a percentage of the total size of the buffer pool."
+  },
+  "innodb_autoextend_increment": {
+    "max": 1000,
+    "min": 1,
+    "type": "integer",
+    "description": "The increment size (in megabytes) for extending the size of an auto-extending InnoDB system tablespace file when it becomes full."
+  },
+  "innodb_sort_buffer_size": {
+    "max": 67108864,
+    "min": 65536,
+    "type": "integer",
+    "description": "This variable defines: For related information, see Section 14."
+  },
+  "innodb_adaptive_max_sleep_delay": {
+    "max": 1000000,
+    "min": 0,
+    "type": "integer",
+    "description": "Permits InnoDB to automatically adjust the value of innodb_thread_sleep_delay up or down according to the current workload."
+  },
+  "innodb_ft_total_cache_size": {
+    "max": 1600000000,
+    "min": 32000000,
+    "type": "integer",
+    "description": "The total memory allocated, in bytes, for the InnoDB full-text search index cache for all tables."
+  },
+  "innodb_flush_log_at_timeout": {
+    "max": 2700,
+    "min": 1,
+    "type": "integer",
+    "description": "Write and flush the logs every N seconds."
+  },
+  "innodb_ft_sort_pll_degree": {
+    "max": 16,
+    "min": 1,
+    "type": "integer",
+    "description": "Number of threads used in parallel to index and tokenize text in an InnoDB FULLTEXT index when building a search index."
+  },
+  "innodb_ft_min_token_size": {
+    "max": 16,
+    "min": 0,
+    "type": "integer",
+    "description": "Minimum length of words that are stored in an InnoDB FULLTEXT index."
+  },
+  "innodb_read_io_threads": {
+    "max": 64,
+    "min": 1,
+    "type": "integer",
+    "description": "The number of I/O threads for read operations in InnoDB."
+  },
+  "innodb_table_locks": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "If autocommit = 0 , InnoDB honors LOCK TABLES ; MySQL does not return from LOCK TABLES ."
+  },
+  "innodb_ft_result_cache_limit": {
+    "max": 4294967295,
+    "min": 1000000,
+    "type": "integer",
+    "description": "The InnoDB full-text search query result cache limit (defined in bytes) per full-text search query or per thread."
+  },
+  "innodb_purge_rseg_truncate_frequency": {
+    "max": 128,
+    "min": 1,
+    "type": "integer",
+    "description": "Defines the frequency with which the purge system frees rollback segments in terms of the number of times that purge is invoked."
+  },
+  "innodb_thread_sleep_delay": {
+    "max": 1000000,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines how long InnoDB threads sleep before joining the InnoDB queue, in microseconds."
+  },
+  "innodb_adaptive_flushing_lwm": {
+    "max": 70,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines the low water mark representing percentage of redo log capacity at which adaptive flushing is enabled."
+  },
+  "innodb_io_capacity_max": {
+    "max": 40000,
+    "min": 100,
+    "type": "integer",
+    "description": "If flushing activity falls behind, InnoDB can flush more aggressively, at a higher rate of I/O operations per second (IOPS) than defined by the innodb_io_capacity variable."
+  },
+  "innodb_max_purge_lag": {
+    "max": 4294967295,
+    "min": 0,
+    "type": "integer",
+    "description": "Defines the desired maximum purge lag."
+  },
+  "innodb_log_file_size": {
+    "max": 1073741824,
+    "min": 4194304,
+    "type": "integer",
+    "description": "The size in bytes of each log file in a log group."
+  },
+  "innodb_flush_neighbors": {
+    "enum_values": [
+      "0",
+      "1",
+      "2"
+    ],
+    "type": "enum",
+    "description": "Specifies whether flushing a page from the InnoDB buffer pool also flushes other dirty pages in the same extent."
+  },
+  "innodb_fill_factor": {
+    "max": 100,
+    "min": 10,
+    "type": "integer",
+    "description": "InnoDB performs a bulk load when creating or rebuilding indexes."
+  },
+  "innodb_compression_level": {
+    "max": 9,
+    "min": 0,
+    "type": "integer",
+    "description": "Specifies the level of zlib compression to use for InnoDB compressed tables and indexes."
+  },
+  "innodb_old_blocks_time": {
+    "max": 4294967295,
+    "min": 0,
+    "type": "integer",
+    "description": "Non-zero values protect against the buffer pool being filled by data that is referenced only for a brief period, such as during a full table scan."
+  },
+  "innodb_replication_delay": {
+    "max": 10000,
+    "min": 0,
+    "type": "integer",
+    "description": "The replication thread delay in milliseconds on a replica server if innodb_thread_concurrency is reached."
+  },
+  "innodb_page_cleaners": {
+    "max": 8,
+    "min": 1,
+    "type": "integer",
+    "description": "The number of page cleaner threads that flush dirty pages from buffer pool instances."
+  },
+  "innodb_sync_spin_loops": {
+    "max": 30000,
+    "min": 0,
+    "type": "integer",
+    "description": "The number of times a thread waits for an InnoDB mutex to be freed before the thread is suspended."
+  },
+  "innodb_adaptive_hash_index_parts": {
+    "max": 512,
+    "min": 1,
+    "type": "integer",
+    "description": "Partitions the adaptive hash index search system."
+  },
+  "innodb_sync_array_size": {
+    "max": 1024,
+    "min": 1,
+    "type": "integer",
+    "description": "Defines the size of the mutex/lock wait array."
+  },
+  "innodb_api_disable_rowlock": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Use this option to disable row locks when InnoDB memcached performs DML operations."
+  },
+  "innodb_ft_cache_size": {
+    "max": 80000000,
+    "min": 1600000,
+    "type": "integer",
+    "description": "The memory allocated, in bytes, for the InnoDB FULLTEXT search index cache, which holds a parsed document in memory while creating an InnoDB FULLTEXT index."
+  },
+  "innodb_cmp_per_index_enabled": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Enables per-index compression-related statistics in the Information Schema INNODB_CMP_PER_INDEX table."
+  },
+  "innodb_use_native_aio": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Specifies whether to use the Linux asynchronous I/O subsystem."
+  },
+  "innodb_max_purge_lag_delay": {
+    "max": 10000000,
+    "min": 0,
+    "type": "integer",
+    "description": "Specifies the maximum delay in microseconds for the delay imposed when the innodb_max_purge_lag threshold is exceeded."
+  },
+  "innodb_log_buffer_size": {
+    "max": 4294967295,
+    "min": 262144,
+    "type": "integer",
+    "description": "The size in bytes of the buffer that InnoDB uses to write to the log files on disk."
+  },
+  "innodb_api_enable_mdl": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Locks the table used by the InnoDB memcached plugin, so that it cannot be dropped or altered by DDL through the SQL interface."
+  },
+  "innodb_file_per_table": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "When innodb_file_per_table is enabled, tables are created in file-per-table tablespaces by default."
+  },
+  "innodb_ft_num_word_optimize": {
+    "max": 10000,
+    "min": 1000,
+    "type": "integer",
+    "description": "Number of words to process during each OPTIMIZE TABLE operation on an InnoDB FULLTEXT index."
+  },
+  "innodb_optimize_fulltext_only": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Changes the way OPTIMIZE TABLE operates on InnoDB tables."
+  },
+  "innodb_log_files_in_group": {
+    "max": 10,
+    "min": 2,
+    "type": "integer",
+    "description": "The number of log files in the log group."
+  },
+  "innodb_max_undo_log_size": {
+    "max": 18446700000000000000,
+    "min": 10485760,
+    "type": "integer",
+    "description": "Defines a threshold size for undo tablespaces."
+  },
+  "innodb_ft_max_token_size": {
+    "max": 84,
+    "min": 10,
+    "type": "integer",
+    "description": "Maximum character length of words that are stored in an InnoDB FULLTEXT index."
+  },
+  "innodb_stats_auto_recalc": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Causes InnoDB to automatically recalculate persistent statistics after the data in a table is changed substantially."
+  },
+  "innodb_open_files": {
+    "max": 655350,
+    "min": 10,
+    "type": "integer",
+    "description": "Specifies the maximum number of files that InnoDB can have open at one time."
+  },
+  "innodb_stats_include_delete_marked": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "By default, InnoDB reads uncommitted data when calculating statistics."
+  },
+  "innodb_api_bk_commit_interval": {
+    "max": 1073741824,
+    "min": 1,
+    "type": "integer",
+    "description": "How often to auto-commit idle connections that use the InnoDB memcached interface, in seconds."
+  },
+  "innodb_commit_concurrency": {
+    "max": 1000,
+    "min": 0,
+    "type": "integer",
+    "description": "The number of threads that can commit at the same time."
+  },
+  "innodb_stats_on_metadata": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "This option only applies when optimizer statistics are configured to be non-persistent."
+  },
+  "innodb_io_capacity": {
+    "max": 2000000,
+    "min": 100,
+    "type": "integer",
+    "description": "The innodb_io_capacity variable defines the number of I/O operations per second (IOPS) available to InnoDB background tasks, such as flushing pages from the buffer pool and merging data from the change buffer."
+  },
+  "innodb_log_compressed_pages": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Specifies whether images of re-compressed pages are written to the redo log."
+  },
+  "innodb_undo_log_truncate": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "When enabled, undo tablespaces that exceed the threshold value defined by innodb_max_undo_log_size are marked for truncation."
+  },
+  "innodb_flush_log_at_trx_commit": {
+    "enum_values": [
+      "0",
+      "1",
+      "2"
+    ],
+    "type": "enum",
+    "description": "Controls the balance between strict ACID compliance for commit operations and higher performance that is possible when commit-related I/O operations are rearranged and done in batches."
+  },
+  "innodb_adaptive_flushing": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Specifies whether to dynamically adjust the rate of flushing dirty pages in the InnoDB buffer pool based on the workload."
+  },
+  "innodb_ft_enable_diag_print": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Whether to enable additional full-text search (FTS) diagnostic output."
+  },
+  "innodb_deadlock_detect": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "This option is used to disable deadlock detection."
+  },
+  "innodb_print_all_deadlocks": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "When this option is enabled, information about all deadlocks in InnoDB user transactions is recorded in the mysqld error log."
+  },
+  "innodb_flushing_avg_loops": {
+    "max": 1000,
+    "min": 1,
+    "type": "integer",
+    "description": "Number of iterations for which InnoDB keeps the previously calculated snapshot of the flushing state, controlling how quickly adaptive flushing responds to changing workloads."
+  },
+  "innodb_rollback_segments": {
+    "max": 128,
+    "min": 1,
+    "type": "integer",
+    "description": "Defines the number of rollback segments used by InnoDB for transactions that generate undo records."
+  },
+  "innodb_default_row_format": {
+    "enum_values": [
+      "DYNAMIC",
+      "COMPACT",
+      "REDUNDANT"
+    ],
+    "type": "enum",
+    "description": "The innodb_default_row_format option defines the default row format for InnoDB tables and user-created temporary tables."
+  },
+  "innodb_stats_persistent": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Specifies whether InnoDB index statistics are persisted to disk."
+  },
+  "innodb_disable_sort_file_cache": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Disables the operating system file system cache for merge-sort temporary files."
+  },
+  "innodb_api_enable_binlog": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Lets you use the InnoDB memcached plugin with the MySQL binary log."
+  },
+  "innodb_rollback_on_timeout": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "InnoDB rolls back only the last statement on a transaction timeout by default."
+  },
+  "innodb_ft_enable_stopword": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "Specifies that a set of stopwords is associated with an InnoDB FULLTEXT index at the time the index is created."
+  },
+  "innodb_flush_sync": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "The innodb_flush_sync variable, which is enabled by default, causes the innodb_io_capacity setting to be ignored during bursts of I/O activity that occur at checkpoints."
+  },
+  "innodb_stats_method": {
+    "enum_values": [
+      "nulls_equal",
+      "nulls_unequal",
+      "nulls_ignored"
+    ],
+    "type": "enum",
+    "description": "How the server treats NULL values when collecting statistics about the distribution of index values for InnoDB tables."
+  },
+  "innodb_strict_mode": {
+    "enum_values": [
+      "ON",
+      "OFF"
+    ],
+    "type": "enum",
+    "description": "When innodb_strict_mode is enabled, InnoDB returns errors rather than warnings when checking for invalid or incompatible table options."
+  }
+}

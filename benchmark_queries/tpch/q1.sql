@@ -15,11 +15,18 @@ select
 from
 	lineitem
 where
+<<<<<<< HEAD
 	l_shipdate <= date '1998-12-01' - interval '87' day (3)
+=======
+	l_shipdate <= '1998-12-01' - interval 87 day
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 group by
 	l_returnflag,
 	l_linestatus
 order by
 	l_returnflag,
 	l_linestatus;
+<<<<<<< HEAD
 limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

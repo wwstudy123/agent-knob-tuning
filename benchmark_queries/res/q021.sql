@@ -1,0 +1,1 @@
+SELECT sbtest42.k,sbtest31.id,sbtest31.k FROM sbtest42,sbtest31 WHERE sbtest42.id = sbtest31.id and sbtest42.pad = 'o3cI5A6bSuderGWhOU4ONAnXuyseVOEviakPUUZOCNl2UA2LLoZHxUhU1MwD' and sbtest42.k = 583316 LIMIT 10;

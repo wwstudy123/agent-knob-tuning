@@ -1,0 +1,1 @@
+SELECT pad,id,c FROM sbtest31 WHERE sbtest31.c = '9ZDKGzST9SRDwsg7bEPZmre5g75CH4toQz3M0fN4q1thYDp7sZu8xByQA6xgvsKQFGnXQB2CCvpKkFn7vk8If3Ctga57sZamgi4c42HQrOvwtPgVI6PkdwqP' and sbtest31.id < 459977 and sbtest31.c = 'Z0YcOzi7ASkCDkxGZ2tKFk7ZrbFvCL5mdGInpoqCFH9WsZqrwZ1EZzBruexMsevIsHVFb9ftOBODm0I6ETVu4k3tP2SzN0LXu8EIFPlgighVs0dNFbmqbgzY';

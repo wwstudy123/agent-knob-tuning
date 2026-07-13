@@ -1,0 +1,1 @@
+SELECT c FROM sbtest10 WHERE sbtest10.pad = 'xRnoGEPSH80GrWUaUxlbeMa6iCBKGgetqdzd5zXq8B3hzvKsD0eq0lQgzkKR' and sbtest10.c = '84y7VkeXQ92PZg0xgUc5rGngqGbQT4pLzvow231MhFrixBpUzcgwKqKhG0fWyaKBK92LqvxYtOohzgKWIIsZ3q78O9AhM1NuELXcop4HKLb95UMdQA8taXw5';

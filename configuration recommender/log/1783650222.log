@@ -1,0 +1,96 @@
+sysbench 1.1.0-3ceba0b (using bundled LuaJIT 2.1.0-beta3)
+
+Running the test with following options:
+Number of threads: 32
+Report intermediate results every 60 second(s)
+Initializing random number generator from current time
+
+
+Initializing worker threads...
+
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 3 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 2 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 1 times)
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: mysql_stmt_prepare() failed
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: mysql_stmt_prepare() failed
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: mysql_stmt_prepare() failed
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: mysql_stmt_prepare() failed
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: mysql_stmt_prepare() failed
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 2 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+(last message repeated 1 times)
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:291: SQL API error
+FATAL: MySQL error: 2013 "Lost connection to MySQL server during query"
+(last message repeated 8 times)
+FATAL: Threads initialization failed!

@@ -1,0 +1,1 @@
+SELECT c FROM sbtest24 WHERE sbtest24.c = 'GRmgUUWzIPSQ6a8khgz1HcKksS9AO9ca4rQTidfxqXz2RtdsbccgGE4Yk4Fu9g3dZgymmNx94oHnI0sVcLfmwkcsBOPYW7iSigD8rWggDX2zvcCQcCNKX8DO' and sbtest24.id > 359881 or sbtest24.pad = 'qMONGdlGZG0BHBnuHhhkiY7OrUGtG12brvnenbLy8vWp8kHAw6mh7eXIPiz5' LIMIT 10;

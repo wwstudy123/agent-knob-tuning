@@ -1,0 +1,1 @@
+DELETE FROM sbtest31 WHERE c = 'PLldlgELf1hTE3ZZGg68ruFOhwLpSxuY6DdNerpcGDDumcIe0r1ozz4F3wQqS903tgXGuOw66THdD5u3pWo4tbTuqqpyapYls2gEM9sGxUX5PXRmzE36DwgZ';

@@ -1,0 +1,1 @@
+SELECT c,k,id FROM sbtest39 WHERE sbtest39.c = 'MfL6TuCutrsL6Sf3QOEK04l2QSif2P1sUgcHoI6OogGv9dAdsreDTsokMpgoX8omaGYYztgy7crkdPgeocr4Kf6LTV1HCFngH8XMPz8GKG8hw9NHusLZD3Dg';

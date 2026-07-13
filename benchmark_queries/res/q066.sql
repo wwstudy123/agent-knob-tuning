@@ -1,0 +1,1 @@
+SELECT sbtest13.pad,sbtest13.id FROM sbtest13,sbtest31 WHERE sbtest13.id = sbtest31.id and sbtest13.id > 676785 and sbtest31.pad = 'XvqINKv6fNxG7vVmxTrFudfcfDDYY66HNH4fuFnuKf5sBUi5zlblTWRZ7gvV' LIMIT 10;
