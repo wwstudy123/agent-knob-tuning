@@ -46,7 +46,7 @@ db_config = {
 }
 
 # MySQL安装路径配置
-MYSQL_BASE_DIR = '/home/king/mysql-5.7'
+MYSQL_BASE_DIR = '/workspace/setup/mysql'
 MYSQL_CONFIG_FILE = f'{MYSQL_BASE_DIR}/my.cnf'
 MYSQL_CONFIG_BACKUP = f'{MYSQL_BASE_DIR}/my.cnf.bak'
 MYSQLADMIN_BIN = f'{MYSQL_BASE_DIR}/bin/mysqladmin'

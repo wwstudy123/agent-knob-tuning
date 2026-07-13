@@ -147,7 +147,7 @@ def _build_mysqladmin_shutdown_command():
         str: mysqladmin shutdown命令
     """
     base_cmd = (
-        f"/home/king/mysql-5.7/bin/mysqladmin -u {db_config['user']} "
+        f"/workspace/setup/mysql/bin/mysqladmin -u {db_config['user']} "
         f"-h {db_config['host']} -P {db_config['port']}"
     )
     if db_config.get('password'):
@@ -217,7 +217,7 @@ def _clean_pid_files():
     """
     清理残留的PID文件，防止mysqld_safe误判实例仍在运行
     """
-    pid_files = glob.glob('/home/king/mysql-5.7/data/*.pid')
+    pid_files = glob.glob('/workspace/setup/mysql/data/*.pid')
     for pid_file in pid_files:
         try:
             os.remove(pid_file)
@@ -269,8 +269,8 @@ def _restart_mysql():
     os.makedirs(log_dir, exist_ok=True)
     log_path = f'{log_dir}/start_{time.strftime("%Y_%m_%d_%H-%M-%S")}.log'
     start_cmd = (
-        f"/home/king/mysql-5.7/bin/mysqld_safe "
-        f"--defaults-file=/home/king/mysql-5.7/my.cnf > {log_path} 2>&1 &"
+        f"/workspace/setup/mysql/bin/mysqld_safe "
+        f"--defaults-file=/workspace/setup/mysql/my.cnf > {log_path} 2>&1 &"
     )
 
     print("正在重启MySQL...")
@@ -348,7 +348,7 @@ def _restart_mysql():
         # 同时检查MySQL自身的错误日志
         try:
             result = subprocess.run(
-                ['tail', '-n', '10', '/home/king/mysql-5.7/data/LAPTOP-SQRHDF68.err'],
+                ['tail', '-n', '10', '/workspace/setup/mysql/data/LAPTOP-SQRHDF68.err'],
                 capture_output=True, text=True
             )
             if result.stdout.strip():
@@ -433,9 +433,9 @@ def apply_mysql_config(temp_config):
         return False
 
     # 构建配置写入命令
-    set_knobs_command = f"\\cp /home/king/mysql-5.7/my.cnf.bak /home/king/mysql-5.7/my.cnf"
+    set_knobs_command = f"\\cp /workspace/setup/mysql/my.cnf.bak /workspace/setup/mysql/my.cnf"
     for param_name, param_value in temp_config.items():
-        set_knobs_command += f' && echo "{param_name}={param_value}" >> /home/king/mysql-5.7/my.cnf'
+        set_knobs_command += f' && echo "{param_name}={param_value}" >> /workspace/setup/mysql/my.cnf'
 
     # NOTE：旋钮配置写入到my.cnf文件，并且MySQL重启之后旋钮配置才可以生效
     state = os.system(set_knobs_command)
@@ -451,7 +451,7 @@ def apply_mysql_config(temp_config):
     print("错误：MySQL启动失败，尝试将my.cnf恢复到初始备份状态并重启...")
     # 回滚前先彻底杀死旧进程，防止mysqld_safe还在用坏配置反复重启mysqld
     _force_kill_mysql()
-    rollback_command = '\\cp /home/king/mysql-5.7/my.cnf.bak /home/king/mysql-5.7/my.cnf'
+    rollback_command = '\\cp /workspace/setup/mysql/my.cnf.bak /workspace/setup/mysql/my.cnf'
     os.system(rollback_command)
     if _restart_mysql():
         print("my.cnf已恢复到初始备份状态，MySQL服务重启成功")
@@ -565,11 +565,11 @@ def test_by_job(self, log_file):
     
     # set knobs and restart databases 
     # my.cnf文件路径需要手动修改
-    set_knobs_command = '\cp {} {};'.format('/home/king/mysql-5.7/my.cnf.bak' , '/home/king/mysql-5.7/my.cnf')
+    set_knobs_command = '\cp {} {};'.format('/workspace/setup/mysql/my.cnf.bak' , '/workspace/setup/mysql/my.cnf')
     for knobs in temp_config:
         index = int(knobs.replace("knob", "")) - 1
         knob_name = original_keys[index]
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/home/king/mysql-5.7/my.cnf')
+        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/workspace/setup/mysql/my.cnf')
     
     # 修改点：执行命令(WSL2不需要SSH)
     # head_command = 'sshpass -p {} ssh {} '.format(ip_password, db_ip)
@@ -633,9 +633,9 @@ def test_by_tpcc(knob):
     
     #set knobs and restart databases
     # 修改my.cnf文件路径
-    set_knobs_command = '\cp {} {};'.format('/home/king/mysql-5.7/my.cnf.bak' , '/home/king/mysql-5.7/my.cnf')
+    set_knobs_command = '\cp {} {};'.format('/workspace/setup/mysql/my.cnf.bak' , '/workspace/setup/mysql/my.cnf')
     for knobs in temp_config:
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/home/king/mysql-5.7/my.cnf')
+        set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/workspace/setup/mysql/my.cnf')
     
     # 执行命令(WSL2不需要SSH)
     state = os.system(set_knobs_command)
@@ -814,11 +814,11 @@ def test_by_tpcds(self, log_file):
                 temp_config[key] = knobs_detail[key]['enum_values'][knob.get(key)]
     
     #set knobs and restart databases
-    set_knobs_command = '\cp {} {};'.format('/home/king/mysql-5.7/my.cnf.bak' , '/home/king/mysql-5.7/my.cnf')
+    set_knobs_command = '\cp {} {};'.format('/workspace/setup/mysql/my.cnf.bak' , '/workspace/setup/mysql/my.cnf')
     for knobs in temp_config:
         index = int(knobs.replace("knob", "")) - 1
         knob_name = original_keys[index]
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/home/king/mysql-5.7/my.cnf')
+        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/workspace/setup/mysql/my.cnf')
     
     # 修改点：执行命令(WSL2不需要SSH)
     state = os.system(set_knobs_command)
