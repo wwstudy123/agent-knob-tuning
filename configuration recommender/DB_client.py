@@ -470,7 +470,7 @@ if __name__ == "__main__":
 
     url = 'http://{}:{}/process'.format(
         cfg['configuration recommender']['LLM_server_IP'],
-        cfg['configuration recommender']['LLM_server_port']
+        int(cfg['configuration recommender']['LLM_server_port'])
     )
 
     response = requests.post(url, json=data1)

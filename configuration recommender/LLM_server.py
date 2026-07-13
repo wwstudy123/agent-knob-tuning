@@ -28,6 +28,10 @@ with open(metric_path, "r") as f:
 
 db_metric=config['configuration recommender']['db_metric']
 
+HISTORY_NUM = int(config['configuration recommender']['history_num'])
+NODE_COUNT = int(config['configuration recommender']['node_count'])
+LLM_SERVER_PORT = int(config['configuration recommender']['LLM_server_port'])
+
 
 def extract_key_value_pairs(json_string):
     # match "key": value 
@@ -115,6 +119,7 @@ def call_open_source_llm(model, messages,filename):
             print("No JSON configuration found in the input.")
 
 history_top = []
+last_result = ""
 app = Flask(__name__)
 request_count = 0
 @app.route('/process', methods=['POST'])
@@ -123,6 +128,7 @@ def process_data():
 
     global request_count
     global history_top
+    global last_result
     request_count += 1
     filename = f'./configuration recommender/record/turn_{request_count}'
     file = open(filename, 'w')
@@ -141,7 +147,7 @@ def process_data():
         print(now_inner_metrics)
         print(throughput)
 
-        if len(history_top) < config['configuration recommender']['history_num']:
+        if len(history_top) < HISTORY_NUM:
             # If the queue is not full, join directly
             heapq.heappush(history_top, (throughput, item))
         else:
@@ -203,22 +209,18 @@ def process_data():
 
         model = config['configuration recommender']['model']
 
-        global last_result
-        while i<config['configuration recommender']['node_count'] :
-            i = i+1
+        for _ in range(NODE_COUNT):
             call_open_source_llm(model, messages1, filename)
     
     with open(filename, 'r') as f:
-        data_str = f.read()
-        check = data_str.strip()  
-        if not check:  
-            print("File is empty")
-            data_str = last_result
-    
-    with open(filename, 'r') as f:
-        data_str = f.read()
-        # Split the data into individual JSON strings
-        json_strings = data_str.strip().split('\n')
+        data_str = f.read().strip()
+    if not data_str:
+        print("File is empty")
+        data_str = last_result.strip()
+
+    json_strings = [s for s in data_str.split('\n') if s.strip()]
+    if json_strings:
+        last_result = data_str
     
     top_k = sort_list(json_strings)
     with open('./configuration recommender/record/top_k', 'a') as f:
@@ -231,5 +233,5 @@ def process_data():
     return jsonify(top_k)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=config['configuration recommender']['LLM_server_port'])
+    app.run(host='0.0.0.0', port=LLM_SERVER_PORT)
 
