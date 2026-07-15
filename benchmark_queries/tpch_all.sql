@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+-- using 1779287821 as a seed to the RNG
+
+
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 select
 	c_custkey,
 	c_name,
@@ -28,7 +34,14 @@ group by
 	c_address,
 	c_comment
 order by
+<<<<<<< HEAD
+	revenue desc;
+limit 20;
+-- using 1779287821 as a seed to the RNG
+
+=======
 	revenue desc limit 20;
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 select
 	ps_partkey,
@@ -57,6 +70,12 @@ group by
 		)
 order by
 	value desc;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 select
 	l_shipmode,
@@ -86,6 +105,11 @@ group by
 	l_shipmode
 order by
 	l_shipmode;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -95,19 +119,32 @@ from
 	(
 		select
 			c_custkey,
+<<<<<<< HEAD
+			count(o_orderkey)
+=======
 			count(o_orderkey) as c_count
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 		from
 			customer left outer join orders on
 				c_custkey = o_custkey
 				and o_comment not like '%special%packages%'
 		group by
 			c_custkey
+<<<<<<< HEAD
+	) as c_orders (c_custkey, c_count)
+=======
 	) as c_orders
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 group by
 	c_count
 order by
 	custdist desc,
 	c_count desc;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -123,6 +160,11 @@ where
 	l_partkey = p_partkey
 	and l_shipdate >= date '1993-08-01'
 	and l_shipdate < date '1993-08-01' + interval '1' month;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 create view revenue0 (supplier_no, total_revenue) as
 	select
@@ -158,6 +200,11 @@ order by
 	s_suppkey;
 
 drop view revenue0;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -190,6 +237,11 @@ order by
 	p_brand,
 	p_type,
 	p_size;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -209,6 +261,11 @@ where
 		where
 			l_partkey = p_partkey
 	);
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -242,7 +299,13 @@ group by
 	o_totalprice
 order by
 	o_totalprice desc,
+<<<<<<< HEAD
+	o_orderdate;
+limit 100;
+-- using 1779287821 as a seed to the RNG
+=======
 	o_orderdate limit 100;
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -280,7 +343,12 @@ where
 		and l_shipmode in ('AIR', 'AIR REG')
 		and l_shipinstruct = 'DELIVER IN PERSON'
 	);
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
 
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -297,14 +365,23 @@ select
 from
 	lineitem
 where
+<<<<<<< HEAD
+	l_shipdate <= date '1998-12-01' - interval '87' day (3)
+=======
 	l_shipdate <= date '1998-12-01' - interval '87' day
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 group by
 	l_returnflag,
 	l_linestatus
 order by
 	l_returnflag,
 	l_linestatus;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
 
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -344,7 +421,12 @@ where
 	and n_name = 'JAPAN'
 order by
 	s_name;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
 
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -385,8 +467,14 @@ group by
 	s_name
 order by
 	numwait desc,
+<<<<<<< HEAD
+	s_name;
+limit 100;
+-- using 1779287821 as a seed to the RNG
+=======
 	s_name limit 100;
 
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -426,7 +514,12 @@ group by
 	cntrycode
 order by
 	cntrycode;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -471,8 +564,14 @@ order by
 	s_acctbal desc,
 	n_name,
 	s_name,
+<<<<<<< HEAD
+	p_partkey;
+limit 100;
+-- using 1779287821 as a seed to the RNG
+=======
 	p_partkey limit 100;
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -496,8 +595,14 @@ group by
 	o_shippriority
 order by
 	revenue desc,
+<<<<<<< HEAD
+	o_orderdate;
+limit 10;
+-- using 1779287821 as a seed to the RNG
+=======
 	o_orderdate limit 10;
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -521,7 +626,12 @@ group by
 	o_orderpriority
 order by
 	o_orderpriority;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -548,7 +658,12 @@ group by
 	n_name
 order by
 	revenue desc;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -560,7 +675,12 @@ where
 	and l_shipdate < date '1996-01-01' + interval '1' year
 	and l_discount between 0.08 - 0.01 and 0.08 + 0.01
 	and l_quantity < 25;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -573,7 +693,11 @@ from
 		select
 			n1.n_name as supp_nation,
 			n2.n_name as cust_nation,
+<<<<<<< HEAD
+			extract(year from l_shipdate) as l_year,
+=======
 			YEAR(l_shipdate) as l_year,
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			l_extendedprice * (1 - l_discount) as volume
 		from
 			supplier,
@@ -602,7 +726,12 @@ order by
 	supp_nation,
 	cust_nation,
 	l_year;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
  
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -614,7 +743,11 @@ select
 from
 	(
 		select
+<<<<<<< HEAD
+			extract(year from o_orderdate) as o_year,
+=======
 			YEAR(o_orderdate) as o_year,
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			l_extendedprice * (1 - l_discount) as volume,
 			n2.n_name as nation
 		from
@@ -642,7 +775,12 @@ group by
 	o_year
 order by
 	o_year;
+<<<<<<< HEAD
+limit -1;
+-- using 1779287821 as a seed to the RNG
+=======
 
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 
 
 select
@@ -653,7 +791,11 @@ from
 	(
 		select
 			n_name as nation,
+<<<<<<< HEAD
+			extract(year from o_orderdate) as o_year,
+=======
 			YEAR(o_orderdate) as o_year,
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
 		from
 			part,
@@ -677,3 +819,7 @@ group by
 order by
 	nation,
 	o_year desc;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

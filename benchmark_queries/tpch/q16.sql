@@ -31,3 +31,7 @@ order by
 	p_brand,
 	p_type,
 	p_size;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

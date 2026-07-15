@@ -43,4 +43,9 @@ order by
 	s_acctbal desc,
 	n_name,
 	s_name,
+<<<<<<< HEAD
+	p_partkey;
+limit 100;
+=======
 	p_partkey limit 100;
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

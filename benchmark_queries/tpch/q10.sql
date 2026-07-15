@@ -18,8 +18,13 @@ from
 where
 	c_custkey = o_custkey
 	and l_orderkey = o_orderkey
+<<<<<<< HEAD
+	and o_orderdate >= date '1994-09-01'
+	and o_orderdate < date '1994-09-01' + interval '3' month
+=======
 	and o_orderdate >= '1994-09-01'
 	and o_orderdate < '1994-09-01' + interval 3 month
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 	and l_returnflag = 'R'
 	and c_nationkey = n_nationkey
 group by
@@ -31,4 +36,9 @@ group by
 	c_address,
 	c_comment
 order by
+<<<<<<< HEAD
+	revenue desc;
+limit 20;
+=======
 	revenue desc limit 20;
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

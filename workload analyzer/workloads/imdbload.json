@@ -1,0 +1,1505 @@
+{
+    "Table Schema": "imdbload",
+    "Tables": [
+        {
+            "Table Name": "aka_name",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "person_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "imdb_index",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 12,
+                    "Data Distribution": [
+                        0,
+                        12
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_cf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_nf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "surname_pcode",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125,
+                0.125
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "aka_title",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "title",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "imdb_index",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 12,
+                    "Data Distribution": [
+                        0,
+                        12
+                    ]
+                },
+                {
+                    "Column Name": "kind_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "production_year",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "phonetic_code",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "episode_of_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "season_nr",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "episode_nr",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "cast_info",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "person_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "person_role_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "nr_order",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "role_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "char_name",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "imdb_index",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 12,
+                    "Data Distribution": [
+                        0,
+                        12
+                    ]
+                },
+                {
+                    "Column Name": "imdb_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_nf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "surname_pcode",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "company_name",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "country_code",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 255,
+                    "Data Distribution": [
+                        0,
+                        255
+                    ]
+                },
+                {
+                    "Column Name": "imdb_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_nf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_sf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285,
+                0.14285714285714285
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "company_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "kind",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "complete_cast",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "subject_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "status_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.25,
+                0.25,
+                0.25,
+                0.25
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "comp_cast_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "kind",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "info_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "keyword",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "keyword",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "phonetic_code",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "kind_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "kind",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 15,
+                    "Data Distribution": [
+                        0,
+                        15
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "link_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "link",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "movie_companies",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "company_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "company_type_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "movie_info",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info_type_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "movie_info_idx",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info_type_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "movie_keyword",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "keyword_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.3333333333333333,
+                0.3333333333333333,
+                0.3333333333333333
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "movie_link",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "linked_movie_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "link_type_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.25,
+                0.25,
+                0.25,
+                0.25
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "name",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "name",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "imdb_index",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 12,
+                    "Data Distribution": [
+                        0,
+                        12
+                    ]
+                },
+                {
+                    "Column Name": "imdb_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "gender",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 1,
+                    "Data Distribution": [
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_cf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "name_pcode_nf",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "surname_pcode",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111,
+                0.1111111111111111
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "person_info",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "person_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info_type_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "info",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "note",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "role_type",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "role",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.5,
+                0.5
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        },
+        {
+            "Table Name": "title",
+            "Table Columns": [
+                {
+                    "Column Name": "id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "title",
+                    "Data Type": "text",
+                    "Data Type Mod": 65535,
+                    "Data Distribution": [
+                        0,
+                        65535
+                    ]
+                },
+                {
+                    "Column Name": "imdb_index",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 12,
+                    "Data Distribution": [
+                        0,
+                        12
+                    ]
+                },
+                {
+                    "Column Name": "kind_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "production_year",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "imdb_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "phonetic_code",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 5,
+                    "Data Distribution": [
+                        0,
+                        5
+                    ]
+                },
+                {
+                    "Column Name": "episode_of_id",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "season_nr",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "episode_nr",
+                    "Data Type": "int",
+                    "Data Type Mod": 10,
+                    "Data Distribution": [
+                        0,
+                        0
+                    ]
+                },
+                {
+                    "Column Name": "series_years",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 49,
+                    "Data Distribution": [
+                        0,
+                        49
+                    ]
+                },
+                {
+                    "Column Name": "md5sum",
+                    "Data Type": "varchar",
+                    "Data Type Mod": 32,
+                    "Data Distribution": [
+                        0,
+                        32
+                    ]
+                }
+            ],
+            "Column Distribution": [
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333,
+                0.08333333333333333
+            ],
+            "Primary Key": {
+                "Name": "id",
+                "Data Type": "int"
+            },
+            "Foreign Key": [
+                {
+                    "Foreign Key Name": "",
+                    "Foreign Key Type": "",
+                    "Referenced Table": "",
+                    "Referenced Primary Key": "",
+                    "Referenced Primary Key Type": ""
+                }
+            ]
+        }
+    ]
+}

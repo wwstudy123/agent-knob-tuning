@@ -30,11 +30,20 @@ where
 				where
 					l_partkey = ps_partkey
 					and l_suppkey = ps_suppkey
+<<<<<<< HEAD
+					and l_shipdate >= date '1997-01-01'
+					and l_shipdate < date '1997-01-01' + interval '1' year
+=======
 					and l_shipdate >= '1997-01-01'
 					and l_shipdate < '1997-01-01' + interval 1 year
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			)
 	)
 	and s_nationkey = n_nationkey
 	and n_name = 'JAPAN'
 order by
 	s_name;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

@@ -23,9 +23,18 @@ where
 	and l_shipmode in ('REG AIR', 'AIR')
 	and l_commitdate < l_receiptdate
 	and l_shipdate < l_commitdate
+<<<<<<< HEAD
+	and l_receiptdate >= date '1993-01-01'
+	and l_receiptdate < date '1993-01-01' + interval '1' year
+=======
 	and l_receiptdate >= '1993-01-01'
 	and l_receiptdate < '1993-01-01' + interval 1 year
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 group by
 	l_shipmode
 order by
 	l_shipmode;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

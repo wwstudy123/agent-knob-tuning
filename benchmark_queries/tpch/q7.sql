@@ -11,7 +11,11 @@ from
 		select
 			n1.n_name as supp_nation,
 			n2.n_name as cust_nation,
+<<<<<<< HEAD
+			extract(year from l_shipdate) as l_year,
+=======
 			YEAR(l_shipdate) as l_year,
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			l_extendedprice * (1 - l_discount) as volume
 		from
 			supplier,
@@ -30,7 +34,11 @@ from
 				(n1.n_name = 'SAUDI ARABIA' and n2.n_name = 'CHINA')
 				or (n1.n_name = 'CHINA' and n2.n_name = 'SAUDI ARABIA')
 			)
+<<<<<<< HEAD
+			and l_shipdate between date '1995-01-01' and date '1996-12-31'
+=======
 			and l_shipdate between '1995-01-01' and '1996-12-31'
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 	) as shipping
 group by
 	supp_nation,
@@ -40,3 +48,7 @@ order by
 	supp_nation,
 	cust_nation,
 	l_year;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

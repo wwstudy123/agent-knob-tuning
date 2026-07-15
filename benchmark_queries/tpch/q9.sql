@@ -9,7 +9,11 @@ from
 	(
 		select
 			n_name as nation,
+<<<<<<< HEAD
+			extract(year from o_orderdate) as o_year,
+=======
 			YEAR(o_orderdate) as o_year,
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
 			l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity as amount
 		from
 			part,
@@ -33,3 +37,7 @@ group by
 order by
 	nation,
 	o_year desc;
+<<<<<<< HEAD
+limit -1;
+=======
+>>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
