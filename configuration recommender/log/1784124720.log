@@ -1,0 +1,92 @@
+sysbench 1.1.0-3ceba0b (using bundled LuaJIT 2.1.0-beta3)
+
+Running the test with following options:
+Number of threads: 32
+Report intermediate results every 60 second(s)
+Initializing random number generator from current time
+
+
+Initializing worker threads...
+
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 2 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 3 times)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 3 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 2 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: unable to connect to MySQL server on socket '/tmp/mysql.sock', aborting...
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 2 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 1 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 3 times)
+FATAL: error 2002: Can't connect to local MySQL server through socket '/tmp/mysql.sock' (2)
+(last message repeated 2 times)
+FATAL: `thread_init' function failed: /usr/local/share/sysbench/oltp_common.lua:356: connection creation failed
+(last message repeated 6 times)
+FATAL: Threads initialization failed!

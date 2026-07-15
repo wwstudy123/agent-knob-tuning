@@ -176,18 +176,20 @@ def process_data():
 
         if len(history_top) < HISTORY_NUM:
             # If the queue is not full, join directly
-            heapq.heappush(history_top, (throughput, item))
+            heapq.heappush(history_top, (throughput, request_count, item))
         else:
             # update the queue
-            heapq.heappushpop(history_top, (throughput, item))
+            heapq.heappushpop(history_top, (throughput, request_count, item))
 
         if throughput == 0 :
-            throughput = "0, because database starting failed under current configuration"
+            performance_desc = "0, because database starting failed under current configuration"
+        else:
+            performance_desc = str(throughput)
         
         sorted_history = sorted(history_top, key=lambda x: -x[0])  
         # Sort by performance
         history_entries = []
-        for idx, (t, item) in enumerate(sorted_history, 1):
+        for idx, (t, _, item) in enumerate(sorted_history, 1):
             knob_str = json.dumps(item['knob'], indent=4)
             metric_str = json.dumps(item['metric'], indent=4)
             history_entries.append(
@@ -230,7 +232,7 @@ def process_data():
                 }}
                 Now, let's think step by step.
 
-            """.format(knob=knobs, inner_metric=inner_metrics, last_knob = last_knobs, now_inner_metric = now_inner_metrics, performance = throughput, db_metric = db_metric,history="\n\n".join(history_entries), workload_features=workload_features, database_kernel=database_kernel, hardware=hardware,database_scale=database_scale)
+            """.format(knob=knobs, inner_metric=inner_metrics, last_knob = last_knobs, now_inner_metric = now_inner_metrics, performance = performance_desc, db_metric = db_metric,history="\n\n".join(history_entries), workload_features=workload_features, database_kernel=database_kernel, hardware=hardware,database_scale=database_scale)
         }
         ]
 
