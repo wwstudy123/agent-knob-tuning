@@ -8,24 +8,24 @@ import re
 import paramiko
 import configparser
 
-cfg = configparser.ConfigParser()
-cfg.read('./config.ini')
+config_parser = configparser.ConfigParser()
+config_parser.read('./config.ini')
 
-db_ip = cfg['configuration recommender']['DB_IP']
-ip_password = cfg['configuration recommender']['DB_IP_Password']
+db_ip = config_parser['configuration recommender']['DB_IP']
+ip_password = config_parser['configuration recommender']['DB_IP_Password']
 db_config = {
-    'user': cfg['configuration recommender']['DB_User'],       
-    'password': cfg['configuration recommender']['DB_Password'],   
-    'host': cfg['configuration recommender']['DB_Host'],          
-    'database': cfg['configuration recommender']['DB_Name'],    
-    'port': int(cfg['configuration recommender']['DB_Port']),
+    'user': config_parser['configuration recommender']['DB_User'],
+    'password': config_parser['configuration recommender']['DB_Password'],
+    'host': config_parser['configuration recommender']['DB_Host'],
+    'database': config_parser['configuration recommender']['DB_Name'],
+    'port': int(config_parser['configuration recommender']['DB_Port']),
 }
 
-with open(cfg['knob selector']['candidate_knobs'], 'r') as f:
+with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
     original = json.load(f)
     original_keys = list(original.keys())
 
-with open(cfg['range pruner']['output_file'], 'r') as f:
+with open(config_parser['range pruner']['output_file'], 'r') as f:
     selected_knobs = json.load(f)
 
 def get_current_metric():
@@ -40,11 +40,9 @@ def get_current_metric():
     for i in result:
         #print(f"\"{i[0]}\" : {i[1]},")
         knobs[i[0]] = int(i[1])
-
-    cursor.close()
-    conn.close()
+    json_data = json.dumps(knobs, indent=4)
+    #print(json_data)
     return knobs
-
 
 def get_current_knob():
 
@@ -59,7 +57,7 @@ def get_current_knob():
         parameters.append(param_name)
 
     for param in parameters:
-        cursor.execute("SHOW VARIABLES LIKE %s", (param,))
+        cursor.execute(f"SHOW VARIABLES LIKE '{param}'")
         result = cursor.fetchone()
         if result:
             try:
@@ -71,15 +69,14 @@ def get_current_knob():
 
     cursor.close()
     conn.close()
-
     json_data = json.dumps(knobs, indent=4)
     print(json_data)
     return knobs
 
 
 def get_knobs_detail():
-    with open(cfg['range pruner']['output_file'], 'r') as f:
-        content = json.load(f)
+    f = open(config_parser['range pruner']['output_file'], 'r')
+    content = json.load(f)
     #content = set_expert_rule(content)
 
     result = {}
@@ -108,8 +105,6 @@ def test_by_job(self,log_file):
         knob_name = original_keys[index]
         set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/etc/my.cnf')
     
-    head_command = 'sshpass -p {} ssh {} '.format(ip_password, db_ip)
-    set_knobs_command = head_command + '"' + set_knobs_command + '"' 
     state = os.system(set_knobs_command)
 
     time.sleep(10)
@@ -117,7 +112,7 @@ def test_by_job(self,log_file):
     print("success set knobs")
     #exit()
 
-    restart_knobs_command = head_command + '"service mysqld restart"' 
+    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
     state = os.system(restart_knobs_command)
 
     if state == 0:
@@ -168,15 +163,13 @@ def test_by_tpcc(knob):
     for knobs in temp_config:
         set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/etc/my.cnf')
     
-    head_command = 'sshpass -p {} ssh {} '.format(ip_password, db_ip)
-    set_knobs_command = head_command + '"' + set_knobs_command + '"' 
     state = os.system(set_knobs_command)
 
     time.sleep(10)
 
     print("success set knobs")
 
-    restart_knobs_command = head_command + '"service mysqld restart"' 
+    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
     state = os.system(restart_knobs_command)
 
     if state == 0:
@@ -245,76 +238,46 @@ def test_by_sysbench(knob):
                     # Handle case where value is not in the enum_values list
                     print(f"Warning: {value} not found in enum values for {key}")
     
-    #set knobs and restart databases (local execution, no SSH)
+    #set knobs and restart databases (local, no SSH)
     set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
     for knobs in temp_config:
         set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/etc/my.cnf')
     
     state = os.system(set_knobs_command)
 
-    time.sleep(2)
+    time.sleep(10)
 
     print("success set knobs")
     #exit()
 
-    # Restart MySQL locally: shutdown then start via mysqld_safe
-    mysql_admin = '/workspace/setup/mysql/bin/mysqladmin -u root -p{} -S /tmp/mysql.sock shutdown'.format(db_config.get('password'))
-    os.system(mysql_admin)
-    time.sleep(3)
+    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
+    state = os.system(restart_knobs_command)
 
-    # Remove stale socket file before starting
-    if os.path.exists('/tmp/mysql.sock'):
-        os.remove('/tmp/mysql.sock')
-
-    # Use subprocess.Popen with start_new_session to detach mysqld_safe from parent
-    # so it won't be killed when os.system returns
-    mysql_start_cmd = [
-        '/bin/sh', 'bin/mysqld_safe',
-        '--basedir=/workspace/setup/mysql',
-        '--datadir=/workspace/setup/mysql/data',
-    ]
-    devnull = open(os.devnull, 'w')
-    subprocess.Popen(
-        mysql_start_cmd,
-        cwd='/workspace/setup/mysql',
-        stdout=devnull,
-        stderr=devnull,
-        stdin=devnull,
-        start_new_session=True,
-    )
-
-    # Wait for MySQL socket to be ready (up to 60 seconds)
-    mysql_ready = False
-    for i in range(60):
-        time.sleep(1)
-        if os.path.exists('/tmp/mysql.sock'):
-            mysql_ready = True
-            break
-
-    if not mysql_ready:
-        print('database restarting failed: socket not ready after 60s')
+    if state == 0:
+        print('database has been restarted')
+        os.makedirs('./configuration recommender/log', exist_ok=True)
+        log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
+        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-host={} --mysql-port={} --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
+                            db_config.get('host'),
+                            db_config.get('port'),
+                            db_config.get('user'),
+                            db_config.get('password'),
+                            db_config.get('database')
+                            )
+        
+        # quote path: "configuration recommender" contains a space
+        os.system(command_run + ' > "{}" '.format(log_file))
+        
+        try:
+            qps = sum([float(line.split()[8]) for line in open(log_file,'r').readlines() if 'qps' in line][-int(120/60):]) / (int(120/60))
+        except (FileNotFoundError, IndexError, ZeroDivisionError, ValueError) as e:
+            print(f'Failed to parse sysbench log {log_file}: {e}')
+            return 0
+        tps = float(qps/20.0)
+        return tps
+    else:
+        print('database restarting failed')
         return 0
-
-    # Extra grace period after socket appears
-    time.sleep(3)
-
-    print('database has been restarted')
-    log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
-    command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-socket=/tmp/mysql.sock --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
-                        db_config.get('user'),
-                        db_config.get('password'),
-                        db_config.get('database')
-                        )
-    
-    os.system(command_run + ' > "{}" '.format(log_file))
-
-    try:
-        qps = sum([float(line.split()[8]) for line in open(log_file,'r').readlines() if 'qps' in line][-int(120/60):]) / (int(120/60))
-    except (FileNotFoundError, IndexError, ZeroDivisionError):
-        print(f"Failed to parse sysbench log: {log_file}")
-        return 0
-    tps = float(qps/20.0)
-    return tps
 
 def unknown_benchmark(name):
     print(f"Unknown benchmark: {name}")
@@ -337,8 +300,6 @@ def test_by_tpcds(self,log_file):
         knob_name = original_keys[index]
         set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/etc/my.cnf')
     
-    head_command = 'sshpass -p {} ssh {} '.format(ip_password, db_ip)
-    set_knobs_command = head_command + '"' + set_knobs_command + '"' 
     state = os.system(set_knobs_command)
 
     time.sleep(10)
@@ -346,7 +307,7 @@ def test_by_tpcds(self,log_file):
     print("success set knobs")
     #exit()
 
-    restart_knobs_command = head_command + '"service mysqld restart"' 
+    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
     state = os.system(restart_knobs_command)
 
     if state == 0:
@@ -388,7 +349,7 @@ if __name__ == "__main__":
     data1 = [data]
 
 
-    url = 'http://{}:{}/process'.format(cfg['configuration recommender']['LLM_server_IP'], cfg['configuration recommender']['LLM_server_port'])
+    url = 'http://{}:{}/process'.format(config_parser['configuration recommender']['LLM_server_IP'], config_parser['configuration recommender']['LLM_server_port'])
     
     # Return the result to LLM_server 
     response = requests.post(url, json=data1)
@@ -398,47 +359,43 @@ if __name__ == "__main__":
     
     
     iteration = 0
-    best_knob = None
+    best_knob = []
     best_metric = []
     best_throughput = 0
-    while iteration < int(cfg['configuration recommender']['iteration']):
+    while iteration < int(config_parser['configuration recommender']['iteration']):
         data_list = []
-        # result 可能是 dict、list 或 str，统一处理
-        if isinstance(result, dict):
-            items = list(result.values())
-        elif isinstance(result, list):
+        # LLM_server jsonify returns list[dict]; also accept JSON strings
+        if isinstance(result, list):
             items = result
+        elif isinstance(result, dict):
+            items = [result]
         elif isinstance(result, str):
             items = [result]
         else:
             items = []
 
-        for knobs in items:
-            if isinstance(knobs, str):
-                if not knobs.strip():
+        for item in items:
+            if isinstance(item, str):
+                if not item.strip():
                     continue
-                knob = json.loads(knobs)
+                knob = json.loads(item)
+            elif isinstance(item, dict):
+                knob = item
             else:
-                knob = knobs
+                continue
 
-            benchmark = cfg['configuration recommender']['benchmark'].strip().upper()
+            if not knob:
+                print('Skip empty knob config')
+                continue
+
+            benchmark = config_parser['configuration recommender']['benchmark'].strip().upper()
             benchmark_switch = {
                 "SYSBENCH": test_by_sysbench,
                 "TPCC": test_by_tpcc,
                 "JOB": test_by_job,
                 "TPCDS": test_by_tpcds
             }
-            benchmark_func = benchmark_switch.get(benchmark)
-            if benchmark_func is None:
-                unknown_benchmark(benchmark)
-                continue
-            throughput = benchmark_func(knob)
-            # 严格类型保护：确保 throughput 是数字
-            if isinstance(throughput, bool) or not isinstance(throughput, (int, float)):
-                print(f"Warning: throughput is {type(throughput).__name__}: {throughput!r}, converting to 0")
-                throughput = 0
-            else:
-                throughput = float(throughput)
+            throughput =  benchmark_switch.get(benchmark, lambda: unknown_benchmark(benchmark))(knob)
             if(throughput == 0):
                 metric = []
             else:
@@ -451,16 +408,17 @@ if __name__ == "__main__":
             data_list.append(data)
             with open('./configuration recommender/record/benmark_history',"a") as f:
                 json.dump(data, f, indent=4)
-            # 确保 best_throughput 是数字
-            if not isinstance(best_throughput, (int, float)):
-                best_throughput = 0
-            if throughput > best_throughput:
+                f.close()
+            if throughput>best_throughput:
                 best_knob = knob
                 best_metric = metric
                 best_throughput = throughput
         
+        if not data_list:
+            print('No valid knob configs in this iteration, stop.')
+            break
 
-        url = 'http://{}:{}/process'.format(cfg['configuration recommender']['LLM_server_IP'], cfg['configuration recommender']['LLM_server_port'])
+        url = 'http://{}:{}/process'.format(config_parser['configuration recommender']['LLM_server_IP'], config_parser['configuration recommender']['LLM_server_port'])
         #  Return the result to LLM_server 
         response = requests.post(url, json=data_list)
 

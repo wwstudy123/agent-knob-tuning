@@ -1,0 +1,69 @@
+sysbench 1.1.0-3ceba0b (using bundled LuaJIT 2.1.0-beta3)
+
+Running the test with following options:
+Number of threads: 32
+Report intermediate results every 60 second(s)
+Initializing random number generator from current time
+
+
+Initializing worker threads...
+
+Threads started!
+
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT DISTINCT c FROM sbtest12 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest47 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest48 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest44 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest32 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest27 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest50 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest46 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest12 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest37 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest19 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT DISTINCT c FROM sbtest46 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest37 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'INSERT INTO sbtest16 (id, k, c, pad) VALUES (?, ?, ?, ?)'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'DELETE FROM sbtest25 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest14 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest11 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest1 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest12 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT DISTINCT c FROM sbtest45 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT DISTINCT c FROM sbtest17 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest27 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest16 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest1 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest25 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT SUM(k) FROM sbtest21 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT DISTINCT c FROM sbtest41 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest16 WHERE id BETWEEN ? AND ? ORDER BY c'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'UPDATE sbtest22 SET k=k+1 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest17 WHERE id BETWEEN ? AND ?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'DELETE FROM sbtest45 WHERE id=?'
+FATAL: mysql_stmt_execute() returned error 2013 (Lost connection to MySQL server during query) for query 'SELECT c FROM sbtest25 WHERE id=?'
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 4 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 1 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 1 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:494: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:495: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 1 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 2 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+(last message repeated 4 times)
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:465: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:426: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:494: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query
+FATAL: `thread_run' function failed: /usr/local/share/sysbench/oltp_common.lua:439: SQL error, errno = 2013, state = 'HY000': Lost connection to MySQL server during query

@@ -34,63 +34,106 @@ database_scale=config['knob selector']['database_scale']
 
 
 def extract_knob_intervals_with_ids(text):
-    # Split by Knob Paragraph
-    knob_blocks = re.split(r'\n\d+\.\s+\*\*(knob\d+)\s+\((.*?)\)\*\*:', text)
     knobs = {}
     validation_errors = []
-    
-    for i in range(1, len(knob_blocks), 3):
-        knob_id = knob_blocks[i]  # e.g., "knob42"
-        block_text = knob_blocks[i+2]
 
-        min_match = re.search(r'\*\*min_value\*\*:\s*([\d]+)', block_text)
-        max_match = re.search(r'\*\*max_value\*\*:\s*([\d]+)', block_text)
-        step_match = re.search(r'\*\*step\*\*:\s*([\d]+)', block_text)
-        special_match = re.search(r'\*\*special_value\*\*:\s*([\d]+)', block_text)
+    # Prefer JSON-style blocks that current LLMs often return:
+    # "knob10": { "min_value": ..., "max_value": ..., "step": ..., "special_value": ... }
+    json_pattern = re.compile(
+        r'"(knob\d+)"\s*:\s*\{([^{}]+)\}',
+        re.DOTALL
+    )
+    json_matches = list(json_pattern.finditer(text))
 
-        if min_match and max_match and step_match:
+    if json_matches:
+        for match in json_matches:
+            knob_id = match.group(1)
+            block_text = match.group(2)
+            if knob_id not in knob_details:
+                continue
+
+            min_match = re.search(r'"?min_value"?\s*:\s*"?(-?\d+)"?', block_text)
+            max_match = re.search(r'"?max_value"?\s*:\s*"?(-?\d+)"?', block_text)
+            step_match = re.search(r'"?step"?\s*:\s*"?(-?\d+)"?', block_text)
+            special_match = re.search(r'"?special_value"?\s*:\s*"?(-?\d+|none)"?', block_text, re.IGNORECASE)
+
+            if not (min_match and max_match and step_match):
+                # skip enum-like ON/OFF blocks that are not numeric intervals
+                continue
+
+            min_val = int(min_match.group(1))
+            max_val = int(max_match.group(1))
+            step_val = int(step_match.group(1))
+
+            entry = {
+                "min_value": min_val,
+                "max_value": max_val,
+                "step": step_val,
+                "type": knob_details[knob_id]["type"],
+                "description": knob_details[knob_id]["description"],
+            }
+            if special_match:
+                special = special_match.group(1)
+                if special.lower() != "none":
+                    entry["special_value"] = int(special)
+
+            # Safe Check against original bounds when available
+            error_messages = []
+            config_min = knob_details[knob_id].get("min")
+            config_max = knob_details[knob_id].get("max")
+            if isinstance(config_min, (int, float)) and isinstance(config_max, (int, float)):
+                if not (config_min <= min_val <= config_max):
+                    error_messages.append(f"min_val {min_val} out of bounds [{config_min}-{config_max}]")
+                if not (config_min <= max_val <= config_max):
+                    error_messages.append(f"max_val {max_val} out of bounds [{config_min}-{config_max}]")
+            if min_val > max_val:
+                error_messages.append(f"min_val {min_val} larger than {max_val}")
+
+            if error_messages:
+                validation_errors.append({
+                    "parameter": knob_id,
+                    "errors": error_messages,
+                    "received": {"min": min_val, "max": max_val},
+                })
+                continue
+
+            knobs[knob_id] = entry
+    else:
+        # Legacy markdown format:
+        # 1. **knob42 (name)**:
+        # **min_value**: ...
+        knob_blocks = re.split(r'\n\d+\.\s+\*\*(knob\d+)\s+\((.*?)\)\*\*:', text)
+        for i in range(1, len(knob_blocks), 3):
+            knob_id = knob_blocks[i]
+            block_text = knob_blocks[i + 2]
+            if knob_id not in knob_details:
+                continue
+
+            min_match = re.search(r'\*\*min_value\*\*:\s*([\d]+)', block_text)
+            max_match = re.search(r'\*\*max_value\*\*:\s*([\d]+)', block_text)
+            step_match = re.search(r'\*\*step\*\*:\s*([\d]+)', block_text)
+            special_match = re.search(r'\*\*special_value\*\*:\s*([\d]+)', block_text)
+
+            if not (min_match and max_match and step_match):
+                continue
+
             knobs[knob_id] = {
                 "min_value": int(min_match.group(1)),
                 "max_value": int(max_match.group(1)),
                 "step": int(step_match.group(1)),
                 "type": knob_details[knob_id]["type"],
-                "description": knob_details[knob_id]["description"]
+                "description": knob_details[knob_id]["description"],
             }
             if special_match:
                 knobs[knob_id]["special_value"] = int(special_match.group(1))
-        
-        #Safe Check
-        error_messages=[]
-        config_min = knob_details[knob_id]["min"]
-        config_max = knob_details[knob_id]["max"]
-        min_val = int(min_match.group(1))
-        max_val = int(max_match.group(1))
 
-        if isinstance(min_val, int) and not (config_min <= min_val <= config_max):
-            error_messages.append(f"min_val{min_val}out of bounds{config_min}-{config_max}]")
-            
-        if isinstance(max_val, int) and not (config_min <= max_val <= config_max):
-            error_messages.append(f"max_val{max_val}out of bounds[{config_min}-{config_max}]")
-            
-        if isinstance(min_val, int) and isinstance(max_val, int) and min_val > max_val:
-            error_messages.append(f"min_val{min_val}larger than{max_val}")
-
-        #Record validation errors
-        if error_messages:
-            validation_errors.append({
-                "parameter": knob_name,
-                "errors": error_messages,
-                "received": {
-                    "min": min_val,
-                    "max": max_val
-                }
-            })
-            continue
-            
     if validation_errors:
         print("Error:")
         for error in validation_errors:
             print(json.dumps(error, indent=2, ensure_ascii=False))
+
+    if not knobs:
+        print("Warning: no knobs extracted from LLM response. Check output format.")
 
     return knobs
 
