@@ -227,21 +227,29 @@ def test_by_sysbench(knob):
     temp_config = {}
     knobs_detail = get_knobs_detail()
     for key in knobs_detail.keys():
-        if key in knob.keys():
-            if knobs_detail[key]['type'] == 'integer':
-                temp_config[key] = knob.get(key) 
-            elif knobs_detail[key]['type'] == 'enum':
-                value = str(knob.get(key))
-                if value in knobs_detail[key]['enum_values']:
-                    temp_config[key] = value
-                else:
-                    # Handle case where value is not in the enum_values list
-                    print(f"Warning: {value} not found in enum values for {key}")
+        if key not in knob.keys():
+            continue
+        knob_type = knobs_detail[key].get('type')
+        if knob_type == 'integer':
+            temp_config[key] = knob.get(key)
+        elif knob_type == 'enum':
+            value = str(knob.get(key))
+            enum_values = knobs_detail[key].get('enum_values') or []
+            if value in enum_values:
+                temp_config[key] = value
+            else:
+                print(f"Warning: {value} not found in enum values for {key}")
     
     #set knobs and restart databases (local, no SSH)
+    # map anonymous knobN -> real MySQL variable name
     set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
     for knobs in temp_config:
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/etc/my.cnf')
+        if isinstance(knobs, str) and knobs.startswith('knob') and knobs[4:].isdigit():
+            index = int(knobs.replace('knob', '')) - 1
+            knob_name = original_keys[index] if 0 <= index < len(original_keys) else knobs
+        else:
+            knob_name = knobs
+        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name, temp_config[knobs], '/etc/my.cnf')
     
     state = os.system(set_knobs_command)
 
@@ -257,9 +265,7 @@ def test_by_sysbench(knob):
         print('database has been restarted')
         os.makedirs('./configuration recommender/log', exist_ok=True)
         log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
-        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-host={} --mysql-port={} --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
-                            db_config.get('host'),
-                            db_config.get('port'),
+        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-socket=/tmp/mysql.sock --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
                             db_config.get('user'),
                             db_config.get('password'),
                             db_config.get('database')

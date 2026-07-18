@@ -1,3 +1,2 @@
-best_knob: {'innodb_log_file_size': 50331648, 'innodb_change_buffer_max_size': 25, 'tmp_table_size': 134217728, 'table_open_cache': 4000, 'innodb_buffer_pool_size': 8589934592, 'innodb_max_dirty_pages_pct': 75, 'innodb_write_io_threads': 16, 'innodb_flush_neighbors': 1, 'sync_binlog': 1, 'innodb_adaptive_hash_index_parts': 8, 'innodb_thread_concurrency': 0, 'thread_cache_size': 9, 'max_heap_table_size': 134217728, 'innodb_old_blocks_time': 1000, 'innodb_doublewrite': 'ON', 'innodb_read_io_threads': 16, 'sort_buffer_size': 4194304, 'innodb_io_capacity_max': 4000, 'innodb_page_cleaners': 4, 'table_open_cache_instances': 16}
-best_metric: []
-best_throughput: 0
+best_knob: {'knob10': 10307921510, 'knob100': 8, 'knob13': 8, 'knob20': 50, 'knob21': 4, 'knob27': 5000, 'knob37': 128, 'knob41': 2000, 'knob51': 16, 'knob6': 32768, 'knob61': 2000, 'knob67': 100, 'knob68': 0, 'knob75': 50331648, 'knob78': 10000, 'knob80': 0, 'knob83': 1000, 'knob90': 0, 'knob94': 4}
+best_throughput: 174.55925
