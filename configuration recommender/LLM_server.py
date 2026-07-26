@@ -37,6 +37,9 @@ db_metric=config['configuration recommender']['db_metric']
 HISTORY_NUM = int(config['configuration recommender']['history_num'])
 NODE_COUNT = int(config['configuration recommender']['node_count'])
 LLM_SERVER_PORT = int(config['configuration recommender']['LLM_server_port'])
+RECORD_DIR_NAME = config['configuration recommender'].get('record_dir', 'record').strip()
+RECORD_DIR = os.path.join('./configuration recommender', RECORD_DIR_NAME)
+os.makedirs(RECORD_DIR, exist_ok=True)
 
 
 def extract_key_value_pairs(json_string):
@@ -149,6 +152,25 @@ history_top = []
 last_result = ""
 app = Flask(__name__)
 request_count = 0
+
+
+@app.route('/restore', methods=['POST'])
+def restore_state():
+    """Restore LLM_server in-memory state from DB_client checkpoint."""
+    global request_count, history_top, last_result
+    data = request.get_json() or {}
+    request_count = int(data.get('request_count', 0))
+    last_result = data.get('last_result', '') or ''
+    restored = data.get('history_top', []) or []
+    # history_top entries: [throughput, request_count, item]
+    history_top = []
+    for entry in restored:
+        if isinstance(entry, (list, tuple)) and len(entry) >= 3:
+            heapq.heappush(history_top, (entry[0], entry[1], entry[2]))
+    print(f'LLM_server restored: request_count={request_count}, history_top={len(history_top)}')
+    return jsonify({'ok': True, 'request_count': request_count, 'history_size': len(history_top)})
+
+
 @app.route('/process', methods=['POST'])
 def process_data():
 
@@ -157,7 +179,7 @@ def process_data():
     global history_top
     global last_result
     request_count += 1
-    filename = f'./configuration recommender/record/turn_{request_count}'
+    filename = os.path.join(RECORD_DIR, f'turn_{request_count}')
     file = open(filename, 'w')
     file.close()
 
@@ -252,15 +274,17 @@ def process_data():
         last_result = data_str
     
     top_k = sort_list(json_strings)
-    with open('./configuration recommender/record/top_k', 'a') as f:
+    with open(os.path.join(RECORD_DIR, 'top_k'), 'a') as f:
         json.dump(top_k, f, indent=4)
         f.close()
-    
 
-
-    # send the result to DB_client 
-    return jsonify(top_k)
+    # send the result to DB_client (include server state for checkpoint)
+    return jsonify({
+        'recommendations': top_k,
+        'request_count': request_count,
+        'history_top': list(history_top),
+        'last_result': last_result,
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=LLM_SERVER_PORT)
-

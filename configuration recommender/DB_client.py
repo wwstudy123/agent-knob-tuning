@@ -5,6 +5,7 @@ import os
 import sys
 import time
 import re
+import shutil
 import paramiko
 import configparser
 
@@ -19,6 +20,8 @@ db_config = {
     'host': config_parser['configuration recommender']['DB_Host'],
     'database': config_parser['configuration recommender']['DB_Name'],
     'port': int(config_parser['configuration recommender']['DB_Port']),
+    # match your mysqld socket; avoids default /var/run/mysqld/mysqld.sock
+    'unix_socket': '/tmp/mysql.sock',
 }
 
 with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
@@ -27,6 +30,90 @@ with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
 
 with open(config_parser['range pruner']['output_file'], 'r') as f:
     selected_knobs = json.load(f)
+
+MYCNF_PATH = '/etc/my.cnf'
+MYCNF_BAK = '/etc/my.cnf.bak'
+
+
+def _format_mycnf_value(value):
+    if isinstance(value, bool):
+        return '1' if value else '0'
+    return str(value)
+
+
+def _knob_key_to_mysql_name(knob_key):
+    if isinstance(knob_key, str) and knob_key.startswith('knob') and knob_key[4:].isdigit():
+        index = int(knob_key.replace('knob', '')) - 1
+        if 0 <= index < len(original_keys):
+            return original_keys[index]
+    return knob_key
+
+
+def apply_knobs_to_mycnf(knob_vars, mycnf_path=MYCNF_PATH, backup_path=MYCNF_BAK, section='mysqld'):
+    """Restore my.cnf from backup and merge knob vars into [mysqld]."""
+    if os.path.exists(backup_path):
+        shutil.copy2(backup_path, mycnf_path)
+    elif not os.path.exists(mycnf_path):
+        print(f'Error: neither {backup_path} nor {mycnf_path} exists')
+        return False
+
+    if not knob_vars:
+        return True
+
+    with open(mycnf_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+
+    section_lower = section.lower()
+    in_target = False
+    section_found = False
+    remaining = dict(knob_vars)
+    new_lines = []
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith('[') and stripped.endswith(']'):
+            if in_target and remaining:
+                for key, val in remaining.items():
+                    new_lines.append(f'{key}={_format_mycnf_value(val)}\n')
+                remaining.clear()
+            sec_name = stripped[1:-1].strip().lower()
+            in_target = sec_name == section_lower
+            if in_target:
+                section_found = True
+            new_lines.append(line)
+            continue
+
+        if in_target and stripped and not stripped.startswith('#') and '=' in stripped:
+            key = stripped.split('=', 1)[0].strip()
+            if key in remaining:
+                new_lines.append(f'{key}={_format_mycnf_value(remaining.pop(key))}\n')
+                continue
+
+        new_lines.append(line)
+
+    if in_target and remaining:
+        for key, val in remaining.items():
+            new_lines.append(f'{key}={_format_mycnf_value(val)}\n')
+        remaining.clear()
+
+    if not section_found:
+        if new_lines and not new_lines[-1].endswith('\n'):
+            new_lines.append('\n')
+        new_lines.append(f'[{section}]\n')
+        for key, val in knob_vars.items():
+            new_lines.append(f'{key}={_format_mycnf_value(val)}\n')
+
+    with open(mycnf_path, 'w', encoding='utf-8') as f:
+        f.writelines(new_lines)
+    return True
+
+
+def apply_temp_config_to_mycnf(temp_config):
+    mysql_vars = {
+        _knob_key_to_mysql_name(key): temp_config[key]
+        for key in temp_config
+    }
+    return apply_knobs_to_mycnf(mysql_vars)
 
 def get_current_metric():
 
@@ -87,61 +174,98 @@ def get_knobs_detail():
     
     return result
 
-def test_by_job(self,log_file):
-
+def _build_temp_config_from_knob(knob):
     temp_config = {}
     knobs_detail = get_knobs_detail()
     for key in knobs_detail.keys():
-        if key in knob.keys():
-            if knobs_detail[key]['type'] == 'integer':
-                temp_config[key] = knob.get(key) 
-            elif knobs_detail[key]['type'] == 'enum':
-                temp_config[key] = knobs_detail[key]['enum_values'][knob.get(key)]
-    
-    #set knobs and restart databases
-    set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
-    for knobs in temp_config:
-        index = int(knobs.replace("knob", "")) - 1
-        knob_name = original_keys[index]
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/etc/my.cnf')
-    
-    state = os.system(set_knobs_command)
+        if key not in knob.keys():
+            continue
+        knob_type = knobs_detail[key].get('type')
+        if knob_type == 'integer':
+            temp_config[key] = knob.get(key)
+        elif knob_type == 'enum':
+            value = str(knob.get(key))
+            enum_values = knobs_detail[key].get('enum_values') or []
+            if value in enum_values:
+                temp_config[key] = value
+            else:
+                print(f"Warning: {value} not found in enum values for {key}")
+    return temp_config
 
+
+def _apply_knobs_and_restart(knob):
+    temp_config = _build_temp_config_from_knob(knob)
+    apply_temp_config_to_mycnf(temp_config)
     time.sleep(10)
-
     print("success set knobs")
-    #exit()
-
     restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
-    state = os.system(restart_knobs_command)
+    return os.system(restart_knobs_command)
 
-    if state == 0:
-        print('database has been restarted')
+
+def _load_sql_statements(sql_path):
+    with open(sql_path, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+    lines = content.splitlines()
+    while lines and lines[0].startswith('--'):
+        lines.pop(0)
+    content = '\n'.join(lines).lstrip('\n')
+    parts = re.split(r';\s*\n', content)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _run_sql_file(cursor, sql_path, log_file=None):
+    """Execute all statements in a .sql file; return (ok_count, fail_count, elapsed_seconds)."""
+    statements = _load_sql_statements(sql_path)
+    ok_count = 0
+    fail_count = 0
+    start = time.time()
+    for idx, stmt in enumerate(statements, 1):
+        try:
+            cursor.execute(stmt)
+            try:
+                cursor.fetchall()
+            except Exception:
+                pass
+            ok_count += 1
+        except Exception as e:
+            fail_count += 1
+            msg = f'[{sql_path}] stmt#{idx} failed: {e}'
+            print(msg)
+            if log_file:
+                with open(log_file, 'a', encoding='utf-8') as f:
+                    f.write(msg + '\n')
+    elapsed = time.time() - start
+    return ok_count, fail_count, elapsed
+
+
+def test_by_job(knob):
+    """Run JOB (IMDB) queries; return queries/sec (higher is better)."""
+    state = _apply_knobs_and_restart(knob)
+    if state != 0:
+        print('database restarting failed')
+        return 0.0
+
+    print('database has been restarted')
+    os.makedirs('./configuration recommender/log', exist_ok=True)
+    log_file = './configuration recommender/log/job_{}.log'.format(int(time.time()))
+    sql_path = './benchmark_queries/job_all.sql'
+
+    try:
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
-        # query file
-        query_dir = ''
-        query_files = [os.path.join(query_dir, f) for f in os.listdir(query_dir) if f.endswith('.sql')]
-        total_time = 0
-        i = 0 
-        for i in range(1):
-            i = i+1
-            for query_file in query_files:
-                print(f"Running {query_file}")
-                elapsed_time = self.run_benchmark(query_file, cursor)
-                print(f"Time taken: {elapsed_time:.2f} seconds")
-                total_time += elapsed_time
-        
-        print(f"Total time for 5 runs: {total_time:.2f} seconds")
-
+        ok_count, fail_count, total_time = _run_sql_file(cursor, sql_path, log_file=log_file)
         cursor.close()
         conn.close()
-        return total_time
-    else:
-        print('database restarting failed')
-        return -1
+    except Exception as e:
+        print(f'JOB benchmark failed: {e}')
+        return 0.0
 
-    
+    print(f'JOB done: ok={ok_count} fail={fail_count} time={total_time:.2f}s log={log_file}')
+    if total_time <= 0 or ok_count == 0:
+        return 0.0
+    return float(ok_count) / total_time
+
+
 def test_by_tpcc(knob):
     #load knobs
     temp_config = {}
@@ -158,12 +282,7 @@ def test_by_tpcc(knob):
                     # Handle case where value is not in the enum_values list
                     print(f"Warning: {value} not found in enum values for {key}")
     
-    #set knobs and restart databases
-    set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
-    for knobs in temp_config:
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knobs,temp_config[knobs],'/etc/my.cnf')
-    
-    state = os.system(set_knobs_command)
+    apply_temp_config_to_mycnf(temp_config)
 
     time.sleep(10)
 
@@ -240,18 +359,7 @@ def test_by_sysbench(knob):
             else:
                 print(f"Warning: {value} not found in enum values for {key}")
     
-    #set knobs and restart databases (local, no SSH)
-    # map anonymous knobN -> real MySQL variable name
-    set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
-    for knobs in temp_config:
-        if isinstance(knobs, str) and knobs.startswith('knob') and knobs[4:].isdigit():
-            index = int(knobs.replace('knob', '')) - 1
-            knob_name = original_keys[index] if 0 <= index < len(original_keys) else knobs
-        else:
-            knob_name = knobs
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name, temp_config[knobs], '/etc/my.cnf')
-    
-    state = os.system(set_knobs_command)
+    apply_temp_config_to_mycnf(temp_config)
 
     time.sleep(10)
 
@@ -288,151 +396,325 @@ def test_by_sysbench(knob):
 def unknown_benchmark(name):
     print(f"Unknown benchmark: {name}")
 
-def test_by_tpcds(self,log_file):
 
-    temp_config = {}
-    knobs_detail = get_knobs_detail()
-    for key in knobs_detail.keys():
-        if key in knob.keys():
-            if knobs_detail[key]['type'] == 'integer':
-                temp_config[key] = knob.get(key) 
-            elif knobs_detail[key]['type'] == 'enum':
-                temp_config[key] = knobs_detail[key]['enum_values'][knob.get(key)]
-    
-    #set knobs and restart databases
-    set_knobs_command = '\cp {} {};'.format('/etc/my.cnf.bak' , '/etc/my.cnf')
-    for knobs in temp_config:
-        index = int(knobs.replace("knob", "")) - 1
-        knob_name = original_keys[index]
-        set_knobs_command += 'echo "{}"={} >> {};'.format(knob_name,temp_config[knobs],'/etc/my.cnf')
-    
-    state = os.system(set_knobs_command)
+def test_by_tpcds(knob):
+    """Run TPC-DS queries from tpcds_all.sql; return queries/sec (higher is better)."""
+    state = _apply_knobs_and_restart(knob)
+    if state != 0:
+        print('database restarting failed')
+        return 0.0
 
-    time.sleep(10)
+    print('database has been restarted')
+    os.makedirs('./configuration recommender/log', exist_ok=True)
+    log_file = './configuration recommender/log/tpcds_{}.log'.format(int(time.time()))
+    sql_path = './benchmark_queries/tpcds_all.sql'
 
-    print("success set knobs")
-    #exit()
-
-    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
-    state = os.system(restart_knobs_command)
-
-    if state == 0:
-        print('database has been restarted')
+    try:
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
-        # query file
-        query_dir = ''
-        query_files = [os.path.join(query_dir, f) for f in os.listdir(query_dir) if f.endswith('.sql')]
-        total_time = 0
-        i = 0 
-        for i in range(1):
-            i = i+1
-            for query_file in query_files:
-                print(f"Running {query_file}")
-                elapsed_time = self.run_benchmark(query_file, cursor)
-                print(f"Time taken: {elapsed_time:.2f} seconds")
-                total_time += elapsed_time
-        
-        print(f"Total time for 5 runs: {total_time:.2f} seconds")
-
+        ok_count, fail_count, total_time = _run_sql_file(cursor, sql_path, log_file=log_file)
         cursor.close()
         conn.close()
-        return total_time
-    else:
-        print('database restarting failed')
-        return -1
+    except Exception as e:
+        print(f'TPC-DS benchmark failed: {e}')
+        return 0.0
+
+    print(f'TPC-DS done: ok={ok_count} fail={fail_count} time={total_time:.2f}s log={log_file}')
+    if total_time <= 0 or ok_count == 0:
+        return 0.0
+    # Optimize for higher QPS (same direction as SYSBENCH throughput)
+    return float(ok_count) / total_time
+
 
 if __name__ == "__main__":
 
-    knob = get_current_knob()
-    throughput =  test_by_sysbench(knob)
-    metric = get_current_metric()
-    data = {
-        "knob": knob,
-        "throughput": throughput,
-        "metric": metric
-        } 
-    data1 = [data]
+    # ---------- record dir + checkpoint ----------
+    RECORD_DIR_NAME = config_parser['configuration recommender'].get('record_dir', 'record').strip()
+    RECORD_DIR = os.path.join('./configuration recommender', RECORD_DIR_NAME)
+    CHECKPOINT_PATH = os.path.join(RECORD_DIR, 'checkpoint.json')
+    RUN_MODE = config_parser['configuration recommender'].get('run_mode', 'auto').strip().lower()
+    HISTORY_PATH = os.path.join(RECORD_DIR, 'benmark_history')
+    OPTIMAL_PATH = os.path.join(RECORD_DIR, 'optimal configuration')
 
+    def load_checkpoint():
+        if not os.path.exists(CHECKPOINT_PATH):
+            return None
+        try:
+            with open(CHECKPOINT_PATH, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f'Failed to load checkpoint: {e}')
+            return None
 
-    url = 'http://{}:{}/process'.format(config_parser['configuration recommender']['LLM_server_IP'], config_parser['configuration recommender']['LLM_server_port'])
-    
-    # Return the result to LLM_server 
-    response = requests.post(url, json=data1)
+    def save_checkpoint(payload):
+        os.makedirs(RECORD_DIR, exist_ok=True)
+        payload = dict(payload)
+        payload['record_dir'] = RECORD_DIR_NAME
+        payload['updated_at'] = int(time.time())
+        with open(CHECKPOINT_PATH, 'w', encoding='utf-8') as f:
+            json.dump(payload, f, indent=2, ensure_ascii=False)
 
-    result = response.json()
-    print(result)
-    
-    
-    iteration = 0
-    best_knob = []
-    best_metric = []
-    best_throughput = 0
-    while iteration < int(config_parser['configuration recommender']['iteration']):
+    def clear_record_progress():
+        os.makedirs(RECORD_DIR, exist_ok=True)
+        for name in os.listdir(RECORD_DIR):
+            path = os.path.join(RECORD_DIR, name)
+            if name.startswith('turn_') or name in (
+                'benmark_history', 'top_k', 'optimal configuration', 'checkpoint.json'
+            ):
+                try:
+                    if os.path.isfile(path):
+                        os.remove(path)
+                except OSError as e:
+                    print(f'Warning: cannot remove {path}: {e}')
+
+    def resolve_run_mode():
+        ckpt = load_checkpoint()
+        resumable = (
+            ckpt is not None
+            and ckpt.get('status') == 'running'
+            and ckpt.get('result') is not None
+        )
+        if RUN_MODE == 'fresh':
+            return 'fresh', None
+        if RUN_MODE == 'resume':
+            if resumable:
+                return 'resume', ckpt
+            print('run_mode=resume but no incomplete checkpoint found; abort.')
+            sys.exit(1)
+        if resumable:
+            return 'resume', ckpt
+        return 'fresh', None
+
+    def parse_llm_response(response_json):
+        if isinstance(response_json, dict) and 'recommendations' in response_json:
+            return (
+                response_json.get('recommendations') or [],
+                int(response_json.get('request_count', 0)),
+                response_json.get('history_top') or [],
+                response_json.get('last_result') or '',
+            )
+        return response_json, 0, [], ''
+
+    def restore_llm_server(process_url, ckpt_data):
+        restore_url = process_url.rsplit('/process', 1)[0] + '/restore'
+        payload = {
+            'request_count': ckpt_data.get('request_count', 0),
+            'history_top': ckpt_data.get('history_top', []),
+            'last_result': ckpt_data.get('last_result', ''),
+        }
+        try:
+            r = requests.post(restore_url, json=payload, timeout=30)
+            print('LLM_server restore:', r.status_code, r.text[:200])
+        except Exception as e:
+            print(f'Warning: failed to restore LLM_server state: {e}')
+
+    def normalize_result_items(result_obj):
+        if isinstance(result_obj, list):
+            return result_obj
+        if isinstance(result_obj, dict):
+            return [result_obj]
+        if isinstance(result_obj, str):
+            return [result_obj]
+        return []
+
+    os.makedirs(RECORD_DIR, exist_ok=True)
+    os.makedirs('./configuration recommender/log', exist_ok=True)
+
+    mode, ckpt = resolve_run_mode()
+    print(f'run_mode={RUN_MODE} -> {mode}; record_dir={RECORD_DIR}')
+
+    url = 'http://{}:{}/process'.format(
+        config_parser['configuration recommender']['LLM_server_IP'],
+        int(config_parser['configuration recommender']['LLM_server_port']),
+    )
+    max_iteration = int(config_parser['configuration recommender']['iteration'])
+    benchmark = config_parser['configuration recommender']['benchmark'].strip().upper()
+    benchmark_switch = {
+        "SYSBENCH": test_by_sysbench,
+        "TPCC": test_by_tpcc,
+        "JOB": test_by_job,
+        "TPCDS": test_by_tpcds,
+    }
+
+    if mode == 'fresh':
+        clear_record_progress()
+        knob = get_current_knob()
+        benchmark_func = benchmark_switch.get(benchmark)
+        if benchmark_func is None:
+            unknown_benchmark(benchmark)
+            sys.exit(1)
+        throughput = benchmark_func(knob)
+        metric = [] if throughput == 0 else get_current_metric()
+        data1 = [{
+            "knob": knob,
+            "throughput": throughput,
+            "metric": metric,
+        }]
+        with open(HISTORY_PATH, "a", encoding="utf-8") as f:
+            json.dump(data1[0], f, indent=4)
+            f.write("\n")
+
+        response = requests.post(url, json=data1)
+        response_json = response.json()
+        result, request_count, history_top, last_result = parse_llm_response(response_json)
+        print(result)
+
+        iteration = 0
+        result_index = 0
         data_list = []
-        # LLM_server jsonify returns list[dict]; also accept JSON strings
-        if isinstance(result, list):
-            items = result
-        elif isinstance(result, dict):
-            items = [result]
-        elif isinstance(result, str):
-            items = [result]
-        else:
-            items = []
+        best_knob = knob
+        best_metric = metric
+        best_throughput = float(throughput) if isinstance(throughput, (int, float)) else 0.0
 
-        for item in items:
+        save_checkpoint({
+            'status': 'running',
+            'iteration': iteration,
+            'result_index': result_index,
+            'result': result,
+            'data_list': data_list,
+            'best_knob': best_knob,
+            'best_metric': best_metric,
+            'best_throughput': best_throughput,
+            'request_count': request_count,
+            'history_top': history_top,
+            'last_result': last_result,
+        })
+    else:
+        print(
+            f'Resuming: iteration={ckpt.get("iteration")}, '
+            f'result_index={ckpt.get("result_index")}'
+        )
+        restore_llm_server(url, ckpt)
+        iteration = int(ckpt.get('iteration', 0))
+        result_index = int(ckpt.get('result_index', 0))
+        result = ckpt.get('result')
+        data_list = ckpt.get('data_list') or []
+        best_knob = ckpt.get('best_knob') or []
+        best_metric = ckpt.get('best_metric') or []
+        best_throughput = float(ckpt.get('best_throughput') or 0)
+        request_count = int(ckpt.get('request_count', 0))
+        history_top = ckpt.get('history_top') or []
+        last_result = ckpt.get('last_result') or ''
+
+    while iteration < max_iteration:
+        items = normalize_result_items(result)
+
+        for idx in range(result_index, len(items)):
+            item = items[idx]
             if isinstance(item, str):
                 if not item.strip():
+                    result_index = idx + 1
                     continue
                 knob = json.loads(item)
             elif isinstance(item, dict):
                 knob = item
             else:
+                result_index = idx + 1
                 continue
 
             if not knob:
                 print('Skip empty knob config')
+                result_index = idx + 1
+                save_checkpoint({
+                    'status': 'running',
+                    'iteration': iteration,
+                    'result_index': result_index,
+                    'result': result,
+                    'data_list': data_list,
+                    'best_knob': best_knob,
+                    'best_metric': best_metric,
+                    'best_throughput': best_throughput,
+                    'request_count': request_count,
+                    'history_top': history_top,
+                    'last_result': last_result,
+                })
                 continue
 
-            benchmark = config_parser['configuration recommender']['benchmark'].strip().upper()
-            benchmark_switch = {
-                "SYSBENCH": test_by_sysbench,
-                "TPCC": test_by_tpcc,
-                "JOB": test_by_job,
-                "TPCDS": test_by_tpcds
-            }
-            throughput =  benchmark_switch.get(benchmark, lambda: unknown_benchmark(benchmark))(knob)
-            if(throughput == 0):
-                metric = []
+            benchmark_func = benchmark_switch.get(benchmark)
+            if benchmark_func is None:
+                unknown_benchmark(benchmark)
+                result_index = idx + 1
+                continue
+
+            throughput = benchmark_func(knob)
+            if not isinstance(throughput, (int, float)) or isinstance(throughput, bool):
+                throughput = 0.0
             else:
-                metric = get_current_metric()
+                throughput = float(throughput)
+
+            metric = [] if throughput == 0 else get_current_metric()
             data = {
                 "knob": knob,
                 "throughput": throughput,
-                "metric": metric
+                "metric": metric,
             }
             data_list.append(data)
-            with open('./configuration recommender/record/benmark_history',"a") as f:
+            with open(HISTORY_PATH, "a", encoding="utf-8") as f:
                 json.dump(data, f, indent=4)
-                f.close()
-            if throughput>best_throughput:
+                f.write("\n")
+
+            if throughput > best_throughput:
                 best_knob = knob
                 best_metric = metric
                 best_throughput = throughput
-        
-        if not data_list:
+
+            result_index = idx + 1
+            save_checkpoint({
+                'status': 'running',
+                'iteration': iteration,
+                'result_index': result_index,
+                'result': result,
+                'data_list': data_list,
+                'best_knob': best_knob,
+                'best_metric': best_metric,
+                'best_throughput': best_throughput,
+                'request_count': request_count,
+                'history_top': history_top,
+                'last_result': last_result,
+            })
+
+        if not data_list and result_index >= len(items):
             print('No valid knob configs in this iteration, stop.')
             break
 
-        url = 'http://{}:{}/process'.format(config_parser['configuration recommender']['LLM_server_IP'], config_parser['configuration recommender']['LLM_server_port'])
-        #  Return the result to LLM_server 
         response = requests.post(url, json=data_list)
+        response_json = response.json()
+        result, request_count, history_top, last_result = parse_llm_response(response_json)
+        print(result)
 
-        result = response.json()
-        #print(result)
-        iteration = iteration+1
-    
-    #The optimal configuration found
-    with open("./configuration recommender/record/optimal configuration", "w", encoding="utf-8") as f:
+        iteration += 1
+        result_index = 0
+        data_list = []
+        save_checkpoint({
+            'status': 'running',
+            'iteration': iteration,
+            'result_index': result_index,
+            'result': result,
+            'data_list': data_list,
+            'best_knob': best_knob,
+            'best_metric': best_metric,
+            'best_throughput': best_throughput,
+            'request_count': request_count,
+            'history_top': history_top,
+            'last_result': last_result,
+        })
+
+    with open(OPTIMAL_PATH, "w", encoding="utf-8") as f:
         print("best_knob:", best_knob, file=f)
+        print("best_metric:", best_metric, file=f)
         print("best_throughput:", best_throughput, file=f)
+
+    save_checkpoint({
+        'status': 'completed',
+        'iteration': iteration,
+        'result_index': result_index,
+        'result': result,
+        'data_list': data_list,
+        'best_knob': best_knob,
+        'best_metric': best_metric,
+        'best_throughput': best_throughput,
+        'request_count': request_count,
+        'history_top': history_top,
+        'last_result': last_result,
+    })
+    print(f'Done. Results saved under {RECORD_DIR}')

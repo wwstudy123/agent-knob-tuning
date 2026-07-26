@@ -2,10 +2,66 @@ from Parserbase import *
 import configparser
 import os
 import sys
+import warnings
+import re
+import psqlparse
+
+
+def _strip_sql_file_header(content: str) -> str:
+    lines = content.splitlines()
+    while lines and lines[0].startswith("--"):
+        lines.pop(0)
+    return "\n".join(lines).lstrip("\n")
+
+
+def _load_workload_sql_list(workload_path: str) -> list[str]:
+    with open(workload_path, "r", encoding="utf-8", errors="ignore") as f:
+        content = _strip_sql_file_header(f.read())
+    parts = re.split(r";\s*\n", content)
+    return [p.strip() for p in parts if p.strip()]
+
+
+def _extract_tables_regex(sql: str) -> list[str]:
+    tables = []
+    seen = set()
+    for match in re.finditer(
+        r"(?is)\b(?:from|join)\s+(?:only\s+)?([`\"]?)([a-zA-Z_][\w]*)\1",
+        sql,
+    ):
+        name = match.group(2).lower()
+        if name not in seen:
+            seen.add(name)
+            tables.append(name)
+    return tables
+
+
 class WP2(WP):
     def __init__(self) -> None:
         self.dbs=None
         pass
+
+    def _schema_table_names(self) -> set[str]:
+        return {table.name for table in self.dbs.tables}
+
+    def _extract_schema_tables(self, sql: str) -> list[str]:
+        schema_tables = self._schema_table_names()
+        tables = set()
+        try:
+            parsed = psqlparse.parse(sql + ";")
+            if parsed:
+                tables.update(parsed[0].tables() or [])
+        except Exception:
+            pass
+        tables.update(_extract_tables_regex(sql))
+
+        normalized = []
+        seen = set()
+        for table_name in tables:
+            name = table_name.lower()
+            if name in schema_tables and name not in seen:
+                seen.add(name)
+                normalized.append(name)
+        return normalized
     
     # workload analysis function
     def parse_workload(self,workload_path):
@@ -28,61 +84,48 @@ class WP2(WP):
             predicate_type=["=",">","<",">=","<="]
             for i in predicate_type:
                 predicate_dict[i]=0
-            
-            # Set the output window environment to display all information
-            pd.set_option('max_colwidth',None)
-            df = pd.read_csv(workload_path, header=None,on_bad_lines='skip',sep = r'\s+\n',index_col=0,engine='python') 
-            # df=pd.read_csv("seats_workload.txt",header=None)
-            
-            tokens=""
-            for i in df.index.values:
-                tokens+=i
-                tokens+=" "
-        
-            # Using regular expressions to segment
-            sql_list=re.split('[\s]*;[\n]*[\s]*',tokens)
-            # token_list=re.split(r'[\(,;\s\)\n\t]+',tokens)
-            # print(sql_list[-3:])
-            for i in range(len(sql_list)):
-                import psqlparse
-                if sql_list[i]=="" or sql_list[i]==' ':
-                    continue
-                # print("i: ",sql_list[i])
-                real_tb_used=psqlparse.parse(sql_list[i]+";")[0].tables()
-                # print(real_tb_used)
+
+            sql_list = _load_workload_sql_list(workload_path)
+            if not sql_list:
+                print(f"fatal error: no SQL statements found in {workload_path}")
+                return
+
+            for sql in sql_list:
+                real_tb_used = self._extract_schema_tables(sql)
+
                 for table_name in real_tb_used:
                     if table_name not in tbl_dict.keys():
                         tbl_dict[table_name]=1
                         tbl_col_dict[table_name]={}
                         tb_tmp=self.dbs.getTableByName(table_name)
-                        # print(table_name)
+                        if tb_tmp is None:
+                            continue
                         for it in tb_tmp.col:
                             tbl_col_dict[table_name][it.name]=0
                     else:
                         tbl_dict[table_name]+=1
                 
-                match = re.search(r'SELECT\s+(.*?)\s+FROM', sql_list[i], re.IGNORECASE)
+                match = re.search(r'SELECT\s+(.*?)\s+FROM', sql, re.IGNORECASE | re.DOTALL)
                 
                 if match:
                     columns_part = match.group(1).strip()
-                    if columns_part=='*':
-                        non_agg_count+=1
+                    agg_pattern = re.compile(
+                        r'\b(COUNT|SUM|AVG|MAX|MIN|STDDEV|VARIANCE|GROUP_CONCAT)\s*\(',
+                        re.IGNORECASE,
+                    )
+                    if columns_part == '*':
+                        non_agg_count += 1
                         warnings.warn(
                             "Detected SELECT * usage, which may affect performance and result in unnecessary column returns",
-                            category=RuntimeWarning
+                            category=RuntimeWarning,
                         )
                     else:
-                        agg_pattern=re.compile(
-                            r'\b(COUNT|SUM|AVG|MAX|MIN|STDDEV|VARIANCE|GROUP_CONCAT)\s*\(.*?\)',
-                            re.IGNORECASE
-                        )
-                    columns = [col.strip() for col in columns_part.split(',')]
-                    for col in columns:
-                        if not agg_pattern.search(col):
-                            non_agg_count+=1
-                    # print(non_agg_count)
+                        columns = [col.strip() for col in columns_part.split(',')]
+                        for col in columns:
+                            if not agg_pattern.search(col):
+                                non_agg_count += 1
     
-                simple_sql_token_list=re.split(r'[\(,;\s\)\n\t]+',sql_list[i])
+                simple_sql_token_list=re.split(r'[\(,;\s\)\n\t]+',sql)
                 if simple_sql_token_list.__contains__("")==True:
                     simple_sql_token_list.remove("")
                 # print(simple_sql_token_list)
@@ -99,9 +142,9 @@ class WP2(WP):
                     
                     if j.upper()=='AND' or j.upper()=='OR' or j.upper()=="WHERE":
                         predicate_num+=1
-                    elif j.upper()=='GROUP' and simple_sql_token_list[id+1].upper()=="BY":
+                    elif j.upper()=='GROUP' and id + 1 < len(simple_sql_token_list) and simple_sql_token_list[id+1].upper()=="BY":
                         group_by_num+=1
-                    elif j.upper()=='ORDER' and simple_sql_token_list[id+1].upper()=="BY":
+                    elif j.upper()=='ORDER' and id + 1 < len(simple_sql_token_list) and simple_sql_token_list[id+1].upper()=="BY":
                         order_by_num+=1
                     elif j.upper()=="SUM" or j.upper()=="MIN" or j.upper()=="MAX" or j.upper()=="AVG":
                         aggr_num+=1
@@ -110,23 +153,21 @@ class WP2(WP):
                     elif j in predicate_type:
                         predicate_dict[j]+=1
                     else:
-                        # if j=='supplier':
-                        #     print(simple_sql_token_list[id-1:id+5])
                         pass
                         
                 # Data Access Features
                 for token in simple_sql_token_list:
                     for tb_tmp in real_tb_used:
+                        if tb_tmp not in tbl_col_dict:
+                            continue
                         for col_tmp in tbl_col_dict[tb_tmp].keys():
                             if token==col_tmp:
-                                # print("table_name : ",tb_tmp,"col_name : ",col_tmp)
                                 tbl_col_dict[tb_tmp][col_tmp]+=1
                     tmp_res=re.match(".+\..+",token)
                     if tmp_res!=None:
-                        # print(tmp_res.group().split("."))
-                        if tmp_res.group().split(".")[0] in real_tb_used:
-                            # print(tmp_res.group().split()[0],tmp_res.group().split()[1])
-                            tbl_col_dict[tmp_res.group().split(".")[0]][tmp_res.group().split(".")[1]]+=1
+                        table_ref, col_ref = tmp_res.group().split(".", 1)
+                        if table_ref in tbl_col_dict and col_ref in tbl_col_dict[table_ref]:
+                            tbl_col_dict[table_ref][col_ref]+=1
         maxi=""
         maxv=0
         mini=""
@@ -150,11 +191,12 @@ class WP2(WP):
                 minv=tbl_dict[i]
                 mini=i
                 
+        workload_size = len(sql_list)
         print("type of workload :",workload_path)
-        # print("total token num :",len(token_list))
-        print("sample SQL1:",re.split(r'[,;\s\n\t\(\)]+',str(df.iloc[0].name)))
-        print("sample SQL2:",re.split(r'[,;\s\n\t\(\)]+',str(df.iloc[1].name)))
-        print("size of workload :",tokens.count(";"))
+        print("sample SQL1:",re.split(r'[,;\s\n\t\(\)]+',sql_list[0])[:20])
+        if len(sql_list) > 1:
+            print("sample SQL2:",re.split(r'[,;\s\n\t\(\)]+',sql_list[1])[:20])
+        print("size of workload :",workload_size)
         print("read write ratio : "+str(read_cnt)+"|"+str(write_cnt)+"  "+str(read_cnt/(write_cnt+read_cnt)))
         print("group by ratio : "+str(group_by_num/(write_cnt+read_cnt)))
         print("order by ratio : "+str(order_by_num/(write_cnt+read_cnt)))
@@ -163,13 +205,20 @@ class WP2(WP):
         print("max visited table :",maxi,str(maxv/sumv))
         print("min visited table :",mini,str(minv/sumv))
         
-        print("average table access count :",sumv/tokens.count(";"))
-        print("average item returned count per query :",non_agg_count/tokens.count(";"))
-        print("order by logic ratio :",(order_by_num-desc_num)/order_by_num,"(asc):",desc_num/order_by_num,"(desc)")
+        print("average table access count :",sumv/workload_size)
+        print("average item returned count per query :",non_agg_count/workload_size)
+        if order_by_num:
+            print("order by logic ratio :",(order_by_num-desc_num)/order_by_num,"(asc):",desc_num/order_by_num,"(desc)")
+        else:
+            print("order by logic ratio : N/A")
         
         print("where clause comparison condition ratio :")
-        for i in predicate_type:
-            print("\t",i,predicate_dict[i]/sum(predicate_dict.values()))
+        predicate_total = sum(predicate_dict.values())
+        if predicate_total:
+            for i in predicate_type:
+                print("\t",i,predicate_dict[i]/predicate_total)
+        else:
+            print("\t(no comparison predicates detected)")
         
         print("table access pattern :")
         # tbl_dict record the access patterns of each table and column
@@ -185,7 +234,6 @@ class WP2(WP):
                 print("\t\t",j,str(tbl_col_dict[i][j])+"|"+str(tmp_sum),"\t",tbl_col_dict[i][j]/tmp_sum)
         print()
         
-import psqlparse
 import argparse
 
 if __name__=='__main__':
