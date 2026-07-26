@@ -398,7 +398,7 @@ def unknown_benchmark(name):
 
 
 def test_by_tpcds(knob):
-    """Run TPC-DS queries from tpcds_all.sql; return queries/sec (higher is better)."""
+    """Run TPC-DS queries from tpcds.sql; return queries/sec (higher is better)."""
     state = _apply_knobs_and_restart(knob)
     if state != 0:
         print('database restarting failed')
@@ -407,7 +407,7 @@ def test_by_tpcds(knob):
     print('database has been restarted')
     os.makedirs('./configuration recommender/log', exist_ok=True)
     log_file = './configuration recommender/log/tpcds_{}.log'.format(int(time.time()))
-    sql_path = './benchmark_queries/tpcds_all.sql'
+    sql_path = './benchmark_queries/tpcds.sql'
 
     try:
         conn = pymysql.connect(**db_config)
