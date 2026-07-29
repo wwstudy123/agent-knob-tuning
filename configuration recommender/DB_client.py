@@ -20,9 +20,20 @@ db_config = {
     'host': config_parser['configuration recommender']['DB_Host'],
     'database': config_parser['configuration recommender']['DB_Name'],
     'port': int(config_parser['configuration recommender']['DB_Port']),
-    # match your mysqld socket; avoids default /var/run/mysqld/mysqld.sock
-    'unix_socket': '/tmp/mysql.sock',
+    'unix_socket': '/tmp/mysql8.sock',
+    'connect_timeout': 30,
+    'read_timeout': 300,
+    'write_timeout': 300,
 }
+
+MYSQL_BASE = '/workspace/setup/mysql-8.0'
+MYCNF_PATH = '/etc/my8.cnf'
+MYCNF_BAK = '/etc/my8.cnf.bak'
+MYSQL_RESTART_CMD = 'sudo service mysql8 restart'
+MYSQL_SAFE_FALLBACK_CMD = (
+    f'{MYSQL_BASE}/bin/mysqld_safe --defaults-file={MYCNF_PATH} '
+    '>/tmp/mysqld8_safe.out 2>&1 &'
+)
 
 with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
     original = json.load(f)
@@ -31,8 +42,15 @@ with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
 with open(config_parser['range pruner']['output_file'], 'r') as f:
     selected_knobs = json.load(f)
 
-MYCNF_PATH = '/etc/my.cnf'
-MYCNF_BAK = '/etc/my.cnf.bak'
+
+def _restart_mysql():
+    """Restart MySQL 8.0 via service; fall back to mysqld_safe if needed."""
+    state = os.system(MYSQL_RESTART_CMD)
+    if state != 0:
+        print(f'{MYSQL_RESTART_CMD} exit={state}; trying mysqld_safe', flush=True)
+        os.system('pkill -9 mysqld mysqld_safe 2>/dev/null; sleep 2')
+        state = os.system(MYSQL_SAFE_FALLBACK_CMD)
+    return state
 
 
 def _format_mycnf_value(value):
@@ -193,18 +211,52 @@ def _build_temp_config_from_knob(knob):
     return temp_config
 
 
+def _wait_for_mysql(timeout_sec=90, poll_sec=2):
+    """Return True once pymysql can connect; False if MySQL never comes up."""
+    deadline = time.time() + timeout_sec
+    last_err = None
+    sock = db_config.get('unix_socket')
+    while time.time() < deadline:
+        if sock and not os.path.exists(sock):
+            print(f'waiting for mysql socket {sock} ...', flush=True)
+        else:
+            try:
+                conn = pymysql.connect(**db_config)
+                conn.close()
+                print('mysql is accepting connections', flush=True)
+                return True
+            except Exception as e:
+                last_err = e
+                print(f'waiting for mysql connect: {e}', flush=True)
+        time.sleep(poll_sec)
+    print(f'mysql did not become ready within {timeout_sec}s; last_error={last_err}', flush=True)
+    return False
+
+
 def _apply_knobs_and_restart(knob):
     temp_config = _build_temp_config_from_knob(knob)
     apply_temp_config_to_mycnf(temp_config)
     time.sleep(10)
     print("success set knobs")
-    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
-    return os.system(restart_knobs_command)
+    state = _restart_mysql()
+    if state != 0:
+        return state
+    if not _wait_for_mysql(timeout_sec=90):
+        print(
+            'MySQL failed to start after knob apply. Check error log, e.g.\n'
+            f'  ls -t {MYSQL_BASE}/data/*.err | head -1 | xargs tail -n 100\n'
+            'Often caused by bad knobs in my.cnf — restore backup:\n'
+            f'  sudo cp {MYCNF_BAK} {MYCNF_PATH}',
+            flush=True,
+        )
+        return 1
+    return 0
 
 
 def _load_sql_statements(sql_path):
     with open(sql_path, 'r', encoding='utf-8', errors='ignore') as f:
         content = f.read()
+    content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
     lines = content.splitlines()
     while lines and lines[0].startswith('--'):
         lines.pop(0)
@@ -213,13 +265,23 @@ def _load_sql_statements(sql_path):
     return [p.strip() for p in parts if p.strip()]
 
 
-def _run_sql_file(cursor, sql_path, log_file=None):
+def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=180000):
     """Execute all statements in a .sql file; return (ok_count, fail_count, elapsed_seconds)."""
     statements = _load_sql_statements(sql_path)
     ok_count = 0
     fail_count = 0
     start = time.time()
+    # MySQL 5.7.8+: abort SELECT after N ms (prevents multi-hour inventory/self-join hangs)
+    if stmt_timeout_ms and stmt_timeout_ms > 0:
+        try:
+            cursor.execute(f'SET SESSION max_execution_time = {int(stmt_timeout_ms)}')
+        except Exception as e:
+            print(f'Warning: cannot set max_execution_time: {e}')
+    total = len(statements)
+    print(f'[{sql_path}] running {total} statements (timeout={stmt_timeout_ms}ms)')
     for idx, stmt in enumerate(statements, 1):
+        t0 = time.time()
+        print(f'[{sql_path}] stmt#{idx}/{total} ...', flush=True)
         try:
             cursor.execute(stmt)
             try:
@@ -227,10 +289,11 @@ def _run_sql_file(cursor, sql_path, log_file=None):
             except Exception:
                 pass
             ok_count += 1
+            print(f'[{sql_path}] stmt#{idx}/{total} ok in {time.time() - t0:.1f}s', flush=True)
         except Exception as e:
             fail_count += 1
-            msg = f'[{sql_path}] stmt#{idx} failed: {e}'
-            print(msg)
+            msg = f'[{sql_path}] stmt#{idx}/{total} failed after {time.time() - t0:.1f}s: {e}'
+            print(msg, flush=True)
             if log_file:
                 with open(log_file, 'a', encoding='utf-8') as f:
                     f.write(msg + '\n')
@@ -288,7 +351,7 @@ def test_by_tpcc(knob):
 
     print("success set knobs")
 
-    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
+    restart_knobs_command = MYSQL_RESTART_CMD
     state = os.system(restart_knobs_command)
 
     if state == 0:
@@ -296,7 +359,7 @@ def test_by_tpcc(knob):
         log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
         ip = ''
         username = ''
-        command = 'tpcc_start -S /var/lib/mysql/mysql.sock -d -u -p -w -c -r -l'
+        command = f'tpcc_start -S {db_config["unix_socket"]} -d -u -p -w -c -r -l'
         client = paramiko.SSHClient()
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         tps = 0
@@ -366,14 +429,15 @@ def test_by_sysbench(knob):
     print("success set knobs")
     #exit()
 
-    restart_knobs_command = 'cd /workspace/setup/mysql && service mysqld restart'
+    restart_knobs_command = MYSQL_RESTART_CMD
     state = os.system(restart_knobs_command)
 
     if state == 0:
         print('database has been restarted')
         os.makedirs('./configuration recommender/log', exist_ok=True)
         log_file = './configuration recommender/log/' + '{}.log'.format(int(time.time()))
-        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-socket=/tmp/mysql.sock --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
+        command_run = 'sysbench --db-driver=mysql --threads=32 --mysql-socket={} --mysql-user={} --mysql-password={} --mysql-db={} --tables=50 --table-size=1000000 --time=120 --report-interval=60 oltp_read_write run'.format(
+                            db_config.get('unix_socket'),
                             db_config.get('user'),
                             db_config.get('password'),
                             db_config.get('database')
@@ -398,7 +462,7 @@ def unknown_benchmark(name):
 
 
 def test_by_tpcds(knob):
-    """Run TPC-DS queries from tpcds.sql; return queries/sec (higher is better)."""
+    """Run TPC-DS queries from tpcds_all.sql; return queries/sec (higher is better)."""
     state = _apply_knobs_and_restart(knob)
     if state != 0:
         print('database restarting failed')
@@ -407,10 +471,12 @@ def test_by_tpcds(knob):
     print('database has been restarted')
     os.makedirs('./configuration recommender/log', exist_ok=True)
     log_file = './configuration recommender/log/tpcds_{}.log'.format(int(time.time()))
-    sql_path = './benchmark_queries/tpcds.sql'
+    sql_path = './benchmark_queries/tpcds_all.sql'
 
     try:
+        print(f'connecting to MySQL via {db_config.get("unix_socket") or db_config.get("host")} ...', flush=True)
         conn = pymysql.connect(**db_config)
+        print('connected; starting TPC-DS workload', flush=True)
         cursor = conn.cursor()
         ok_count, fail_count, total_time = _run_sql_file(cursor, sql_path, log_file=log_file)
         cursor.close()

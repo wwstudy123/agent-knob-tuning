@@ -509,10 +509,10 @@ order by sum(cr_net_loss) desc LIMIT 100
 select *
  from(select w_warehouse_name
             ,i_item_id
-            ,sum(case when (cast(d_date as date) < cast ('2000-05-19' as date))
+            ,sum(case when (cast(d_date as date) < CAST('2000-05-19' as date))
 	                then inv_quantity_on_hand 
                       else 0 end) as inv_before
-            ,sum(case when (cast(d_date as date) >= cast ('2000-05-19' as date))
+            ,sum(case when (cast(d_date as date) >= CAST('2000-05-19' as date))
                       then inv_quantity_on_hand 
                       else 0 end) as inv_after
    from inventory
@@ -523,8 +523,8 @@ select *
      and i_item_sk          = inv_item_sk
      and inv_warehouse_sk   = w_warehouse_sk
      and inv_date_sk    = d_date_sk
-     and d_date between DATE_SUB(cast ('2000-05-19' as date), INTERVAL 30 DAY)
-                    and DATE_ADD(cast ('2000-05-19' as date), INTERVAL 30 DAY)
+     and d_date between DATE_SUB(CAST('2000-05-19' as date), INTERVAL 30 DAY)
+                    and DATE_ADD(CAST('2000-05-19' as date), INTERVAL 30 DAY)
    group by w_warehouse_name, i_item_id) x
  where (case when inv_before > 0 
              then inv_after / inv_before 
@@ -3952,9 +3952,9 @@ select i_item_id,
 select 
    w_state
   ,i_item_id
-  ,sum(case when (cast(d_date as date) < cast ('2002-05-18' as date)) 
+  ,sum(case when (cast(d_date as date) < CAST('2002-05-18' as date)) 
  		then cs_sales_price - coalesce(cr_refunded_cash,0) else 0 end) as sales_before
-  ,sum(case when (cast(d_date as date) >= cast ('2002-05-18' as date)) 
+  ,sum(case when (cast(d_date as date) >= CAST('2002-05-18' as date)) 
  		then cs_sales_price - coalesce(cr_refunded_cash,0) else 0 end) as sales_after
  from
    catalog_sales left outer join catalog_returns on
@@ -3968,8 +3968,8 @@ select
  and i_item_sk          = cs_item_sk
  and cs_warehouse_sk    = w_warehouse_sk 
  and cs_sold_date_sk    = d_date_sk
- and d_date between DATE_SUB(cast ('2002-05-18' as date), INTERVAL 30 DAY)
-                and DATE_ADD(cast ('2002-05-18' as date), INTERVAL 30 DAY) 
+ and d_date between DATE_SUB(CAST('2002-05-18' as date), INTERVAL 30 DAY)
+                and DATE_ADD(CAST('2002-05-18' as date), INTERVAL 30 DAY) 
  group by
     w_state,i_item_id
  order by w_state,i_item_id
