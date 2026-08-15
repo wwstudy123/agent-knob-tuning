@@ -8,6 +8,9 @@ from config_rank import sort_list
 import configparser
 from reflection_memory import ReflectionMemory
 from surrogate import CanonicalConfigEncoder, SurrogateModel, load_history_jsonl
+from admtune.prescreen import three_d_prescreen
+from admtune.reflection_policy import ReflectionPolicy, TriggerContext, build_delta_m
+from admtune.decision import action_prompt_instruction, map_legacy_action
 
 # Auto-detect: use Anthropic SDK if env vars are set, otherwise OpenAI SDK
 _use_anthropic = bool(os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"))
@@ -107,6 +110,24 @@ SURROGATE_EXPLORATION_SLOTS = config.getint(
     'configuration recommender', 'surrogate_exploration_slots', fallback=1
 )
 TOP_K = config.getint('configuration recommender', 'top_k', fallback=2)
+ADMTUNE_ENABLED = config.getboolean('admtune', 'enabled', fallback=True)
+PRESCREEN_ENABLED = config.getboolean(
+    'admtune', 'prescreen_enabled', fallback=SURROGATE_ENABLED
+)
+RISK_THRESHOLD = config.getfloat(
+    'admtune', 'risk_threshold', fallback=SURROGATE_FAILURE_THRESHOLD
+)
+CONF_THRESHOLD = config.getfloat('admtune', 'conf_threshold', fallback=0.2)
+REFLECTION_MODE = config.get(
+    'admtune',
+    'reflection_mode',
+    fallback='conditional_delta' if REFLECTION_ENABLED else 'off',
+)
+if not REFLECTION_ENABLED:
+    REFLECTION_MODE = 'off'
+REFLECTION_POLICY = ReflectionPolicy(REFLECTION_MODE)
+TRIGGER_IMPROVE = config.getfloat('admtune', 'trigger_improve_delta', fallback=0.03)
+TRIGGER_STAGNATION = config.getint('admtune', 'trigger_stagnation', fallback=4)
 candidate_metadata_path = config['knob selector']['candidate_knobs']
 surrogate_encoder = CanonicalConfigEncoder(
     candidate_metadata_path,
@@ -193,24 +214,42 @@ def _surrogate_select(json_strings, request_number):
     pool = _expand_candidate_pool(candidates, SURROGATE_POOL_SIZE, request_number)
     ranked = model.rank_candidates(
         pool,
-        top_k=TOP_K,
+        top_k=None,
         strategy='ucb',
         beta=SURROGATE_BETA,
         min_success_probability=max(0.0, 1.0 - SURROGATE_FAILURE_THRESHOLD),
         force_exploration=SURROGATE_EXPLORATION_SLOTS > 0,
     )
-    selected = [entry['config'] for entry in ranked]
-    if ranked:
-        relative_uncertainty = [
-            entry['prediction']['std']
-            / max(1e-9, entry['prediction']['mean'] + entry['prediction']['std'])
-            for entry in ranked
-        ]
-        diagnostics['confidence'] = max(
-            0.0, min(1.0, 1.0 - sum(relative_uncertainty) / len(relative_uncertainty))
-        )
-        diagnostics['selected_predictions'] = ranked
+    screen = three_d_prescreen(
+        ranked,
+        top_k=TOP_K,
+        risk_threshold=RISK_THRESHOLD,
+        conf_threshold=CONF_THRESHOLD,
+        enabled=PRESCREEN_ENABLED and ADMTUNE_ENABLED,
+    )
+    selected = [entry['config'] for entry in screen.accepted]
     diagnostics['candidate_pool_size'] = len(pool)
+    diagnostics['R_filter'] = screen.R_filter
+    diagnostics['n_target'] = screen.n_target
+    diagnostics['n_accepted'] = screen.n_accepted
+    diagnostics['n_filtered'] = screen.n_filtered
+    diagnostics['prescreen'] = screen.diagnostics
+    diagnostics['selected_predictions'] = screen.accepted
+    if screen.accepted:
+        confs = [
+            float((entry.get('prediction') or {}).get('confidence') or 0.0)
+            for entry in screen.accepted
+        ]
+        diagnostics['confidence'] = sum(confs) / max(1, len(confs))
+    filter_log = os.path.join(RECORD_DIR, 'filter_log.jsonl')
+    with open(filter_log, 'a', encoding='utf-8') as handle:
+        handle.write(json.dumps({
+            'request_count': request_number,
+            'n_target': screen.n_target,
+            'n_accepted': screen.n_accepted,
+            'n_filtered': screen.n_filtered,
+            'R_filter': screen.R_filter,
+        }) + '\n')
     return selected or sort_list(json_strings), diagnostics
 
 
@@ -438,27 +477,87 @@ def process_data():
         sorted_history = sorted(history_top, key=lambda x: -x[0])  
         # Sort by performance
         history_entries = []
-        for idx, (t, _, item) in enumerate(sorted_history, 1):
-            knob_str = json.dumps(item['knob'], indent=4)
-            metric_str = json.dumps(item['metric'], indent=4)
+        for idx, (t, _, hist_item) in enumerate(sorted_history, 1):
+            knob_str = json.dumps(hist_item['knob'], indent=4)
+            metric_str = json.dumps(hist_item['metric'], indent=4)
             history_entries.append(
                 f"Task {idx}:\n"
                 f"Throughput: {t}\n"
                 f"Knob Configuration:\n{knob_str}\n"
                 f"Metrics:\n{metric_str}\n"
             )
-        
-        if REFLECTION_ENABLED:
-            history_context = reflection_memory.compact_prompt_context(
-                max_chars=REFLECTION_MAX_CHARS
-            )
-        else:
-            history_context = "\n\n".join(history_entries)
-        knob_context = knobs if request_count == 1 else compact_knobs
-        decision_instruction = (
-            f"Adaptive controller action: {decision.get('name', 'continue_local')}. "
-            f"Reason: {decision.get('reason', 'none')}."
+        full_history_text = "\n\n".join(history_entries)
+        compact_reflection = (
+            reflection_memory.compact_prompt_context(max_chars=REFLECTION_MAX_CHARS)
+            if REFLECTION_ENABLED
+            else full_history_text
         )
+        prev_best_score = sorted_history[0][0] if sorted_history else 0.0
+        try:
+            prev_best_score_f = float(prev_best_score or 0.0)
+            now_score_f = float(throughput or 0.0)
+            improve_delta = (
+                abs(now_score_f - prev_best_score_f) / max(1e-9, abs(prev_best_score_f))
+                if prev_best_score_f
+                else 0.0
+            )
+        except (TypeError, ValueError):
+            improve_delta = 0.0
+            prev_best_score_f = 0.0
+            now_score_f = float(throughput or 0.0)
+        adm_action = map_legacy_action(decision.get('name', 'continue_local'))
+        if decision.get('admtune_action'):
+            adm_action = decision.get('admtune_action')
+        delta_m = build_delta_m(
+            knobs_now=item.get('knob') or {},
+            knobs_prev=(sorted_history[0][2].get('knob') if sorted_history else {}) or {},
+            metrics_now=item.get('metric') or {},
+            score_now=now_score_f,
+            score_prev_best=prev_best_score_f,
+            action=adm_action,
+            notes=item.get('failure_reason'),
+        )
+        trigger_ctx = TriggerContext(
+            action=adm_action,
+            improve_delta=improve_delta,
+            failed=not trial_valid,
+            stagnation_len=int(decision.get('stagnation_len') or 0),
+            phase_changed=bool(decision.get('phase_changed')),
+            improve_threshold=TRIGGER_IMPROVE,
+            stagnation_limit=TRIGGER_STAGNATION,
+        )
+        triggered = REFLECTION_POLICY.trigger(trigger_ctx)
+        prompt_pack = REFLECTION_POLICY.prompt_history(
+            triggered=triggered,
+            full_history_text=full_history_text,
+            delta_m=delta_m,
+            compact_reflection=compact_reflection,
+        )
+        history_context = prompt_pack['history_text']
+        knob_context = knobs if request_count == 1 else compact_knobs
+        decision_instruction = action_prompt_instruction(
+            adm_action, decision.get('reason', 'none')
+        )
+        decision_instruction += f" ReflectionMode={REFLECTION_MODE} Trigger_t={triggered}."
+
+        llm_call_log = os.path.join(RECORD_DIR, 'llm_call_log.jsonl')
+        with open(llm_call_log, 'a', encoding='utf-8') as handle:
+            handle.write(json.dumps({
+                'request_count': request_count,
+                'admtune_action': adm_action,
+                'reflection_mode': REFLECTION_MODE,
+                'triggered': triggered,
+                'skip_llm': bool(prompt_pack.get('skip_llm')),
+            }) + '\n')
+
+        if prompt_pack.get('skip_llm'):
+            # Conditional reflection: skip LLM; emit local perturbations of current knobs.
+            base_cfg = item.get('knob') or {}
+            local_pool = _expand_candidate_pool([base_cfg], max(TOP_K, 2), request_count)
+            for cfg in local_pool[: max(1, NODE_COUNT)]:
+                with open(filename, 'a', encoding='utf-8') as f:
+                    f.write(json.dumps(cfg) + '\n')
+            continue
 
         messages1 = [
         {

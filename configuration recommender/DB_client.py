@@ -12,6 +12,9 @@ import hashlib
 import statistics
 import platform
 from decision_controller import DecisionController, TrialResult
+from admtune.metrics import ExperimentLedger, compute_gpr_regression_metrics
+from admtune.decision import decide_admtune
+from admtune.action_executor import ActionExecutor
 
 config_parser = configparser.ConfigParser()
 config_parser.read(os.environ.get('AGENTTUNE_CONFIG', './config.ini'))
@@ -58,12 +61,23 @@ BENCHMARK_REQUIRE_ALL = config_parser.getboolean(
 BENCHMARK_STATEMENT_TIMEOUT_MS = config_parser.getint(
     'configuration recommender', 'statement_timeout_ms', fallback=180000
 )
+# pymysql read/write timeout must be >= MySQL max_execution_time, otherwise
+# the client drops at 300s with 2013 while the server would still be running.
+_CLIENT_SOCKET_TIMEOUT_SEC = max(300, BENCHMARK_STATEMENT_TIMEOUT_MS // 1000 + 60)
+db_config['read_timeout'] = _CLIENT_SOCKET_TIMEOUT_SEC
+db_config['write_timeout'] = _CLIENT_SOCKET_TIMEOUT_SEC
 EXPECTED_STATEMENT_COUNT = config_parser.getint(
     'configuration recommender', 'expected_statement_count', fallback=0
 )
 POST_RESTART_STABILIZATION_SEC = config_parser.getint(
     'configuration recommender', 'post_restart_stabilization_sec', fallback=10
 )
+N_EXEC_MAX = config_parser.getint('admtune', 'n_exec_max', fallback=0)
+if N_EXEC_MAX <= 0:
+    N_EXEC_MAX = config_parser.getint(
+        'configuration recommender', 'benchmark_budget', fallback=61
+    )
+ADMTUNE_ENABLED = config_parser.getboolean('admtune', 'enabled', fallback=True)
 # Comma-separated basenames without .sql, e.g. q012,q021,q034
 _TPCDS_SKIP_RAW = config_parser.get(
     'configuration recommender', 'tpcds_skip_queries', fallback=''
@@ -388,27 +402,57 @@ def _apply_knobs_and_restart(knob):
     return 0
 
 
+
+def _clean_sql_statement(stmt):
+    """
+    Strip section markers / leading dash comments from one statement.
+
+    MySQL requires a space after '--' for line comments. Markers like
+    '--q91.sql--' are therefore NOT comments and cause 1064 errors.
+    """
+    lines = stmt.splitlines()
+    source = None
+    while lines:
+        raw = lines[0].strip()
+        if not raw:
+            lines.pop(0)
+            continue
+        marker = re.match(r'^--\s*q(\d+[a-z]?)(?:\.sql)?\s*--?\s*$', raw, flags=re.IGNORECASE)
+        if marker:
+            source = f"q{marker.group(1)}.sql"
+            lines.pop(0)
+            continue
+        # Valid MySQL '-- comment' (space after dashes) or leftover section junk
+        if raw.startswith('--'):
+            lines.pop(0)
+            continue
+        break
+    cleaned = '\n'.join(lines).strip()
+    # Also drop trailing section-only comment lines
+    out_lines = cleaned.splitlines()
+    while out_lines and out_lines[-1].strip().startswith('--'):
+        out_lines.pop()
+    return '\n'.join(out_lines).strip(), source
+
+
 def _split_sql_content(content, source_label, allow_intersect_except=None):
     """Split one SQL file body into executable statements."""
     if allow_intersect_except is None:
         allow_intersect_except = bool(_MYSQL_SUPPORTS_INTERSECT)
     content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
-    lines = content.splitlines()
-    while lines and lines[0].startswith('--'):
-        lines.pop(0)
-    content = '\n'.join(lines).lstrip('\n')
     statements = []
     for part in re.split(r';\s*\n', content):
-        stmt = part.strip()
+        stmt, section = _clean_sql_statement(part)
         if not stmt:
             continue
         if (not allow_intersect_except) and _UNSUPPORTED_SQL.search(stmt):
             ver = '.'.join(str(x) for x in (_MYSQL_VERSION_TUPLE or (8, 0, 21)))
+            label = section or source_label
             raise ValueError(
-                f'{source_label} contains INTERSECT/EXCEPT unsupported by MySQL {ver} '
+                f'{label} contains INTERSECT/EXCEPT unsupported by MySQL {ver} '
                 f'(need >= 8.0.31)'
             )
-        statements.append(stmt)
+        statements.append({'sql': stmt, 'section': section})
     return statements
 
 
@@ -444,15 +488,14 @@ def _workload_entries(workload_path, allow_intersect_except=None):
                 skipped.append(name)
                 continue
             try:
-                stmts = _parse_sql_file(path, allow_intersect_except=allow_intersect_except)
+                parsed = _parse_sql_file(path, allow_intersect_except=allow_intersect_except)
             except ValueError as e:
-                # Keep directory mode useful: skip known-incompatible files loudly.
                 print(f'[skip] {name}: {e}', flush=True)
                 skipped.append(name)
                 continue
-            for i, stmt in enumerate(stmts, 1):
-                label = name if len(stmts) == 1 else f'{name}#{i}'
-                entries.append({'source': label, 'file': name, 'sql': stmt})
+            for i, item in enumerate(parsed, 1):
+                label = name if len(parsed) == 1 else f'{name}#{i}'
+                entries.append({'source': label, 'file': name, 'sql': item['sql']})
         if skipped:
             print(
                 f'[{workload_path}] skipped {len(skipped)} files: {", ".join(skipped)}',
@@ -460,8 +503,6 @@ def _workload_entries(workload_path, allow_intersect_except=None):
             )
         if not entries:
             raise ValueError(f'{workload_path} produced zero executable statements')
-        # Directory workloads change size when files are skipped; do not enforce
-        # expected_statement_count (use 0 in config.ini for directory mode).
         if EXPECTED_STATEMENT_COUNT and is_configured:
             print(
                 f'[{workload_path}] loaded {len(entries)} statements '
@@ -470,20 +511,25 @@ def _workload_entries(workload_path, allow_intersect_except=None):
             )
         return entries
 
-    stmts = _parse_sql_file(workload_path, allow_intersect_except=allow_intersect_except)
+    parsed = _parse_sql_file(workload_path, allow_intersect_except=allow_intersect_except)
     if (
         EXPECTED_STATEMENT_COUNT
         and is_configured
-        and len(stmts) != EXPECTED_STATEMENT_COUNT
+        and len(parsed) != EXPECTED_STATEMENT_COUNT
     ):
         raise ValueError(
             f'{workload_path} statement manifest changed: expected '
-            f'{EXPECTED_STATEMENT_COUNT}, got {len(stmts)}'
+            f'{EXPECTED_STATEMENT_COUNT}, got {len(parsed)}'
         )
-    return [
-        {'source': f'stmt#{i}', 'file': os.path.basename(workload_path), 'sql': s}
-        for i, s in enumerate(stmts, 1)
-    ]
+    entries = []
+    for i, item in enumerate(parsed, 1):
+        source = item.get('section') or f'stmt#{i}'
+        entries.append({
+            'source': source,
+            'file': os.path.basename(workload_path),
+            'sql': item['sql'],
+        })
+    return entries
 
 
 def _load_sql_statements(sql_path):
@@ -601,9 +647,8 @@ def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=None, run_ind
     }
     report['valid'] = (
         not connection_lost
-        and (not BENCHMARK_REQUIRE_ALL or (
-            fail_count == 0 and ok_count == len(entries)
-        ))
+        and ok_count > 0
+        and (not BENCHMARK_REQUIRE_ALL or fail_count == 0)
     )
     if log_file:
         with open(log_file + '.jsonl', 'a', encoding='utf-8') as f:
@@ -672,6 +717,12 @@ def _run_sql_benchmark(sql_path, log_file, label):
                 'failed_sources': failed_sources,
             }
             return 0.0
+        if fail_count and not BENCHMARK_REQUIRE_ALL:
+            print(
+                f'{label} partial: run={run_index} ok={ok_count} fail={fail_count} '
+                f'(skipped failures; QPS from successes)',
+                flush=True,
+            )
         if not warmup:
             measured_reports.append(report)
             measured_qps.append(float(ok_count) / total_time if total_time > 0 else 0.0)
@@ -912,6 +963,20 @@ if __name__ == "__main__":
     RUN_MODE = config_parser['configuration recommender'].get('run_mode', 'auto').strip().lower()
     HISTORY_PATH = os.path.join(RECORD_DIR, 'benmark_history')
     OPTIMAL_PATH = os.path.join(RECORD_DIR, 'optimal configuration')
+    METRICS_PATH = os.path.join(RECORD_DIR, 'experiment_metrics.json')
+    GPR_METRICS_PATH = os.path.join(RECORD_DIR, 'gpr_metrics.json')
+    ledger = ExperimentLedger()
+    action_executor = ActionExecutor(
+        pruned_knobs_path=config_parser['range pruner']['output_file'],
+        selected_knobs_path=config_parser['knob selector']['output_file'],
+        workload_features_path=config_parser['workload analyzer']['output_file'],
+        record_dir=RECORD_DIR,
+    )
+    print(
+        f'ADMTune: enabled={ADMTUNE_ENABLED} N_exec_max={N_EXEC_MAX} '
+        f'record_dir={RECORD_DIR}',
+        flush=True,
+    )
 
     def make_trial_id(iteration_value, result_index_value, knob_value):
         payload = json.dumps(
@@ -1104,6 +1169,8 @@ if __name__ == "__main__":
         int(config_parser['configuration recommender']['LLM_server_port']),
     )
     max_iteration = int(config_parser['configuration recommender']['iteration'])
+    # Keep smoke runs short: iterations cannot exceed remaining exec budget.
+    max_iteration = min(max_iteration, max(1, int(N_EXEC_MAX)))
     controller_enabled = config_parser.getboolean(
         'configuration recommender', 'adaptive_controller_enabled', fallback=False
     )
@@ -1133,7 +1200,7 @@ if __name__ == "__main__":
                     'configuration recommender', 'failure_rate_threshold', fallback=0.50
                 ) / 2.0,
             ),
-            benchmark_budget=config_parser.getint(
+            benchmark_budget=N_EXEC_MAX or config_parser.getint(
                 'configuration recommender', 'benchmark_budget', fallback=61
             ),
             token_budget=config_parser.getint(
@@ -1187,11 +1254,27 @@ if __name__ == "__main__":
         }]
         record_controller_trial(controller, knob, throughput, metric)
         append_history_record(data1[0])
+        ledger.set_baseline(float(throughput) if throughput else 0.0)
+        ledger.record_execution(
+            float(throughput) if throughput else 0.0,
+            success=bool(throughput and throughput > 0),
+            meta={'iteration': -1},
+        )
 
         decision = controller.decide() if controller_enabled else None
+        adm_action, adm_reason = decide_admtune(
+            decision.state.to_dict() if decision else None,
+            enabled=ADMTUNE_ENABLED and controller_enabled,
+            legacy_action=decision.name if decision else None,
+        )
+        action_executor.apply(adm_action, adm_reason)
+        ledger.record_action(adm_action)
+        decision_payload = decision.to_dict() if decision else {}
+        decision_payload['admtune_action'] = adm_action
+        decision_payload['admtune_reason'] = adm_reason
         request_payload = {
             'trials': data1,
-            'decision': decision.to_dict() if decision else {},
+            'decision': decision_payload,
         }
         response = requests.post(url, json=request_payload, timeout=300)
         response.raise_for_status()
@@ -1209,6 +1292,11 @@ if __name__ == "__main__":
         )
         pending_token_cost = max(0, new_token_total - last_token_total)
         last_token_total = new_token_total
+        if surrogate_diagnostics.get('n_target'):
+            ledger.record_prescreen(
+                int(surrogate_diagnostics.get('n_target') or 0),
+                int(surrogate_diagnostics.get('n_accepted') or 0),
+            )
         print(result)
 
         iteration = 0
@@ -1304,6 +1392,11 @@ if __name__ == "__main__":
                 })
                 continue
 
+            if ledger.n_exec >= N_EXEC_MAX:
+                print(f'N_exec_max={N_EXEC_MAX} reached; stop evaluating candidates', flush=True)
+                stopped_by_controller = True
+                break
+
             benchmark_func = benchmark_switch.get(benchmark)
             if benchmark_func is None:
                 unknown_benchmark(benchmark)
@@ -1349,6 +1442,16 @@ if __name__ == "__main__":
             pending_token_cost = 0
             data_list.append(data)
             append_history_record(data)
+            pred = None
+            selected_preds = surrogate_diagnostics.get('selected_predictions') or []
+            if selected_preds and isinstance(selected_preds[0], dict):
+                pred = selected_preds[0].get('prediction')
+            ledger.record_execution(
+                throughput,
+                success=bool(data.get('valid')),
+                prediction=pred,
+                meta={'iteration': iteration, 'result_index': idx},
+            )
 
             if throughput > best_throughput:
                 best_knob = knob
@@ -1379,19 +1482,34 @@ if __name__ == "__main__":
             print('No valid knob configs in this iteration, stop.')
             break
 
+        if ledger.n_exec >= N_EXEC_MAX:
+            print(f'N_exec_max={N_EXEC_MAX} reached; ending ADMTune loop', flush=True)
+            stopped_by_controller = True
+            break
+
         decision = controller.decide() if controller_enabled else None
         if decision:
             with open(os.path.join(RECORD_DIR, 'decision_log.jsonl'), 'a', encoding='utf-8') as f:
                 f.write(json.dumps(decision.to_dict(), ensure_ascii=False) + '\n')
-        if decision and decision.name == 'stop':
-            print(f'Adaptive controller stopped search: {decision.reason}', flush=True)
+        adm_action, adm_reason = decide_admtune(
+            decision.state.to_dict() if decision else None,
+            enabled=ADMTUNE_ENABLED and controller_enabled,
+            legacy_action=decision.name if decision else None,
+        )
+        action_executor.apply(adm_action, adm_reason)
+        ledger.record_action(adm_action)
+        if (decision and decision.name == 'stop') or adm_action == 'Stop':
+            print(f'Adaptive controller stopped search: {adm_reason}', flush=True)
             stopped_by_controller = True
             break
+        decision_payload = decision.to_dict() if decision else {}
+        decision_payload['admtune_action'] = adm_action
+        decision_payload['admtune_reason'] = adm_reason
         response = requests.post(
             url,
             json={
                 'trials': data_list,
-                'decision': decision.to_dict() if decision else {},
+                'decision': decision_payload,
             },
             timeout=300,
         )
@@ -1405,11 +1523,17 @@ if __name__ == "__main__":
             reflection_state,
             surrogate_diagnostics,
         ) = parse_llm_response(response_json)
+        if surrogate_diagnostics.get('n_target'):
+            ledger.record_prescreen(
+                int(surrogate_diagnostics.get('n_target') or 0),
+                int(surrogate_diagnostics.get('n_accepted') or 0),
+            )
         new_token_total = int(
             (reflection_state.get('token_usage') or {}).get('total', last_token_total)
         )
         pending_token_cost = max(0, new_token_total - last_token_total)
         last_token_total = new_token_total
+        ledger.record_llm(calls=1, tokens=pending_token_cost)
         print(result)
 
         iteration += 1
@@ -1440,6 +1564,25 @@ if __name__ == "__main__":
         print("best_metric:", best_metric, file=f)
         print("best_throughput:", best_throughput, file=f)
 
+    gpr_stats = compute_gpr_regression_metrics(ledger.gpr_pairs)
+    with open(GPR_METRICS_PATH, 'w', encoding='utf-8') as handle:
+        json.dump(gpr_stats, handle, indent=2)
+        handle.write('\n')
+    stop_reason = (
+        'n_exec_max'
+        if ledger.n_exec >= N_EXEC_MAX
+        else ('adaptive_controller' if stopped_by_controller else 'iteration_limit')
+    )
+    ledger.write_json(
+        METRICS_PATH,
+        extra={
+            'best_throughput_tracked': best_throughput,
+            'stop_reason': stop_reason,
+            'variant': config_parser.get('admtune', 'variant', fallback='admtune_full'),
+            'gpr': gpr_stats.get('overall'),
+        },
+    )
+
     save_checkpoint({
         'status': 'completed',
         'iteration': iteration,
@@ -1457,6 +1600,8 @@ if __name__ == "__main__":
         'surrogate_diagnostics': surrogate_diagnostics,
         'last_token_total': last_token_total,
         'pending_token_cost': pending_token_cost,
-        'stop_reason': 'adaptive_controller' if stopped_by_controller else 'iteration_limit',
+        'stop_reason': stop_reason,
+        'experiment_metrics': ledger.summary(),
     })
     print(f'Done. Results saved under {RECORD_DIR}')
+    print(f'ADMTune metrics: {METRICS_PATH}', flush=True)
