@@ -1,5 +1,5 @@
 {
-  "created_at": 1786774705,
+  "created_at": 1786777748,
   "python": "3.10.20 (main, Jun 11 2026, 15:17:37) [GCC 14.3.0]",
   "platform": "Linux-6.6.92-34.1.tl4.x86_64-x86_64-with-glibc2.39",
   "config_path": "./config.ini",
@@ -9,12 +9,12 @@
   "benchmark": "TPCDS",
   "random_seed": 42,
   "workload_file": "./benchmark_queries/tpcds_all.sql",
-  "workload_sha256": "9e591d525f2bca5dbd67c38defceedaf7b42473167317d7781fe3506d25e5786",
+  "workload_sha256": "2f6ecbf090867df4799328c751d5511b48dc0473cd7e12852d9903e99a0ca3e9",
   "benchmark_protocol": {
-    "warmup_runs": 1,
-    "repetitions": 3,
-    "require_all": true,
-    "statement_timeout_ms": 600000,
+    "warmup_runs": 0,
+    "repetitions": 1,
+    "require_all": false,
+    "statement_timeout_ms": 180000,
     "tpcds_skip_queries": []
   }
 }
