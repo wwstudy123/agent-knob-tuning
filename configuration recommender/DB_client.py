@@ -8,9 +8,13 @@ import re
 import shutil
 import paramiko
 import configparser
+import hashlib
+import statistics
+import platform
+from decision_controller import DecisionController, TrialResult
 
 config_parser = configparser.ConfigParser()
-config_parser.read('./config.ini')
+config_parser.read(os.environ.get('AGENTTUNE_CONFIG', './config.ini'))
 
 db_ip = config_parser['configuration recommender']['DB_IP']
 ip_password = config_parser['configuration recommender']['DB_IP_Password']
@@ -25,13 +29,13 @@ db_config = {
     'read_timeout': 300,
     'write_timeout': 300,
 }
+LAST_BENCHMARK_RESULT = {}
 
 MYSQL_BASE = '/workspace/setup/mysql-8.0'
 MYCNF_PATH = '/etc/my8.cnf'
 MYCNF_BAK = '/etc/my8.cnf.bak'
-MYSQL_RESTART_CMD = 'sudo service mysql8 restart'
-MYSQL_SAFE_FALLBACK_CMD = (
-    f'{MYSQL_BASE}/bin/mysqld_safe --defaults-file={MYCNF_PATH} '
+MYSQL_START_CMD = (
+    f'{MYSQL_BASE}/bin/mysqld_safe --defaults-file={MYCNF_PATH} --user=mysql '
     '>/tmp/mysqld8_safe.out 2>&1 &'
 )
 
@@ -42,15 +46,93 @@ with open(config_parser['knob selector']['candidate_knobs'], 'r') as f:
 with open(config_parser['range pruner']['output_file'], 'r') as f:
     selected_knobs = json.load(f)
 
+BENCHMARK_WARMUP_RUNS = config_parser.getint(
+    'configuration recommender', 'benchmark_warmup_runs', fallback=0
+)
+BENCHMARK_REPETITIONS = config_parser.getint(
+    'configuration recommender', 'benchmark_repetitions', fallback=1
+)
+BENCHMARK_REQUIRE_ALL = config_parser.getboolean(
+    'configuration recommender', 'benchmark_require_all', fallback=True
+)
+BENCHMARK_STATEMENT_TIMEOUT_MS = config_parser.getint(
+    'configuration recommender', 'statement_timeout_ms', fallback=180000
+)
+EXPECTED_STATEMENT_COUNT = config_parser.getint(
+    'configuration recommender', 'expected_statement_count', fallback=0
+)
+POST_RESTART_STABILIZATION_SEC = config_parser.getint(
+    'configuration recommender', 'post_restart_stabilization_sec', fallback=10
+)
+# Comma-separated basenames without .sql, e.g. q012,q021,q034
+_TPCDS_SKIP_RAW = config_parser.get(
+    'configuration recommender', 'tpcds_skip_queries', fallback=''
+)
+TPCDS_SKIP_QUERIES = set()
+for name in _TPCDS_SKIP_RAW.split(','):
+    name = name.strip().lower()
+    if name.endswith('.sql'):
+        name = name[:-4]
+    if name:
+        TPCDS_SKIP_QUERIES.add(name)
+_UNSUPPORTED_SQL = re.compile(r'(?is)\b(intersect|except)\b')
+# INTERSECT/EXCEPT require MySQL >= 8.0.31. Cached after first probe.
+_MYSQL_VERSION_TUPLE = None
+_MYSQL_SUPPORTS_INTERSECT = None
+
+
+def _parse_mysql_version(version_str):
+    """Return (major, minor, patch) from a MySQL VERSION() string."""
+    match = re.search(r'(\d+)\.(\d+)\.(\d+)', str(version_str) or '')
+    if not match:
+        return (0, 0, 0)
+    return tuple(int(x) for x in match.groups())
+
+
+def _probe_mysql_intersect_support(cursor=None):
+    """Detect whether the live server supports INTERSECT/EXCEPT (>= 8.0.31)."""
+    global _MYSQL_VERSION_TUPLE, _MYSQL_SUPPORTS_INTERSECT
+    if _MYSQL_SUPPORTS_INTERSECT is not None:
+        return _MYSQL_SUPPORTS_INTERSECT
+
+    own_conn = None
+    try:
+        if cursor is None:
+            own_conn = pymysql.connect(**db_config)
+            cursor = own_conn.cursor()
+        cursor.execute('SELECT VERSION()')
+        version_str = cursor.fetchone()[0]
+        _MYSQL_VERSION_TUPLE = _parse_mysql_version(version_str)
+        _MYSQL_SUPPORTS_INTERSECT = _MYSQL_VERSION_TUPLE >= (8, 0, 31)
+        print(
+            f'MySQL version={version_str} '
+            f'intersect_except_supported={_MYSQL_SUPPORTS_INTERSECT}',
+            flush=True,
+        )
+    except Exception as e:
+        # Fail closed for old environments if probe fails.
+        _MYSQL_VERSION_TUPLE = (0, 0, 0)
+        _MYSQL_SUPPORTS_INTERSECT = False
+        print(f'Warning: cannot probe MySQL version ({e}); '
+              f'assuming INTERSECT/EXCEPT unsupported', flush=True)
+    finally:
+        if own_conn is not None:
+            own_conn.close()
+    return _MYSQL_SUPPORTS_INTERSECT
+
 
 def _restart_mysql():
-    """Restart MySQL 8.0 via service; fall back to mysqld_safe if needed."""
-    state = os.system(MYSQL_RESTART_CMD)
-    if state != 0:
-        print(f'{MYSQL_RESTART_CMD} exit={state}; trying mysqld_safe', flush=True)
-        os.system('pkill -9 mysqld mysqld_safe 2>/dev/null; sleep 2')
-        state = os.system(MYSQL_SAFE_FALLBACK_CMD)
-    return state
+    """Restart MySQL 8.0 using the user-provided mysqld_safe command."""
+    stop_cmd = (
+        "pkill -9 -f '/workspace/setup/mysql/bin/mysqld' 2>/dev/null; "
+        "pkill -9 -f '/workspace/setup/mysql-8.0/bin/mysqld' 2>/dev/null; "
+        "pkill -9 -f 'mysqld_safe' 2>/dev/null; "
+        "rm -f /tmp/mysql8.sock /tmp/mysql8.sock.lock 2>/dev/null; "
+        "sleep 2"
+    )
+    os.system(stop_cmd)
+    print(f'starting MySQL with: {MYSQL_START_CMD}', flush=True)
+    return os.system(MYSQL_START_CMD)
 
 
 def _format_mycnf_value(value):
@@ -74,6 +156,15 @@ def apply_knobs_to_mycnf(knob_vars, mycnf_path=MYCNF_PATH, backup_path=MYCNF_BAK
     elif not os.path.exists(mycnf_path):
         print(f'Error: neither {backup_path} nor {mycnf_path} exists')
         return False
+    else:
+        # Capture a stable baseline once. Every trial starts from this file so
+        # knobs from prior trials cannot leak into the next configuration.
+        try:
+            shutil.copy2(mycnf_path, backup_path)
+            print(f'created baseline MySQL config backup: {backup_path}', flush=True)
+        except OSError as e:
+            print(f'Error: cannot create baseline backup {backup_path}: {e}', flush=True)
+            return False
 
     if not knob_vars:
         return True
@@ -156,21 +247,19 @@ def get_current_knob():
 
     knobs = {}
     parameters = []
-    for key in selected_knobs.keys():
-        index = int(key.replace("knob", "")) - 1
-        param_name = original_keys[index]
-        parameters.append(param_name)
+    for knob_key in selected_knobs.keys():
+        parameters.append((knob_key, _knob_key_to_mysql_name(knob_key)))
 
-    for param in parameters:
+    for knob_key, param in parameters:
         cursor.execute(f"SHOW VARIABLES LIKE '{param}'")
         result = cursor.fetchone()
         if result:
             try:
-                # Attempt to convert to integer if it's a digit, otherwise to float
-                knobs[param] = int(result[1]) if result[1].isdigit() else round(float(result[1]))
+                # Keep the same canonical knobN key space used by the LLM,
+                # surrogate and persisted history.
+                knobs[knob_key] = int(result[1]) if result[1].isdigit() else round(float(result[1]))
             except ValueError:
-                # If conversion fails, assign the string directly (e.g., 'ON' or 'OFF')
-                knobs[param] = result[1]
+                knobs[knob_key] = result[1]
 
     cursor.close()
     conn.close()
@@ -192,6 +281,15 @@ def get_knobs_detail():
     
     return result
 
+def _resolve_enum_values(knob_key, knobs_detail):
+    enum_values = knobs_detail.get(knob_key, {}).get('enum_values') or []
+    if enum_values:
+        return enum_values
+    # pruned_knobs sometimes drops enum_values; fall back to candidate_knobs
+    mysql_name = _knob_key_to_mysql_name(knob_key)
+    return (original.get(mysql_name) or {}).get('enum_values') or []
+
+
 def _build_temp_config_from_knob(knob):
     temp_config = {}
     knobs_detail = get_knobs_detail()
@@ -202,12 +300,17 @@ def _build_temp_config_from_knob(knob):
         if knob_type == 'integer':
             temp_config[key] = knob.get(key)
         elif knob_type == 'enum':
-            value = str(knob.get(key))
-            enum_values = knobs_detail[key].get('enum_values') or []
+            raw = knob.get(key)
+            enum_values = _resolve_enum_values(key, knobs_detail)
+            value = str(raw)
             if value in enum_values:
                 temp_config[key] = value
+            elif isinstance(raw, int) and 0 <= raw < len(enum_values):
+                temp_config[key] = enum_values[raw]
+            elif value.isdigit() and 0 <= int(value) < len(enum_values):
+                temp_config[key] = enum_values[int(value)]
             else:
-                print(f"Warning: {value} not found in enum values for {key}")
+                print(f"Warning: {value} not found in enum values for {key}: {enum_values}")
     return temp_config
 
 
@@ -233,13 +336,36 @@ def _wait_for_mysql(timeout_sec=90, poll_sec=2):
     return False
 
 
+def _rollback_to_baseline():
+    """Restore, restart and verify the known-good baseline configuration."""
+    if not os.path.exists(MYCNF_BAK):
+        print(f'Rollback unavailable: missing {MYCNF_BAK}', flush=True)
+        return False
+    try:
+        shutil.copy2(MYCNF_BAK, MYCNF_PATH)
+    except OSError as e:
+        print(f'Rollback copy failed: {e}', flush=True)
+        return False
+    if _restart_mysql() != 0:
+        print('Rollback restart command failed', flush=True)
+        return False
+    ready = _wait_for_mysql(timeout_sec=90)
+    print(
+        'baseline rollback verified' if ready else 'baseline rollback did not become ready',
+        flush=True,
+    )
+    return ready
+
+
 def _apply_knobs_and_restart(knob):
     temp_config = _build_temp_config_from_knob(knob)
-    apply_temp_config_to_mycnf(temp_config)
+    if not apply_temp_config_to_mycnf(temp_config):
+        return 1
     time.sleep(10)
     print("success set knobs")
     state = _restart_mysql()
     if state != 0:
+        _rollback_to_baseline()
         return state
     if not _wait_for_mysql(timeout_sec=90):
         print(
@@ -249,27 +375,157 @@ def _apply_knobs_and_restart(knob):
             f'  sudo cp {MYCNF_BAK} {MYCNF_PATH}',
             flush=True,
         )
+        # Best-effort rollback to a known-good baseline. The failed candidate is
+        # still returned as throughput=0 by the caller.
+        _rollback_to_baseline()
         return 1
+    if POST_RESTART_STABILIZATION_SEC > 0:
+        print(
+            f'waiting {POST_RESTART_STABILIZATION_SEC}s for post-restart stabilization',
+            flush=True,
+        )
+        time.sleep(POST_RESTART_STABILIZATION_SEC)
     return 0
 
 
-def _load_sql_statements(sql_path):
-    with open(sql_path, 'r', encoding='utf-8', errors='ignore') as f:
-        content = f.read()
+def _split_sql_content(content, source_label, allow_intersect_except=None):
+    """Split one SQL file body into executable statements."""
+    if allow_intersect_except is None:
+        allow_intersect_except = bool(_MYSQL_SUPPORTS_INTERSECT)
     content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
     lines = content.splitlines()
     while lines and lines[0].startswith('--'):
         lines.pop(0)
     content = '\n'.join(lines).lstrip('\n')
-    parts = re.split(r';\s*\n', content)
-    return [p.strip() for p in parts if p.strip()]
+    statements = []
+    for part in re.split(r';\s*\n', content):
+        stmt = part.strip()
+        if not stmt:
+            continue
+        if (not allow_intersect_except) and _UNSUPPORTED_SQL.search(stmt):
+            ver = '.'.join(str(x) for x in (_MYSQL_VERSION_TUPLE or (8, 0, 21)))
+            raise ValueError(
+                f'{source_label} contains INTERSECT/EXCEPT unsupported by MySQL {ver} '
+                f'(need >= 8.0.31)'
+            )
+        statements.append(stmt)
+    return statements
 
 
-def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=180000):
-    """Execute all statements in a .sql file; return (ok_count, fail_count, elapsed_seconds)."""
-    statements = _load_sql_statements(sql_path)
+def _parse_sql_file(sql_path, allow_intersect_except=None):
+    with open(sql_path, 'r', encoding='utf-8', errors='ignore') as f:
+        content = f.read()
+    return _split_sql_content(content, sql_path, allow_intersect_except=allow_intersect_except)
+
+
+def _workload_entries(workload_path, allow_intersect_except=None):
+    """
+    Return ordered list of {source, sql} entries.
+    workload_path may be a single .sql file or a directory of q*.sql files.
+    """
+    if allow_intersect_except is None:
+        allow_intersect_except = bool(_MYSQL_SUPPORTS_INTERSECT)
+    configured = config_parser['workload analyzer']['workload_file']
+    is_configured = os.path.normpath(workload_path) == os.path.normpath(configured)
+
+    if os.path.isdir(workload_path):
+        files = sorted(
+            f for f in os.listdir(workload_path)
+            if re.fullmatch(r'q\d{3}\.sql', f, flags=re.IGNORECASE)
+        )
+        if not files:
+            raise ValueError(f'{workload_path} has no qNNN.sql files')
+        entries = []
+        skipped = []
+        for name in files:
+            qid = os.path.splitext(name)[0].lower()
+            path = os.path.join(workload_path, name)
+            if qid in TPCDS_SKIP_QUERIES:
+                skipped.append(name)
+                continue
+            try:
+                stmts = _parse_sql_file(path, allow_intersect_except=allow_intersect_except)
+            except ValueError as e:
+                # Keep directory mode useful: skip known-incompatible files loudly.
+                print(f'[skip] {name}: {e}', flush=True)
+                skipped.append(name)
+                continue
+            for i, stmt in enumerate(stmts, 1):
+                label = name if len(stmts) == 1 else f'{name}#{i}'
+                entries.append({'source': label, 'file': name, 'sql': stmt})
+        if skipped:
+            print(
+                f'[{workload_path}] skipped {len(skipped)} files: {", ".join(skipped)}',
+                flush=True,
+            )
+        if not entries:
+            raise ValueError(f'{workload_path} produced zero executable statements')
+        # Directory workloads change size when files are skipped; do not enforce
+        # expected_statement_count (use 0 in config.ini for directory mode).
+        if EXPECTED_STATEMENT_COUNT and is_configured:
+            print(
+                f'[{workload_path}] loaded {len(entries)} statements '
+                f'(expected_statement_count={EXPECTED_STATEMENT_COUNT} ignored for directory)',
+                flush=True,
+            )
+        return entries
+
+    stmts = _parse_sql_file(workload_path, allow_intersect_except=allow_intersect_except)
+    if (
+        EXPECTED_STATEMENT_COUNT
+        and is_configured
+        and len(stmts) != EXPECTED_STATEMENT_COUNT
+    ):
+        raise ValueError(
+            f'{workload_path} statement manifest changed: expected '
+            f'{EXPECTED_STATEMENT_COUNT}, got {len(stmts)}'
+        )
+    return [
+        {'source': f'stmt#{i}', 'file': os.path.basename(workload_path), 'sql': s}
+        for i, s in enumerate(stmts, 1)
+    ]
+
+
+def _load_sql_statements(sql_path):
+    """Backward-compatible helper: return raw SQL strings only."""
+    return [e['sql'] for e in _workload_entries(sql_path)]
+
+
+def _hash_workload(workload_path):
+    """Stable hash for a file or directory workload."""
+    if os.path.isdir(workload_path):
+        digest = hashlib.sha256()
+        for name in sorted(
+            f for f in os.listdir(workload_path)
+            if re.fullmatch(r'q\d{3}\.sql', f, flags=re.IGNORECASE)
+        ):
+            qid = os.path.splitext(name)[0].lower()
+            if qid in TPCDS_SKIP_QUERIES:
+                continue
+            path = os.path.join(workload_path, name)
+            with open(path, 'rb') as f:
+                digest.update(name.encode('utf-8'))
+                digest.update(b'\0')
+                digest.update(f.read())
+                digest.update(b'\0')
+        return digest.hexdigest()
+    if os.path.exists(workload_path):
+        with open(workload_path, 'rb') as f:
+            return hashlib.sha256(f.read()).hexdigest()
+    return hashlib.sha256(b'').hexdigest()
+
+
+def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=None, run_index=0, warmup=False):
+    """Execute a fixed SQL manifest and return counts, elapsed time and report."""
+    allow_intersect = _probe_mysql_intersect_support(cursor)
+    entries = _workload_entries(sql_path, allow_intersect_except=allow_intersect)
+    stmt_timeout_ms = (
+        BENCHMARK_STATEMENT_TIMEOUT_MS if stmt_timeout_ms is None else stmt_timeout_ms
+    )
     ok_count = 0
     fail_count = 0
+    connection_lost = False
+    statement_results = []
     start = time.time()
     # MySQL 5.7.8+: abort SELECT after N ms (prevents multi-hour inventory/self-join hangs)
     if stmt_timeout_ms and stmt_timeout_ms > 0:
@@ -277,28 +533,193 @@ def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=180000):
             cursor.execute(f'SET SESSION max_execution_time = {int(stmt_timeout_ms)}')
         except Exception as e:
             print(f'Warning: cannot set max_execution_time: {e}')
-    total = len(statements)
+    total = len(entries)
     print(f'[{sql_path}] running {total} statements (timeout={stmt_timeout_ms}ms)')
-    for idx, stmt in enumerate(statements, 1):
+    for idx, entry in enumerate(entries, 1):
+        stmt = entry['sql']
+        source = entry['source']
         t0 = time.time()
-        print(f'[{sql_path}] stmt#{idx}/{total} ...', flush=True)
+        print(f'[{source}] {idx}/{total} ...', flush=True)
         try:
             cursor.execute(stmt)
-            try:
-                cursor.fetchall()
-            except Exception:
-                pass
+            cursor.fetchall()
             ok_count += 1
-            print(f'[{sql_path}] stmt#{idx}/{total} ok in {time.time() - t0:.1f}s', flush=True)
+            latency = time.time() - t0
+            statement_results.append({
+                'statement_index': idx,
+                'source': source,
+                'file': entry['file'],
+                'latency_seconds': latency,
+                'status': 'ok',
+            })
+            print(f'[{source}] {idx}/{total} ok in {latency:.1f}s', flush=True)
         except Exception as e:
             fail_count += 1
-            msg = f'[{sql_path}] stmt#{idx}/{total} failed after {time.time() - t0:.1f}s: {e}'
+            latency = time.time() - t0
+            err_str = str(e)
+            lost_conn = (
+                'Lost connection to MySQL server' in err_str
+                or 'MySQL server has gone away' in err_str
+                or getattr(e, 'args', [None])[0] in (2003, 2006, 2013)
+            )
+            connection_lost = connection_lost or lost_conn
+            statement_results.append({
+                'statement_index': idx,
+                'source': source,
+                'file': entry['file'],
+                'latency_seconds': latency,
+                'status': 'lost_connection' if lost_conn else 'failed',
+                'error': err_str,
+            })
+            msg = f'[{source}] {idx}/{total} failed after {latency:.1f}s: {e}'
             print(msg, flush=True)
             if log_file:
                 with open(log_file, 'a', encoding='utf-8') as f:
                     f.write(msg + '\n')
+                    # Helpful for diagnosing crashes: record the failing SQL prefix.
+                    if lost_conn or idx <= 5:
+                        snippet = ' '.join(stmt.replace('\n', ' ').split())
+                        f.write(f'FAILED_STMT_PREFIX {source}: {snippet[:1200]}\n')
+                    if lost_conn:
+                        # If mysqld crashed / restarted, continuing will only produce (0, '') noise.
+                        f.write('STOPPING remaining stmts due to lost connection.\n')
+                        break
     elapsed = time.time() - start
-    return ok_count, fail_count, elapsed
+    manifest_text = '\n;\n'.join(e['sql'] for e in entries)
+    report = {
+        'sql_path': sql_path,
+        'manifest_sha256': hashlib.sha256(manifest_text.encode('utf-8')).hexdigest(),
+        'expected_statements': len(entries),
+        'executed_statements': len(statement_results),
+        'ok_count': ok_count,
+        'fail_count': fail_count,
+        'connection_lost': connection_lost,
+        'elapsed_seconds': elapsed,
+        'run_index': run_index,
+        'warmup': warmup,
+        'statement_results': statement_results,
+    }
+    report['valid'] = (
+        not connection_lost
+        and (not BENCHMARK_REQUIRE_ALL or (
+            fail_count == 0 and ok_count == len(entries)
+        ))
+    )
+    if log_file:
+        with open(log_file + '.jsonl', 'a', encoding='utf-8') as f:
+            f.write(json.dumps(report, ensure_ascii=False) + '\n')
+    return ok_count, fail_count, elapsed, report
+
+
+def _run_sql_benchmark(sql_path, log_file, label):
+    """Run warmups and measured repetitions; reject any incomplete run."""
+    global LAST_BENCHMARK_RESULT
+    measured_qps = []
+    measured_reports = []
+    total_runs = BENCHMARK_WARMUP_RUNS + max(1, BENCHMARK_REPETITIONS)
+    manifest_hash = None
+    for run_index in range(total_runs):
+        warmup = run_index < BENCHMARK_WARMUP_RUNS
+        conn = pymysql.connect(**db_config)
+        cursor = conn.cursor()
+        try:
+            ok_count, fail_count, total_time, report = _run_sql_file(
+                cursor,
+                sql_path,
+                log_file=log_file,
+                run_index=run_index,
+                warmup=warmup,
+            )
+        finally:
+            cursor.close()
+            conn.close()
+
+        if manifest_hash is None:
+            manifest_hash = report['manifest_sha256']
+        elif report['manifest_sha256'] != manifest_hash:
+            print(f'{label} invalid: SQL manifest changed between repetitions', flush=True)
+            LAST_BENCHMARK_RESULT = {
+                'benchmark': label,
+                'valid': False,
+                'failure_reason': 'manifest_changed_between_repetitions',
+                'manifest_sha256': report['manifest_sha256'],
+                'report_path': log_file + '.jsonl',
+            }
+            return 0.0
+
+        if not report['valid']:
+            failed_sources = [
+                r.get('source', f"stmt#{r['statement_index']}")
+                for r in report.get('statement_results', [])
+                if r.get('status') != 'ok'
+            ]
+            print(
+                f'{label} invalid: run={run_index} ok={ok_count} '
+                f'fail={fail_count} expected={report["expected_statements"]}'
+                + (f' failed={failed_sources}' if failed_sources else ''),
+                flush=True,
+            )
+            LAST_BENCHMARK_RESULT = {
+                'benchmark': label,
+                'valid': False,
+                'failure_reason': (
+                    'connection_lost' if report['connection_lost']
+                    else 'incomplete_workload'
+                ),
+                'manifest_sha256': report['manifest_sha256'],
+                'report_path': log_file + '.jsonl',
+                'run_index': run_index,
+                'failed_sources': failed_sources,
+            }
+            return 0.0
+        if not warmup:
+            measured_reports.append(report)
+            measured_qps.append(float(ok_count) / total_time if total_time > 0 else 0.0)
+
+    score = statistics.median(measured_qps) if measured_qps else 0.0
+    successful_latencies = [
+        stmt['latency_seconds']
+        for report in measured_reports
+        for stmt in report['statement_results']
+        if stmt['status'] == 'ok'
+    ]
+    sorted_latencies = sorted(successful_latencies)
+    p95_index = max(0, int(0.95 * len(sorted_latencies)) - 1)
+    summary = {
+        'benchmark': label,
+        'valid': score > 0,
+        'manifest_sha256': manifest_hash,
+        'warmup_runs': BENCHMARK_WARMUP_RUNS,
+        'repetitions': len(measured_qps),
+        'qps_values': measured_qps,
+        'median_qps': score,
+        'median_elapsed_seconds': statistics.median(
+            [r['elapsed_seconds'] for r in measured_reports]
+        ) if measured_reports else None,
+        'query_latency_seconds': {
+            'min': min(successful_latencies) if successful_latencies else None,
+            'mean': statistics.mean(successful_latencies) if successful_latencies else None,
+            'median': statistics.median(successful_latencies) if successful_latencies else None,
+            'p95': sorted_latencies[p95_index] if sorted_latencies else None,
+            'max': max(successful_latencies) if successful_latencies else None,
+        },
+        'report_path': log_file + '.jsonl',
+    }
+    with open(log_file + '.summary.json', 'w', encoding='utf-8') as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
+    LAST_BENCHMARK_RESULT = summary
+    return score
+
+
+def _record_benchmark_failure(label, reason, report_path=None):
+    global LAST_BENCHMARK_RESULT
+    LAST_BENCHMARK_RESULT = {
+        'benchmark': label,
+        'valid': False,
+        'failure_reason': reason,
+        'manifest_sha256': None,
+        'report_path': report_path,
+    }
 
 
 def test_by_job(knob):
@@ -306,6 +727,7 @@ def test_by_job(knob):
     state = _apply_knobs_and_restart(knob)
     if state != 0:
         print('database restarting failed')
+        _record_benchmark_failure('JOB', 'database_restart_failed')
         return 0.0
 
     print('database has been restarted')
@@ -314,19 +736,14 @@ def test_by_job(knob):
     sql_path = './benchmark_queries/job_all.sql'
 
     try:
-        conn = pymysql.connect(**db_config)
-        cursor = conn.cursor()
-        ok_count, fail_count, total_time = _run_sql_file(cursor, sql_path, log_file=log_file)
-        cursor.close()
-        conn.close()
+        score = _run_sql_benchmark(sql_path, log_file, 'JOB')
     except Exception as e:
         print(f'JOB benchmark failed: {e}')
+        _record_benchmark_failure('JOB', f'benchmark_exception:{type(e).__name__}', log_file)
         return 0.0
 
-    print(f'JOB done: ok={ok_count} fail={fail_count} time={total_time:.2f}s log={log_file}')
-    if total_time <= 0 or ok_count == 0:
-        return 0.0
-    return float(ok_count) / total_time
+    print(f'JOB done: median_qps={score:.6f} log={log_file}')
+    return score
 
 
 def test_by_tpcc(knob):
@@ -351,8 +768,7 @@ def test_by_tpcc(knob):
 
     print("success set knobs")
 
-    restart_knobs_command = MYSQL_RESTART_CMD
-    state = os.system(restart_knobs_command)
+    state = _restart_mysql()
 
     if state == 0:
         print('database has been restarted')
@@ -429,8 +845,7 @@ def test_by_sysbench(knob):
     print("success set knobs")
     #exit()
 
-    restart_knobs_command = MYSQL_RESTART_CMD
-    state = os.system(restart_knobs_command)
+    state = _restart_mysql()
 
     if state == 0:
         print('database has been restarted')
@@ -462,34 +877,30 @@ def unknown_benchmark(name):
 
 
 def test_by_tpcds(knob):
-    """Run TPC-DS queries from tpcds_all.sql; return queries/sec (higher is better)."""
+    """Run TPC-DS queries from workload_file (single .sql or tpcds/ dir)."""
     state = _apply_knobs_and_restart(knob)
     if state != 0:
         print('database restarting failed')
+        _record_benchmark_failure('TPC-DS', 'database_restart_failed')
         return 0.0
 
     print('database has been restarted')
     os.makedirs('./configuration recommender/log', exist_ok=True)
     log_file = './configuration recommender/log/tpcds_{}.log'.format(int(time.time()))
-    sql_path = './benchmark_queries/tpcds_all.sql'
+    sql_path = config_parser['workload analyzer']['workload_file']
 
     try:
         print(f'connecting to MySQL via {db_config.get("unix_socket") or db_config.get("host")} ...', flush=True)
-        conn = pymysql.connect(**db_config)
-        print('connected; starting TPC-DS workload', flush=True)
-        cursor = conn.cursor()
-        ok_count, fail_count, total_time = _run_sql_file(cursor, sql_path, log_file=log_file)
-        cursor.close()
-        conn.close()
+        score = _run_sql_benchmark(sql_path, log_file, 'TPC-DS')
     except Exception as e:
         print(f'TPC-DS benchmark failed: {e}')
+        _record_benchmark_failure(
+            'TPC-DS', f'benchmark_exception:{type(e).__name__}', log_file
+        )
         return 0.0
 
-    print(f'TPC-DS done: ok={ok_count} fail={fail_count} time={total_time:.2f}s log={log_file}')
-    if total_time <= 0 or ok_count == 0:
-        return 0.0
-    # Optimize for higher QPS (same direction as SYSBENCH throughput)
-    return float(ok_count) / total_time
+    print(f'TPC-DS done: median_qps={score:.6f} log={log_file}')
+    return score
 
 
 if __name__ == "__main__":
@@ -501,6 +912,31 @@ if __name__ == "__main__":
     RUN_MODE = config_parser['configuration recommender'].get('run_mode', 'auto').strip().lower()
     HISTORY_PATH = os.path.join(RECORD_DIR, 'benmark_history')
     OPTIMAL_PATH = os.path.join(RECORD_DIR, 'optimal configuration')
+
+    def make_trial_id(iteration_value, result_index_value, knob_value):
+        payload = json.dumps(
+            {
+                'iteration': iteration_value,
+                'result_index': result_index_value,
+                'knob': knob_value,
+            },
+            sort_keys=True,
+            separators=(',', ':'),
+            ensure_ascii=False,
+        )
+        return hashlib.sha256(payload.encode('utf-8')).hexdigest()
+
+    def append_history_record(record):
+        trial_id = record.get('trial_id')
+        if trial_id and os.path.exists(HISTORY_PATH):
+            with open(HISTORY_PATH, 'r', encoding='utf-8') as existing:
+                if trial_id in existing.read():
+                    print(f'skip duplicate history trial {trial_id[:12]}', flush=True)
+                    return False
+        with open(HISTORY_PATH, 'a', encoding='utf-8') as history_file:
+            json.dump(record, history_file, ensure_ascii=False)
+            history_file.write('\n')
+        return True
 
     def load_checkpoint():
         if not os.path.exists(CHECKPOINT_PATH):
@@ -517,15 +953,26 @@ if __name__ == "__main__":
         payload = dict(payload)
         payload['record_dir'] = RECORD_DIR_NAME
         payload['updated_at'] = int(time.time())
-        with open(CHECKPOINT_PATH, 'w', encoding='utf-8') as f:
+        payload['environment_snapshot_sha256'] = globals().get('SNAPSHOT_HASH')
+        temp_path = CHECKPOINT_PATH + '.tmp'
+        with open(temp_path, 'w', encoding='utf-8') as f:
             json.dump(payload, f, indent=2, ensure_ascii=False)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(temp_path, CHECKPOINT_PATH)
 
     def clear_record_progress():
         os.makedirs(RECORD_DIR, exist_ok=True)
         for name in os.listdir(RECORD_DIR):
             path = os.path.join(RECORD_DIR, name)
             if name.startswith('turn_') or name in (
-                'benmark_history', 'top_k', 'optimal configuration', 'checkpoint.json'
+                'benmark_history',
+                'top_k',
+                'optimal configuration',
+                'checkpoint.json',
+                'decision_log.jsonl',
+                'token_usage.jsonl',
+                'environment_snapshot.json',
             ):
                 try:
                     if os.path.isfile(path):
@@ -535,6 +982,14 @@ if __name__ == "__main__":
 
     def resolve_run_mode():
         ckpt = load_checkpoint()
+        if (
+            RUN_MODE != 'fresh'
+            and os.path.exists(CHECKPOINT_PATH)
+            and ckpt is None
+        ):
+            raise RuntimeError(
+                'Checkpoint exists but is unreadable; refusing to clear experiment state'
+            )
         resumable = (
             ckpt is not None
             and ckpt.get('status') == 'running'
@@ -558,8 +1013,10 @@ if __name__ == "__main__":
                 int(response_json.get('request_count', 0)),
                 response_json.get('history_top') or [],
                 response_json.get('last_result') or '',
+                response_json.get('reflection_state') or {},
+                response_json.get('surrogate_diagnostics') or {},
             )
-        return response_json, 0, [], ''
+        return response_json, 0, [], '', {}, {}
 
     def restore_llm_server(process_url, ckpt_data):
         restore_url = process_url.rsplit('/process', 1)[0] + '/restore'
@@ -567,6 +1024,7 @@ if __name__ == "__main__":
             'request_count': ckpt_data.get('request_count', 0),
             'history_top': ckpt_data.get('history_top', []),
             'last_result': ckpt_data.get('last_result', ''),
+            'reflection_state': ckpt_data.get('reflection_state', {}),
         }
         try:
             r = requests.post(restore_url, json=payload, timeout=30)
@@ -588,12 +1046,67 @@ if __name__ == "__main__":
 
     mode, ckpt = resolve_run_mode()
     print(f'run_mode={RUN_MODE} -> {mode}; record_dir={RECORD_DIR}')
+    if mode == 'fresh':
+        clear_record_progress()
+
+    workload_path = config_parser['workload analyzer']['workload_file']
+    snapshot_core = {
+        'python': sys.version,
+        'platform': platform.platform(),
+        'config_path': os.environ.get('AGENTTUNE_CONFIG', './config.ini'),
+        'database_kernel': config_parser['knob selector']['database_kernel'],
+        'database_scale': config_parser['knob selector']['database_scale'],
+        'hardware': config_parser['knob selector']['hardware'],
+        'benchmark': config_parser['configuration recommender']['benchmark'],
+        'random_seed': config_parser.getint(
+            'configuration recommender', 'random_seed', fallback=42
+        ),
+        'workload_file': workload_path,
+        'workload_sha256': _hash_workload(workload_path),
+        'benchmark_protocol': {
+            'warmup_runs': BENCHMARK_WARMUP_RUNS,
+            'repetitions': BENCHMARK_REPETITIONS,
+            'require_all': BENCHMARK_REQUIRE_ALL,
+            'statement_timeout_ms': BENCHMARK_STATEMENT_TIMEOUT_MS,
+            'tpcds_skip_queries': sorted(TPCDS_SKIP_QUERIES),
+        },
+    }
+    snapshot_path = os.path.join(RECORD_DIR, 'environment_snapshot.json')
+    snapshot_core_json = json.dumps(
+        snapshot_core, sort_keys=True, separators=(',', ':'), ensure_ascii=False
+    )
+    SNAPSHOT_HASH = hashlib.sha256(snapshot_core_json.encode('utf-8')).hexdigest()
+    if mode == 'fresh':
+        snapshot = {'created_at': int(time.time()), **snapshot_core}
+        with open(snapshot_path, 'w', encoding='utf-8') as f:
+            json.dump(snapshot, f, indent=2, ensure_ascii=False)
+    else:
+        checkpoint_hash = (ckpt or {}).get('environment_snapshot_sha256')
+        if not os.path.exists(snapshot_path):
+            print(
+                'Warning: checkpoint exists but environment_snapshot.json is missing; '
+                'starting fresh instead of resume.',
+                flush=True,
+            )
+            mode = 'fresh'
+            ckpt = None
+            clear_record_progress()
+            snapshot = {'created_at': int(time.time()), **snapshot_core}
+            with open(snapshot_path, 'w', encoding='utf-8') as f:
+                json.dump(snapshot, f, indent=2, ensure_ascii=False)
+        elif checkpoint_hash and checkpoint_hash != SNAPSHOT_HASH:
+            raise RuntimeError(
+                'Cannot resume: workload or benchmark protocol differs from checkpoint'
+            )
 
     url = 'http://{}:{}/process'.format(
         config_parser['configuration recommender']['LLM_server_IP'],
         int(config_parser['configuration recommender']['LLM_server_port']),
     )
     max_iteration = int(config_parser['configuration recommender']['iteration'])
+    controller_enabled = config_parser.getboolean(
+        'configuration recommender', 'adaptive_controller_enabled', fallback=False
+    )
     benchmark = config_parser['configuration recommender']['benchmark'].strip().upper()
     benchmark_switch = {
         "SYSBENCH": test_by_sysbench,
@@ -602,27 +1115,100 @@ if __name__ == "__main__":
         "TPCDS": test_by_tpcds,
     }
 
+    def new_controller():
+        return DecisionController(
+            window_size=config_parser.getint(
+                'configuration recommender', 'plateau_window', fallback=4
+            ),
+            min_trials=3,
+            improvement_stagnant=config_parser.getfloat(
+                'configuration recommender', 'plateau_threshold', fallback=0.01
+            ),
+            failure_rate_rollback=config_parser.getfloat(
+                'configuration recommender', 'failure_rate_threshold', fallback=0.50
+            ),
+            failure_rate_shrink=min(
+                0.25,
+                config_parser.getfloat(
+                    'configuration recommender', 'failure_rate_threshold', fallback=0.50
+                ) / 2.0,
+            ),
+            benchmark_budget=config_parser.getint(
+                'configuration recommender', 'benchmark_budget', fallback=61
+            ),
+            token_budget=config_parser.getint(
+                'configuration recommender', 'token_budget', fallback=2_000_000
+            ),
+        )
+
+    def record_controller_trial(controller, knob, throughput, metric, token_cost=0, confidence=None):
+        if not controller_enabled:
+            return
+        controller.record_trial(TrialResult(
+            throughput=throughput if throughput > 0 else None,
+            success=throughput > 0,
+            configuration=knob or {},
+            surrogate_confidence=confidence,
+            token_cost=max(0, int(token_cost)),
+            metadata={'metric_count': len(metric or {})},
+        ))
+
     if mode == 'fresh':
-        clear_record_progress()
+        controller = new_controller()
+        reflection_state = {}
+        surrogate_diagnostics = {}
+        last_token_total = 0
         knob = get_current_knob()
         benchmark_func = benchmark_switch.get(benchmark)
         if benchmark_func is None:
             unknown_benchmark(benchmark)
             sys.exit(1)
+        evaluation_started = time.time()
         throughput = benchmark_func(knob)
-        metric = [] if throughput == 0 else get_current_metric()
+        evaluation_seconds = time.time() - evaluation_started
+        metric = []
+        if throughput != 0:
+            try:
+                metric = get_current_metric()
+            except Exception as e:
+                print(f'Warning: get_current_metric failed (MySQL may be down): {e}', flush=True)
         data1 = [{
+            "trial_id": make_trial_id(-1, 0, knob),
             "knob": knob,
             "throughput": throughput,
             "metric": metric,
+            "valid": bool(LAST_BENCHMARK_RESULT.get('valid', throughput > 0)),
+            "failure_reason": LAST_BENCHMARK_RESULT.get('failure_reason'),
+            "manifest_sha256": LAST_BENCHMARK_RESULT.get('manifest_sha256'),
+            "report_path": LAST_BENCHMARK_RESULT.get('report_path'),
+            "iteration": -1,
+            "evaluation_seconds": evaluation_seconds,
+            "timestamp": int(time.time()),
         }]
-        with open(HISTORY_PATH, "a", encoding="utf-8") as f:
-            json.dump(data1[0], f, indent=4)
-            f.write("\n")
+        record_controller_trial(controller, knob, throughput, metric)
+        append_history_record(data1[0])
 
-        response = requests.post(url, json=data1)
+        decision = controller.decide() if controller_enabled else None
+        request_payload = {
+            'trials': data1,
+            'decision': decision.to_dict() if decision else {},
+        }
+        response = requests.post(url, json=request_payload, timeout=300)
+        response.raise_for_status()
         response_json = response.json()
-        result, request_count, history_top, last_result = parse_llm_response(response_json)
+        (
+            result,
+            request_count,
+            history_top,
+            last_result,
+            reflection_state,
+            surrogate_diagnostics,
+        ) = parse_llm_response(response_json)
+        new_token_total = int(
+            (reflection_state.get('token_usage') or {}).get('total', 0)
+        )
+        pending_token_cost = max(0, new_token_total - last_token_total)
+        last_token_total = new_token_total
         print(result)
 
         iteration = 0
@@ -644,6 +1230,12 @@ if __name__ == "__main__":
             'request_count': request_count,
             'history_top': history_top,
             'last_result': last_result,
+            'decision_controller': controller.to_dict(),
+            'last_decision': decision.to_dict() if decision else {},
+            'reflection_state': reflection_state,
+            'surrogate_diagnostics': surrogate_diagnostics,
+            'last_token_total': last_token_total,
+            'pending_token_cost': pending_token_cost,
         })
     else:
         print(
@@ -651,6 +1243,12 @@ if __name__ == "__main__":
             f'result_index={ckpt.get("result_index")}'
         )
         restore_llm_server(url, ckpt)
+        controller_state = ckpt.get('decision_controller')
+        controller = (
+            DecisionController.from_dict(controller_state)
+            if controller_enabled and controller_state
+            else new_controller()
+        )
         iteration = int(ckpt.get('iteration', 0))
         result_index = int(ckpt.get('result_index', 0))
         result = ckpt.get('result')
@@ -661,7 +1259,12 @@ if __name__ == "__main__":
         request_count = int(ckpt.get('request_count', 0))
         history_top = ckpt.get('history_top') or []
         last_result = ckpt.get('last_result') or ''
+        reflection_state = ckpt.get('reflection_state') or {}
+        surrogate_diagnostics = ckpt.get('surrogate_diagnostics') or {}
+        last_token_total = int(ckpt.get('last_token_total') or 0)
+        pending_token_cost = int(ckpt.get('pending_token_cost') or 0)
 
+    stopped_by_controller = False
     while iteration < max_iteration:
         items = normalize_result_items(result)
 
@@ -693,6 +1296,11 @@ if __name__ == "__main__":
                     'request_count': request_count,
                     'history_top': history_top,
                     'last_result': last_result,
+                    'decision_controller': controller.to_dict(),
+                    'reflection_state': reflection_state,
+                    'surrogate_diagnostics': surrogate_diagnostics,
+                    'last_token_total': last_token_total,
+                    'pending_token_cost': pending_token_cost,
                 })
                 continue
 
@@ -702,22 +1310,45 @@ if __name__ == "__main__":
                 result_index = idx + 1
                 continue
 
+            evaluation_started = time.time()
             throughput = benchmark_func(knob)
+            evaluation_seconds = time.time() - evaluation_started
             if not isinstance(throughput, (int, float)) or isinstance(throughput, bool):
                 throughput = 0.0
             else:
                 throughput = float(throughput)
 
-            metric = [] if throughput == 0 else get_current_metric()
+            metric = []
+            if throughput != 0:
+                try:
+                    metric = get_current_metric()
+                except Exception as e:
+                    print(f'Warning: get_current_metric failed (MySQL may be down): {e}', flush=True)
             data = {
+                "trial_id": make_trial_id(iteration, idx, knob),
                 "knob": knob,
                 "throughput": throughput,
                 "metric": metric,
+                "valid": bool(LAST_BENCHMARK_RESULT.get('valid', throughput > 0)),
+                "failure_reason": LAST_BENCHMARK_RESULT.get('failure_reason'),
+                "manifest_sha256": LAST_BENCHMARK_RESULT.get('manifest_sha256'),
+                "report_path": LAST_BENCHMARK_RESULT.get('report_path'),
+                "iteration": iteration,
+                "evaluation_seconds": evaluation_seconds,
+                "timestamp": int(time.time()),
             }
+            confidence = surrogate_diagnostics.get('confidence')
+            record_controller_trial(
+                controller,
+                knob,
+                throughput,
+                metric,
+                token_cost=pending_token_cost,
+                confidence=confidence,
+            )
+            pending_token_cost = 0
             data_list.append(data)
-            with open(HISTORY_PATH, "a", encoding="utf-8") as f:
-                json.dump(data, f, indent=4)
-                f.write("\n")
+            append_history_record(data)
 
             if throughput > best_throughput:
                 best_knob = knob
@@ -737,15 +1368,48 @@ if __name__ == "__main__":
                 'request_count': request_count,
                 'history_top': history_top,
                 'last_result': last_result,
+                'decision_controller': controller.to_dict(),
+                'reflection_state': reflection_state,
+                'surrogate_diagnostics': surrogate_diagnostics,
+                'last_token_total': last_token_total,
+                'pending_token_cost': pending_token_cost,
             })
 
         if not data_list and result_index >= len(items):
             print('No valid knob configs in this iteration, stop.')
             break
 
-        response = requests.post(url, json=data_list)
+        decision = controller.decide() if controller_enabled else None
+        if decision:
+            with open(os.path.join(RECORD_DIR, 'decision_log.jsonl'), 'a', encoding='utf-8') as f:
+                f.write(json.dumps(decision.to_dict(), ensure_ascii=False) + '\n')
+        if decision and decision.name == 'stop':
+            print(f'Adaptive controller stopped search: {decision.reason}', flush=True)
+            stopped_by_controller = True
+            break
+        response = requests.post(
+            url,
+            json={
+                'trials': data_list,
+                'decision': decision.to_dict() if decision else {},
+            },
+            timeout=300,
+        )
+        response.raise_for_status()
         response_json = response.json()
-        result, request_count, history_top, last_result = parse_llm_response(response_json)
+        (
+            result,
+            request_count,
+            history_top,
+            last_result,
+            reflection_state,
+            surrogate_diagnostics,
+        ) = parse_llm_response(response_json)
+        new_token_total = int(
+            (reflection_state.get('token_usage') or {}).get('total', last_token_total)
+        )
+        pending_token_cost = max(0, new_token_total - last_token_total)
+        last_token_total = new_token_total
         print(result)
 
         iteration += 1
@@ -763,6 +1427,12 @@ if __name__ == "__main__":
             'request_count': request_count,
             'history_top': history_top,
             'last_result': last_result,
+            'decision_controller': controller.to_dict(),
+            'last_decision': decision.to_dict() if decision else {},
+            'reflection_state': reflection_state,
+            'surrogate_diagnostics': surrogate_diagnostics,
+            'last_token_total': last_token_total,
+            'pending_token_cost': pending_token_cost,
         })
 
     with open(OPTIMAL_PATH, "w", encoding="utf-8") as f:
@@ -782,5 +1452,11 @@ if __name__ == "__main__":
         'request_count': request_count,
         'history_top': history_top,
         'last_result': last_result,
+        'decision_controller': controller.to_dict(),
+        'reflection_state': reflection_state,
+        'surrogate_diagnostics': surrogate_diagnostics,
+        'last_token_total': last_token_total,
+        'pending_token_cost': pending_token_cost,
+        'stop_reason': 'adaptive_controller' if stopped_by_controller else 'iteration_limit',
     })
     print(f'Done. Results saved under {RECORD_DIR}')

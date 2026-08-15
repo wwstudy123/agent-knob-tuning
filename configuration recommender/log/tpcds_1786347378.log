@@ -1,0 +1,6 @@
+[./benchmark_queries/tpcds_all.sql] stmt#25/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#33/100 failed after 0.0s: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ') dw2\nwhere rk <= 100\norder by i_category\n        ,i_class\n        ,i_brand\n    ' at line 29")
+[./benchmark_queries/tpcds_all.sql] stmt#45/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#68/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#69/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#74/100 failed after 0.0s: (1630, "FUNCTION tpcds.sum does not exist. Check the 'Function Name Parsing and Resolution' section in the Reference Manual")

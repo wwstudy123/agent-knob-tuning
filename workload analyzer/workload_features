@@ -8,49 +8,19 @@ group by ratio : 1.4077669902912622
 order by ratio : 1.087378640776699
 aggregation ratio : 3.912621359223301
 average predicate num per SQL : 15.74757281553398
-max visited table : store_sales 0.16467780429594273
+max visited table : store_sales 0.16666666666666666
 min visited table : catalog_page 0.0
-average table access count : 4.067961165048544
+average table access count : 4.019417475728155
 average item returned count per query : 3.6699029126213594
 order by logic ratio : 0.8125 (asc): 0.1875 (desc)
 where clause comparison condition ratio :
-	 = 0.8770281810418445
-	 > 0.08625106746370624
-	 < 0.010247651579846286
-	 >= 0.007685738684884714
-	 <= 0.018787361229718188
+	 = 0.8771331058020477
+	 > 0.08617747440273038
+	 < 0.010238907849829351
+	 >= 0.007679180887372013
+	 <= 0.01877133105802048
 table access pattern :
-	 store 27|419 	 0.06443914081145585
-		 s_store_sk 35|127 	 0.2755905511811024
-		 s_store_id 11|127 	 0.08661417322834646
-		 s_rec_start_date 0|127 	 0.0
-		 s_rec_end_date 0|127 	 0.0
-		 s_closed_date_sk 0|127 	 0.0
-		 s_store_name 45|127 	 0.3543307086614173
-		 s_number_employees 1|127 	 0.007874015748031496
-		 s_floor_space 0|127 	 0.0
-		 s_hours 0|127 	 0.0
-		 s_manager 0|127 	 0.0
-		 s_market_id 1|127 	 0.007874015748031496
-		 s_geography_class 0|127 	 0.0
-		 s_market_desc 0|127 	 0.0
-		 s_market_manager 0|127 	 0.0
-		 s_division_id 0|127 	 0.0
-		 s_division_name 0|127 	 0.0
-		 s_company_id 0|127 	 0.0
-		 s_company_name 7|127 	 0.05511811023622047
-		 s_street_number 0|127 	 0.0
-		 s_street_name 0|127 	 0.0
-		 s_street_type 0|127 	 0.0
-		 s_suite_number 0|127 	 0.0
-		 s_city 6|127 	 0.047244094488188976
-		 s_county 3|127 	 0.023622047244094488
-		 s_state 9|127 	 0.07086614173228346
-		 s_zip 6|127 	 0.047244094488188976
-		 s_country 0|127 	 0.0
-		 s_gmt_offset 3|127 	 0.023622047244094488
-		 s_tax_precentage 0|127 	 0.0
-	 store_sales 69|419 	 0.16467780429594273
+	 store_sales 69|414 	 0.16666666666666666
 		 ss_sold_date_sk 75|516 	 0.14534883720930233
 		 ss_sold_time_sk 10|516 	 0.01937984496124031
 		 ss_item_sk 71|516 	 0.1375968992248062
@@ -74,13 +44,43 @@ table access pattern :
 		 ss_net_paid 1|516 	 0.001937984496124031
 		 ss_net_paid_inc_tax 0|516 	 0.0
 		 ss_net_profit 32|516 	 0.06201550387596899
-	 household_demographics 12|419 	 0.028639618138424822
+	 household_demographics 12|414 	 0.028985507246376812
 		 hd_demo_sk 18|64 	 0.28125
 		 hd_income_band_sk 0|64 	 0.0
 		 hd_buy_potential 6|64 	 0.09375
 		 hd_dep_count 33|64 	 0.515625
 		 hd_vehicle_count 7|64 	 0.109375
-	 time_dim 5|419 	 0.011933174224343675
+	 store 26|414 	 0.06280193236714976
+		 s_store_sk 34|125 	 0.272
+		 s_store_id 11|125 	 0.088
+		 s_rec_start_date 0|125 	 0.0
+		 s_rec_end_date 0|125 	 0.0
+		 s_closed_date_sk 0|125 	 0.0
+		 s_store_name 45|125 	 0.36
+		 s_number_employees 1|125 	 0.008
+		 s_floor_space 0|125 	 0.0
+		 s_hours 0|125 	 0.0
+		 s_manager 0|125 	 0.0
+		 s_market_id 1|125 	 0.008
+		 s_geography_class 0|125 	 0.0
+		 s_market_desc 0|125 	 0.0
+		 s_market_manager 0|125 	 0.0
+		 s_division_id 0|125 	 0.0
+		 s_division_name 0|125 	 0.0
+		 s_company_id 0|125 	 0.0
+		 s_company_name 7|125 	 0.056
+		 s_street_number 0|125 	 0.0
+		 s_street_name 0|125 	 0.0
+		 s_street_type 0|125 	 0.0
+		 s_suite_number 0|125 	 0.0
+		 s_city 6|125 	 0.048
+		 s_county 3|125 	 0.024
+		 s_state 8|125 	 0.064
+		 s_zip 6|125 	 0.048
+		 s_country 0|125 	 0.0
+		 s_gmt_offset 3|125 	 0.024
+		 s_tax_precentage 0|125 	 0.0
+	 time_dim 5|414 	 0.012077294685990338
 		 t_time_sk 14|42 	 0.3333333333333333
 		 t_time_id 0|42 	 0.0
 		 t_time 2|42 	 0.047619047619047616
@@ -91,27 +91,7 @@ table access pattern :
 		 t_shift 0|42 	 0.0
 		 t_sub_shift 0|42 	 0.0
 		 t_meal_time 2|42 	 0.047619047619047616
-	 promotion 5|419 	 0.011933174224343675
-		 p_promo_sk 6|13 	 0.46153846153846156
-		 p_promo_id 0|13 	 0.0
-		 p_start_date_sk 0|13 	 0.0
-		 p_end_date_sk 0|13 	 0.0
-		 p_item_sk 0|13 	 0.0
-		 p_cost 0|13 	 0.0
-		 p_response_target 0|13 	 0.0
-		 p_promo_name 0|13 	 0.0
-		 p_channel_dmail 1|13 	 0.07692307692307693
-		 p_channel_email 3|13 	 0.23076923076923078
-		 p_channel_catalog 0|13 	 0.0
-		 p_channel_tv 1|13 	 0.07692307692307693
-		 p_channel_radio 0|13 	 0.0
-		 p_channel_press 0|13 	 0.0
-		 p_channel_event 2|13 	 0.15384615384615385
-		 p_channel_demo 0|13 	 0.0
-		 p_channel_details 0|13 	 0.0
-		 p_purpose 0|13 	 0.0
-		 p_discount_active 0|13 	 0.0
-	 customer_demographics 11|419 	 0.026252983293556086
+	 customer_demographics 11|414 	 0.026570048309178744
 		 cd_demo_sk 13|101 	 0.12871287128712872
 		 cd_gender 11|101 	 0.10891089108910891
 		 cd_marital_status 21|101 	 0.2079207920792079
@@ -121,36 +101,7 @@ table access pattern :
 		 cd_dep_count 9|101 	 0.0891089108910891
 		 cd_dep_employed_count 9|101 	 0.0891089108910891
 		 cd_dep_college_count 9|101 	 0.0891089108910891
-	 date_dim 62|419 	 0.14797136038186157
-		 d_date_sk 88|386 	 0.22797927461139897
-		 d_date_id 0|386 	 0.0
-		 d_date 34|386 	 0.08808290155440414
-		 d_month_seq 18|386 	 0.046632124352331605
-		 d_week_seq 21|386 	 0.054404145077720206
-		 d_quarter_seq 0|386 	 0.0
-		 d_year 109|386 	 0.2823834196891192
-		 d_dow 2|386 	 0.0051813471502590676
-		 d_moy 91|386 	 0.23575129533678757
-		 d_dom 6|386 	 0.015544041450777202
-		 d_qoy 17|386 	 0.04404145077720207
-		 d_fy_year 0|386 	 0.0
-		 d_fy_quarter_seq 0|386 	 0.0
-		 d_fy_week_seq 0|386 	 0.0
-		 d_day_name 0|386 	 0.0
-		 d_quarter_name 0|386 	 0.0
-		 d_holiday 0|386 	 0.0
-		 d_weekend 0|386 	 0.0
-		 d_following_holiday 0|386 	 0.0
-		 d_first_dom 0|386 	 0.0
-		 d_last_dom 0|386 	 0.0
-		 d_same_day_ly 0|386 	 0.0
-		 d_same_day_lq 0|386 	 0.0
-		 d_current_day 0|386 	 0.0
-		 d_current_week 0|386 	 0.0
-		 d_current_month 0|386 	 0.0
-		 d_current_quarter 0|386 	 0.0
-		 d_current_year 0|386 	 0.0
-	 item 40|419 	 0.0954653937947494
+	 item 40|414 	 0.0966183574879227
 		 i_item_sk 62|429 	 0.1445221445221445
 		 i_item_id 65|429 	 0.15151515151515152
 		 i_rec_start_date 0|429 	 0.0
@@ -173,35 +124,77 @@ table access pattern :
 		 i_container 0|429 	 0.0
 		 i_manager_id 10|429 	 0.023310023310023312
 		 i_product_name 4|429 	 0.009324009324009324
-	 catalog_returns 13|419 	 0.031026252983293555
-		 cr_returned_date_sk 5|36 	 0.1388888888888889
-		 cr_returned_time_sk 0|36 	 0.0
-		 cr_item_sk 5|36 	 0.1388888888888889
-		 cr_refunded_customer_sk 0|36 	 0.0
-		 cr_refunded_cdemo_sk 0|36 	 0.0
-		 cr_refunded_hdemo_sk 0|36 	 0.0
-		 cr_refunded_addr_sk 0|36 	 0.0
-		 cr_returning_customer_sk 2|36 	 0.05555555555555555
-		 cr_returning_cdemo_sk 0|36 	 0.0
-		 cr_returning_hdemo_sk 0|36 	 0.0
-		 cr_returning_addr_sk 1|36 	 0.027777777777777776
-		 cr_call_center_sk 3|36 	 0.08333333333333333
-		 cr_catalog_page_sk 1|36 	 0.027777777777777776
-		 cr_ship_mode_sk 0|36 	 0.0
-		 cr_warehouse_sk 0|36 	 0.0
-		 cr_reason_sk 0|36 	 0.0
-		 cr_order_number 5|36 	 0.1388888888888889
-		 cr_return_quantity 2|36 	 0.05555555555555555
-		 cr_return_amount 4|36 	 0.1111111111111111
-		 cr_return_tax 0|36 	 0.0
-		 cr_return_amt_inc_tax 1|36 	 0.027777777777777776
-		 cr_fee 0|36 	 0.0
-		 cr_return_ship_cost 0|36 	 0.0
-		 cr_refunded_cash 2|36 	 0.05555555555555555
-		 cr_reversed_charge 0|36 	 0.0
-		 cr_store_credit 0|36 	 0.0
-		 cr_net_loss 5|36 	 0.1388888888888889
-	 web_sales 38|419 	 0.09069212410501193
+	 promotion 5|414 	 0.012077294685990338
+		 p_promo_sk 6|13 	 0.46153846153846156
+		 p_promo_id 0|13 	 0.0
+		 p_start_date_sk 0|13 	 0.0
+		 p_end_date_sk 0|13 	 0.0
+		 p_item_sk 0|13 	 0.0
+		 p_cost 0|13 	 0.0
+		 p_response_target 0|13 	 0.0
+		 p_promo_name 0|13 	 0.0
+		 p_channel_dmail 1|13 	 0.07692307692307693
+		 p_channel_email 3|13 	 0.23076923076923078
+		 p_channel_catalog 0|13 	 0.0
+		 p_channel_tv 1|13 	 0.07692307692307693
+		 p_channel_radio 0|13 	 0.0
+		 p_channel_press 0|13 	 0.0
+		 p_channel_event 2|13 	 0.15384615384615385
+		 p_channel_demo 0|13 	 0.0
+		 p_channel_details 0|13 	 0.0
+		 p_purpose 0|13 	 0.0
+		 p_discount_active 0|13 	 0.0
+	 date_dim 60|414 	 0.14492753623188406
+		 d_date_sk 84|379 	 0.22163588390501318
+		 d_date_id 0|379 	 0.0
+		 d_date 38|379 	 0.10026385224274406
+		 d_month_seq 18|379 	 0.047493403693931395
+		 d_week_seq 21|379 	 0.055408970976253295
+		 d_quarter_seq 0|379 	 0.0
+		 d_year 105|379 	 0.2770448548812665
+		 d_dow 2|379 	 0.005277044854881266
+		 d_moy 88|379 	 0.23218997361477572
+		 d_dom 6|379 	 0.0158311345646438
+		 d_qoy 17|379 	 0.044854881266490766
+		 d_fy_year 0|379 	 0.0
+		 d_fy_quarter_seq 0|379 	 0.0
+		 d_fy_week_seq 0|379 	 0.0
+		 d_day_name 0|379 	 0.0
+		 d_quarter_name 0|379 	 0.0
+		 d_holiday 0|379 	 0.0
+		 d_weekend 0|379 	 0.0
+		 d_following_holiday 0|379 	 0.0
+		 d_first_dom 0|379 	 0.0
+		 d_last_dom 0|379 	 0.0
+		 d_same_day_ly 0|379 	 0.0
+		 d_same_day_lq 0|379 	 0.0
+		 d_current_day 0|379 	 0.0
+		 d_current_week 0|379 	 0.0
+		 d_current_month 0|379 	 0.0
+		 d_current_quarter 0|379 	 0.0
+		 d_current_year 0|379 	 0.0
+	 store_returns 15|414 	 0.036231884057971016
+		 sr_returned_date_sk 7|58 	 0.1206896551724138
+		 sr_return_time_sk 0|58 	 0.0
+		 sr_item_sk 12|58 	 0.20689655172413793
+		 sr_customer_sk 8|58 	 0.13793103448275862
+		 sr_cdemo_sk 0|58 	 0.0
+		 sr_hdemo_sk 0|58 	 0.0
+		 sr_addr_sk 0|58 	 0.0
+		 sr_store_sk 4|58 	 0.06896551724137931
+		 sr_reason_sk 1|58 	 0.017241379310344827
+		 sr_ticket_number 9|58 	 0.15517241379310345
+		 sr_return_quantity 9|58 	 0.15517241379310345
+		 sr_return_amt 4|58 	 0.06896551724137931
+		 sr_return_tax 0|58 	 0.0
+		 sr_return_amt_inc_tax 0|58 	 0.0
+		 sr_fee 0|58 	 0.0
+		 sr_return_ship_cost 0|58 	 0.0
+		 sr_refunded_cash 0|58 	 0.0
+		 sr_reversed_charge 0|58 	 0.0
+		 sr_store_credit 0|58 	 0.0
+		 sr_net_loss 4|58 	 0.06896551724137931
+	 web_sales 38|414 	 0.09178743961352658
 		 ws_sold_date_sk 44|209 	 0.21052631578947367
 		 ws_sold_time_sk 4|209 	 0.019138755980861243
 		 ws_ship_date_sk 9|209 	 0.0430622009569378
@@ -236,7 +229,35 @@ table access pattern :
 		 ws_net_paid_inc_ship 0|209 	 0.0
 		 ws_net_paid_inc_ship_tax 0|209 	 0.0
 		 ws_net_profit 20|209 	 0.09569377990430622
-	 web_returns 11|419 	 0.026252983293556086
+	 catalog_returns 13|414 	 0.03140096618357488
+		 cr_returned_date_sk 5|36 	 0.1388888888888889
+		 cr_returned_time_sk 0|36 	 0.0
+		 cr_item_sk 5|36 	 0.1388888888888889
+		 cr_refunded_customer_sk 0|36 	 0.0
+		 cr_refunded_cdemo_sk 0|36 	 0.0
+		 cr_refunded_hdemo_sk 0|36 	 0.0
+		 cr_refunded_addr_sk 0|36 	 0.0
+		 cr_returning_customer_sk 2|36 	 0.05555555555555555
+		 cr_returning_cdemo_sk 0|36 	 0.0
+		 cr_returning_hdemo_sk 0|36 	 0.0
+		 cr_returning_addr_sk 1|36 	 0.027777777777777776
+		 cr_call_center_sk 3|36 	 0.08333333333333333
+		 cr_catalog_page_sk 1|36 	 0.027777777777777776
+		 cr_ship_mode_sk 0|36 	 0.0
+		 cr_warehouse_sk 0|36 	 0.0
+		 cr_reason_sk 0|36 	 0.0
+		 cr_order_number 5|36 	 0.1388888888888889
+		 cr_return_quantity 2|36 	 0.05555555555555555
+		 cr_return_amount 4|36 	 0.1111111111111111
+		 cr_return_tax 0|36 	 0.0
+		 cr_return_amt_inc_tax 1|36 	 0.027777777777777776
+		 cr_fee 0|36 	 0.0
+		 cr_return_ship_cost 0|36 	 0.0
+		 cr_refunded_cash 2|36 	 0.05555555555555555
+		 cr_reversed_charge 0|36 	 0.0
+		 cr_store_credit 0|36 	 0.0
+		 cr_net_loss 5|36 	 0.1388888888888889
+	 web_returns 11|414 	 0.026570048309178744
 		 wr_returned_date_sk 4|36 	 0.1111111111111111
 		 wr_returned_time_sk 0|36 	 0.0
 		 wr_item_sk 4|36 	 0.1111111111111111
@@ -261,7 +282,7 @@ table access pattern :
 		 wr_reversed_charge 0|36 	 0.0
 		 wr_account_credit 0|36 	 0.0
 		 wr_net_loss 3|36 	 0.08333333333333333
-	 catalog_sales 40|419 	 0.0954653937947494
+	 catalog_sales 40|414 	 0.0966183574879227
 		 cs_sold_date_sk 48|233 	 0.20600858369098712
 		 cs_sold_time_sk 2|233 	 0.008583690987124463
 		 cs_ship_date_sk 10|233 	 0.04291845493562232
@@ -296,33 +317,12 @@ table access pattern :
 		 cs_net_paid_inc_ship 0|233 	 0.0
 		 cs_net_paid_inc_ship_tax 0|233 	 0.0
 		 cs_net_profit 6|233 	 0.02575107296137339
-	 store_returns 15|419 	 0.03579952267303103
-		 sr_returned_date_sk 7|58 	 0.1206896551724138
-		 sr_return_time_sk 0|58 	 0.0
-		 sr_item_sk 12|58 	 0.20689655172413793
-		 sr_customer_sk 8|58 	 0.13793103448275862
-		 sr_cdemo_sk 0|58 	 0.0
-		 sr_hdemo_sk 0|58 	 0.0
-		 sr_addr_sk 0|58 	 0.0
-		 sr_store_sk 4|58 	 0.06896551724137931
-		 sr_reason_sk 1|58 	 0.017241379310344827
-		 sr_ticket_number 9|58 	 0.15517241379310345
-		 sr_return_quantity 9|58 	 0.15517241379310345
-		 sr_return_amt 4|58 	 0.06896551724137931
-		 sr_return_tax 0|58 	 0.0
-		 sr_return_amt_inc_tax 0|58 	 0.0
-		 sr_fee 0|58 	 0.0
-		 sr_return_ship_cost 0|58 	 0.0
-		 sr_refunded_cash 0|58 	 0.0
-		 sr_reversed_charge 0|58 	 0.0
-		 sr_store_credit 0|58 	 0.0
-		 sr_net_loss 4|58 	 0.06896551724137931
-	 inventory 5|419 	 0.011933174224343675
+	 inventory 5|414 	 0.012077294685990338
 		 inv_date_sk 4|19 	 0.21052631578947367
 		 inv_item_sk 4|19 	 0.21052631578947367
 		 inv_warehouse_sk 3|19 	 0.15789473684210525
 		 inv_quantity_on_hand 8|19 	 0.42105263157894735
-	 warehouse 4|419 	 0.00954653937947494
+	 warehouse 4|414 	 0.00966183574879227
 		 w_warehouse_sk 10|56 	 0.17857142857142858
 		 w_warehouse_id 0|56 	 0.0
 		 w_warehouse_name 16|56 	 0.2857142857142857
@@ -337,40 +337,40 @@ table access pattern :
 		 w_zip 0|56 	 0.0
 		 w_country 6|56 	 0.10714285714285714
 		 w_gmt_offset 0|56 	 0.0
-	 customer_address 25|419 	 0.059665871121718374
-		 ca_address_sk 32|137 	 0.23357664233576642
-		 ca_address_id 0|137 	 0.0
-		 ca_street_number 2|137 	 0.014598540145985401
-		 ca_street_name 2|137 	 0.014598540145985401
-		 ca_street_type 2|137 	 0.014598540145985401
-		 ca_suite_number 2|137 	 0.014598540145985401
-		 ca_city 12|137 	 0.08759124087591241
-		 ca_county 8|137 	 0.058394160583941604
-		 ca_state 27|137 	 0.19708029197080293
-		 ca_zip 21|137 	 0.15328467153284672
-		 ca_country 13|137 	 0.0948905109489051
-		 ca_gmt_offset 14|137 	 0.10218978102189781
-		 ca_location_type 2|137 	 0.014598540145985401
-	 customer 28|419 	 0.06682577565632458
-		 c_customer_sk 35|238 	 0.14705882352941177
-		 c_customer_id 22|238 	 0.09243697478991597
-		 c_current_cdemo_sk 3|238 	 0.012605042016806723
-		 c_current_hdemo_sk 3|238 	 0.012605042016806723
-		 c_current_addr_sk 17|238 	 0.07142857142857142
-		 c_first_shipto_date_sk 1|238 	 0.004201680672268907
-		 c_first_sales_date_sk 1|238 	 0.004201680672268907
-		 c_salutation 7|238 	 0.029411764705882353
-		 c_first_name 43|238 	 0.18067226890756302
-		 c_last_name 45|238 	 0.18907563025210083
-		 c_preferred_cust_flag 15|238 	 0.06302521008403361
-		 c_birth_day 2|238 	 0.008403361344537815
-		 c_birth_month 2|238 	 0.008403361344537815
-		 c_birth_year 2|238 	 0.008403361344537815
-		 c_birth_country 14|238 	 0.058823529411764705
-		 c_login 12|238 	 0.05042016806722689
-		 c_email_address 12|238 	 0.05042016806722689
-		 c_last_review_date_sk 2|238 	 0.008403361344537815
-	 call_center 2|419 	 0.00477326968973747
+	 customer 27|414 	 0.06521739130434782
+		 c_customer_sk 34|243 	 0.13991769547325103
+		 c_customer_id 20|243 	 0.0823045267489712
+		 c_current_cdemo_sk 3|243 	 0.012345679012345678
+		 c_current_hdemo_sk 3|243 	 0.012345679012345678
+		 c_current_addr_sk 17|243 	 0.06995884773662552
+		 c_first_shipto_date_sk 1|243 	 0.00411522633744856
+		 c_first_sales_date_sk 1|243 	 0.00411522633744856
+		 c_salutation 7|243 	 0.02880658436213992
+		 c_first_name 47|243 	 0.1934156378600823
+		 c_last_name 49|243 	 0.20164609053497942
+		 c_preferred_cust_flag 15|243 	 0.06172839506172839
+		 c_birth_day 2|243 	 0.00823045267489712
+		 c_birth_month 2|243 	 0.00823045267489712
+		 c_birth_year 2|243 	 0.00823045267489712
+		 c_birth_country 14|243 	 0.05761316872427984
+		 c_login 12|243 	 0.04938271604938271
+		 c_email_address 12|243 	 0.04938271604938271
+		 c_last_review_date_sk 2|243 	 0.00823045267489712
+	 customer_address 24|414 	 0.057971014492753624
+		 ca_address_sk 29|130 	 0.2230769230769231
+		 ca_address_id 0|130 	 0.0
+		 ca_street_number 2|130 	 0.015384615384615385
+		 ca_street_name 2|130 	 0.015384615384615385
+		 ca_street_type 2|130 	 0.015384615384615385
+		 ca_suite_number 2|130 	 0.015384615384615385
+		 ca_city 12|130 	 0.09230769230769231
+		 ca_county 8|130 	 0.06153846153846154
+		 ca_state 27|130 	 0.2076923076923077
+		 ca_zip 20|130 	 0.15384615384615385
+		 ca_country 13|130 	 0.1
+		 ca_gmt_offset 11|130 	 0.08461538461538462
+		 ca_location_type 2|130 	 0.015384615384615385
+	 call_center 2|414 	 0.004830917874396135
 		 cc_call_center_sk 1|15 	 0.06666666666666667
 		 cc_call_center_id 2|15 	 0.13333333333333333
 		 cc_rec_start_date 0|15 	 0.0
@@ -402,12 +402,8 @@ table access pattern :
 		 cc_country 0|15 	 0.0
 		 cc_gmt_offset 0|15 	 0.0
 		 cc_tax_percentage 0|15 	 0.0
-	 income_band 1|419 	 0.002386634844868735
-	 reason 3|419 	 0.007159904534606206
-		 r_reason_sk 3|7 	 0.42857142857142855
-		 r_reason_id 0|7 	 0.0
-		 r_reason_desc 4|7 	 0.5714285714285714
-	 web_page 2|419 	 0.00477326968973747
+	 income_band 1|414 	 0.0024154589371980675
+	 web_page 2|414 	 0.004830917874396135
 		 wp_web_page_sk 3|5 	 0.6
 		 wp_web_page_id 0|5 	 0.0
 		 wp_rec_start_date 0|5 	 0.0
@@ -422,14 +418,18 @@ table access pattern :
 		 wp_link_count 0|5 	 0.0
 		 wp_image_count 0|5 	 0.0
 		 wp_max_ad_count 0|5 	 0.0
-	 ship_mode 1|419 	 0.002386634844868735
+	 reason 3|414 	 0.007246376811594203
+		 r_reason_sk 3|7 	 0.42857142857142855
+		 r_reason_id 0|7 	 0.0
+		 r_reason_desc 4|7 	 0.5714285714285714
+	 ship_mode 1|414 	 0.0024154589371980675
 		 sm_ship_mode_sk 2|4 	 0.5
 		 sm_ship_mode_id 0|4 	 0.0
 		 sm_type 0|4 	 0.0
 		 sm_code 0|4 	 0.0
 		 sm_carrier 2|4 	 0.5
 		 sm_contract 0|4 	 0.0
-	 catalog_page 0|419 	 0.0
-	 dbgen_version 0|419 	 0.0
-	 web_site 0|419 	 0.0
+	 catalog_page 0|414 	 0.0
+	 dbgen_version 0|414 	 0.0
+	 web_site 0|414 	 0.0
 

@@ -3,9 +3,10 @@ import unittest
 import configparser
 import re
 import json
+import os
 
 config = configparser.ConfigParser()
-config.read('./config.ini')
+config.read(os.environ.get('AGENTTUNE_CONFIG', './config.ini'))
 
 file_path = config['range pruner']['output_file']
 with open(file_path, "r") as f:

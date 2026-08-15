@@ -1,0 +1,5 @@
+[./benchmark_queries/tpcds_all.sql] stmt#25/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#33/100 failed after 0.0s: (1248, 'Every derived table must have its own alias')
+[./benchmark_queries/tpcds_all.sql] stmt#44/100 failed after 0.0s: (1060, "Duplicate column name 'cume_sales'")
+[./benchmark_queries/tpcds_all.sql] stmt#45/100 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[./benchmark_queries/tpcds_all.sql] stmt#46/100 failed after 0.0s: (1248, 'Every derived table must have its own alias')
