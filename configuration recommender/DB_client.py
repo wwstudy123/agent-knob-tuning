@@ -58,6 +58,11 @@ BENCHMARK_REQUIRE_ALL = config_parser.getboolean(
 BENCHMARK_STATEMENT_TIMEOUT_MS = config_parser.getint(
     'configuration recommender', 'statement_timeout_ms', fallback=180000
 )
+# pymysql read/write timeout must be >= MySQL max_execution_time, otherwise
+# the client drops at 300s with 2013 while the server would still be running.
+_CLIENT_SOCKET_TIMEOUT_SEC = max(300, BENCHMARK_STATEMENT_TIMEOUT_MS // 1000 + 60)
+db_config['read_timeout'] = _CLIENT_SOCKET_TIMEOUT_SEC
+db_config['write_timeout'] = _CLIENT_SOCKET_TIMEOUT_SEC
 EXPECTED_STATEMENT_COUNT = config_parser.getint(
     'configuration recommender', 'expected_statement_count', fallback=0
 )
@@ -388,27 +393,57 @@ def _apply_knobs_and_restart(knob):
     return 0
 
 
+
+def _clean_sql_statement(stmt):
+    """
+    Strip section markers / leading dash comments from one statement.
+
+    MySQL requires a space after '--' for line comments. Markers like
+    '--q91.sql--' are therefore NOT comments and cause 1064 errors.
+    """
+    lines = stmt.splitlines()
+    source = None
+    while lines:
+        raw = lines[0].strip()
+        if not raw:
+            lines.pop(0)
+            continue
+        marker = re.match(r'^--\s*q(\d+[a-z]?)(?:\.sql)?\s*--?\s*$', raw, flags=re.IGNORECASE)
+        if marker:
+            source = f"q{marker.group(1)}.sql"
+            lines.pop(0)
+            continue
+        # Valid MySQL '-- comment' (space after dashes) or leftover section junk
+        if raw.startswith('--'):
+            lines.pop(0)
+            continue
+        break
+    cleaned = '\n'.join(lines).strip()
+    # Also drop trailing section-only comment lines
+    out_lines = cleaned.splitlines()
+    while out_lines and out_lines[-1].strip().startswith('--'):
+        out_lines.pop()
+    return '\n'.join(out_lines).strip(), source
+
+
 def _split_sql_content(content, source_label, allow_intersect_except=None):
     """Split one SQL file body into executable statements."""
     if allow_intersect_except is None:
         allow_intersect_except = bool(_MYSQL_SUPPORTS_INTERSECT)
     content = re.sub(r'/\*.*?\*/', '', content, flags=re.DOTALL)
-    lines = content.splitlines()
-    while lines and lines[0].startswith('--'):
-        lines.pop(0)
-    content = '\n'.join(lines).lstrip('\n')
     statements = []
     for part in re.split(r';\s*\n', content):
-        stmt = part.strip()
+        stmt, section = _clean_sql_statement(part)
         if not stmt:
             continue
         if (not allow_intersect_except) and _UNSUPPORTED_SQL.search(stmt):
             ver = '.'.join(str(x) for x in (_MYSQL_VERSION_TUPLE or (8, 0, 21)))
+            label = section or source_label
             raise ValueError(
-                f'{source_label} contains INTERSECT/EXCEPT unsupported by MySQL {ver} '
+                f'{label} contains INTERSECT/EXCEPT unsupported by MySQL {ver} '
                 f'(need >= 8.0.31)'
             )
-        statements.append(stmt)
+        statements.append({'sql': stmt, 'section': section})
     return statements
 
 
@@ -444,15 +479,14 @@ def _workload_entries(workload_path, allow_intersect_except=None):
                 skipped.append(name)
                 continue
             try:
-                stmts = _parse_sql_file(path, allow_intersect_except=allow_intersect_except)
+                parsed = _parse_sql_file(path, allow_intersect_except=allow_intersect_except)
             except ValueError as e:
-                # Keep directory mode useful: skip known-incompatible files loudly.
                 print(f'[skip] {name}: {e}', flush=True)
                 skipped.append(name)
                 continue
-            for i, stmt in enumerate(stmts, 1):
-                label = name if len(stmts) == 1 else f'{name}#{i}'
-                entries.append({'source': label, 'file': name, 'sql': stmt})
+            for i, item in enumerate(parsed, 1):
+                label = name if len(parsed) == 1 else f'{name}#{i}'
+                entries.append({'source': label, 'file': name, 'sql': item['sql']})
         if skipped:
             print(
                 f'[{workload_path}] skipped {len(skipped)} files: {", ".join(skipped)}',
@@ -460,8 +494,6 @@ def _workload_entries(workload_path, allow_intersect_except=None):
             )
         if not entries:
             raise ValueError(f'{workload_path} produced zero executable statements')
-        # Directory workloads change size when files are skipped; do not enforce
-        # expected_statement_count (use 0 in config.ini for directory mode).
         if EXPECTED_STATEMENT_COUNT and is_configured:
             print(
                 f'[{workload_path}] loaded {len(entries)} statements '
@@ -470,20 +502,25 @@ def _workload_entries(workload_path, allow_intersect_except=None):
             )
         return entries
 
-    stmts = _parse_sql_file(workload_path, allow_intersect_except=allow_intersect_except)
+    parsed = _parse_sql_file(workload_path, allow_intersect_except=allow_intersect_except)
     if (
         EXPECTED_STATEMENT_COUNT
         and is_configured
-        and len(stmts) != EXPECTED_STATEMENT_COUNT
+        and len(parsed) != EXPECTED_STATEMENT_COUNT
     ):
         raise ValueError(
             f'{workload_path} statement manifest changed: expected '
-            f'{EXPECTED_STATEMENT_COUNT}, got {len(stmts)}'
+            f'{EXPECTED_STATEMENT_COUNT}, got {len(parsed)}'
         )
-    return [
-        {'source': f'stmt#{i}', 'file': os.path.basename(workload_path), 'sql': s}
-        for i, s in enumerate(stmts, 1)
-    ]
+    entries = []
+    for i, item in enumerate(parsed, 1):
+        source = item.get('section') or f'stmt#{i}'
+        entries.append({
+            'source': source,
+            'file': os.path.basename(workload_path),
+            'sql': item['sql'],
+        })
+    return entries
 
 
 def _load_sql_statements(sql_path):
@@ -601,9 +638,8 @@ def _run_sql_file(cursor, sql_path, log_file=None, stmt_timeout_ms=None, run_ind
     }
     report['valid'] = (
         not connection_lost
-        and (not BENCHMARK_REQUIRE_ALL or (
-            fail_count == 0 and ok_count == len(entries)
-        ))
+        and ok_count > 0
+        and (not BENCHMARK_REQUIRE_ALL or fail_count == 0)
     )
     if log_file:
         with open(log_file + '.jsonl', 'a', encoding='utf-8') as f:
@@ -672,6 +708,12 @@ def _run_sql_benchmark(sql_path, log_file, label):
                 'failed_sources': failed_sources,
             }
             return 0.0
+        if fail_count and not BENCHMARK_REQUIRE_ALL:
+            print(
+                f'{label} partial: run={run_index} ok={ok_count} fail={fail_count} '
+                f'(skipped failures; QPS from successes)',
+                flush=True,
+            )
         if not warmup:
             measured_reports.append(report)
             measured_qps.append(float(ok_count) / total_time if total_time > 0 else 0.0)

@@ -1,0 +1,20 @@
+{
+  "benchmark": "TPC-DS",
+  "valid": true,
+  "manifest_sha256": "e2e330d22e9611d45a6deb20dacd66146a6c758ea789b103c0da008cb5dec53c",
+  "warmup_runs": 0,
+  "repetitions": 1,
+  "qps_values": [
+    0.10021323805726642
+  ],
+  "median_qps": 0.10021323805726642,
+  "median_elapsed_seconds": 798.2977254390717,
+  "query_latency_seconds": {
+    "min": 0.017644405364990234,
+    "mean": 7.728606766462326,
+    "median": 2.2176116704940796,
+    "p95": 26.47688579559326,
+    "max": 92.86029505729675
+  },
+  "report_path": "./configuration recommender/log/tpcds_1786777763.log.jsonl"
+}
