@@ -1,0 +1,20 @@
+{
+  "created_at": 1792057382,
+  "python": "3.10.20 (main, Jun 11 2026, 15:17:37) [GCC 14.3.0]",
+  "platform": "Linux-6.6.92-34.1.tl4.x86_64-x86_64-with-glibc2.39",
+  "config_path": "./config_p1_verification.ini",
+  "database_kernel": "MySQL 8.0",
+  "database_scale": "1GB",
+  "hardware": "64 cores, 246 GB RAM",
+  "benchmark": "TPCDS",
+  "random_seed": 42,
+  "workload_file": "./benchmark_queries/tpcds_all.sql",
+  "workload_sha256": "61b55afc3107eb3b837bdde11fb4871673b88c0a159be766fe98ea391f7a3e10",
+  "benchmark_protocol": {
+    "warmup_runs": 0,
+    "repetitions": 1,
+    "require_all": false,
+    "statement_timeout_ms": 180000,
+    "tpcds_skip_queries": []
+  }
+}

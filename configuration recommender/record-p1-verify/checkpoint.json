@@ -1,0 +1,1093 @@
+{
+  "status": "running",
+  "iteration": 0,
+  "result_index": 0,
+  "result": [
+    {
+      "knob1": 268435456,
+      "knob10": 15569256448,
+      "knob100": 64,
+      "knob12": 4,
+      "knob13": 16,
+      "knob21": 4,
+      "knob37": 4194304,
+      "knob4": 0,
+      "knob41": 20000,
+      "knob45": 200,
+      "knob48": 65536,
+      "knob6": 2097152,
+      "knob61": 40000,
+      "knob64": 62,
+      "knob67": 1024,
+      "knob78": 100000,
+      "knob83": 65535,
+      "knob90": 1000,
+      "knob93": 1024,
+      "knob94": 8
+    },
+    {
+      "knob1": 268435456,
+      "knob10": 15618062894,
+      "knob100": 64,
+      "knob12": 8,
+      "knob13": 16,
+      "knob21": 16,
+      "knob37": 2359296,
+      "knob4": 0,
+      "knob41": 20000,
+      "knob45": 200,
+      "knob48": 65536,
+      "knob6": 2097152,
+      "knob61": 40000,
+      "knob64": 62,
+      "knob67": 1024,
+      "knob78": 110000,
+      "knob83": 65535,
+      "knob90": 1000,
+      "knob93": 2048,
+      "knob94": 8
+    }
+  ],
+  "data_list": [],
+  "best_knob": {
+    "knob6": 2097152,
+    "knob1": 268435456,
+    "knob93": 1024,
+    "knob41": 20000,
+    "knob94": 8,
+    "knob61": 40000,
+    "knob83": 65535,
+    "knob90": 1000,
+    "knob100": 64,
+    "knob37": 2097152,
+    "knob13": 16,
+    "knob48": 65536,
+    "knob10": 15032385536,
+    "knob12": 8,
+    "knob67": 1024,
+    "knob45": 200,
+    "knob4": 0,
+    "knob64": 62,
+    "knob78": 100000,
+    "knob21": 16
+  },
+  "best_metric": {
+    "lock_deadlocks": 0,
+    "lock_deadlock_false_positives": 0,
+    "lock_deadlock_rounds": 1603,
+    "lock_threads_waiting": 0,
+    "lock_timeouts": 0,
+    "lock_rec_release_attempts": 45,
+    "lock_rec_grant_attempts": 0,
+    "lock_row_lock_current_waits": 0,
+    "lock_row_lock_time": 0,
+    "lock_row_lock_time_max": 0,
+    "lock_row_lock_waits": 0,
+    "lock_row_lock_time_avg": 0,
+    "lock_schedule_refreshes": 1603,
+    "buffer_pool_size": 15032385536,
+    "buffer_pool_reads": 90146,
+    "buffer_pool_read_requests": 545155119,
+    "buffer_pool_write_requests": 51512797,
+    "buffer_pool_wait_free": 0,
+    "buffer_pool_read_ahead": 0,
+    "buffer_pool_read_ahead_evicted": 0,
+    "buffer_pool_pages_total": 917504,
+    "buffer_pool_pages_misc": 9556,
+    "buffer_pool_pages_data": 118894,
+    "buffer_pool_bytes_data": 1947959296,
+    "buffer_pool_pages_dirty": 0,
+    "buffer_pool_bytes_dirty": 0,
+    "buffer_pool_pages_free": 789054,
+    "buffer_pages_created": 28749,
+    "buffer_pages_written": 91604,
+    "buffer_pages_read": 90145,
+    "buffer_data_reads": 1482525696,
+    "buffer_data_written": 1500697600,
+    "os_data_reads": 90577,
+    "os_data_writes": 91731,
+    "os_data_fsyncs": 203,
+    "os_log_bytes_written": 90112,
+    "os_log_fsyncs": 74,
+    "os_log_pending_fsyncs": 0,
+    "os_log_pending_writes": 0,
+    "trx_rseg_history_len": 0,
+    "log_waits": 0,
+    "log_write_requests": 861,
+    "log_writes": 48,
+    "adaptive_hash_searches": 196649069,
+    "adaptive_hash_searches_btree": 91213949,
+    "file_num_open_files": 39,
+    "ibuf_merges_insert": 0,
+    "ibuf_merges_delete_mark": 0,
+    "ibuf_merges_delete": 0,
+    "ibuf_merges_discard_insert": 0,
+    "ibuf_merges_discard_delete_mark": 0,
+    "ibuf_merges_discard_delete": 0,
+    "ibuf_merges": 0,
+    "ibuf_size": 1,
+    "innodb_activity_count": 208301,
+    "innodb_dblwr_writes": 41,
+    "innodb_dblwr_pages_written": 76,
+    "innodb_page_size": 16384,
+    "innodb_rwlock_s_spin_waits": 0,
+    "innodb_rwlock_x_spin_waits": 0,
+    "innodb_rwlock_sx_spin_waits": 0,
+    "innodb_rwlock_s_spin_rounds": 0,
+    "innodb_rwlock_x_spin_rounds": 0,
+    "innodb_rwlock_sx_spin_rounds": 0,
+    "innodb_rwlock_s_os_waits": 0,
+    "innodb_rwlock_x_os_waits": 0,
+    "innodb_rwlock_sx_os_waits": 0,
+    "dml_inserts": 6882078,
+    "dml_deletes": 0,
+    "dml_updates": 0,
+    "dml_system_reads": 5936,
+    "dml_system_inserts": 8,
+    "dml_system_deletes": 8,
+    "dml_system_updates": 331
+  },
+  "best_throughput": 0.07062162163201158,
+  "request_count": 1,
+  "history_top": [
+    [
+      0.07062162163201158,
+      100000,
+      {
+        "evaluation_seconds": 1445.1961538791656,
+        "failure_reason": null,
+        "iteration": -1,
+        "knob": {
+          "knob1": 268435456,
+          "knob10": 15032385536,
+          "knob100": 64,
+          "knob12": 8,
+          "knob13": 16,
+          "knob21": 16,
+          "knob37": 2097152,
+          "knob4": 0,
+          "knob41": 20000,
+          "knob45": 200,
+          "knob48": 65536,
+          "knob6": 2097152,
+          "knob61": 40000,
+          "knob64": 62,
+          "knob67": 1024,
+          "knob78": 100000,
+          "knob83": 65535,
+          "knob90": 1000,
+          "knob93": 1024,
+          "knob94": 8
+        },
+        "manifest_sha256": "98f4e0ae8eb37a748f2d757d9cc8948c0bec0a30139be74ef3cb7b5bbf620a9c",
+        "metric": {
+          "adaptive_hash_searches": 196649069,
+          "adaptive_hash_searches_btree": 91213949,
+          "buffer_data_reads": 1482525696,
+          "buffer_data_written": 1500697600,
+          "buffer_pages_created": 28749,
+          "buffer_pages_read": 90145,
+          "buffer_pages_written": 91604,
+          "buffer_pool_bytes_data": 1947959296,
+          "buffer_pool_bytes_dirty": 0,
+          "buffer_pool_pages_data": 118894,
+          "buffer_pool_pages_dirty": 0,
+          "buffer_pool_pages_free": 789054,
+          "buffer_pool_pages_misc": 9556,
+          "buffer_pool_pages_total": 917504,
+          "buffer_pool_read_ahead": 0,
+          "buffer_pool_read_ahead_evicted": 0,
+          "buffer_pool_read_requests": 545155119,
+          "buffer_pool_reads": 90146,
+          "buffer_pool_size": 15032385536,
+          "buffer_pool_wait_free": 0,
+          "buffer_pool_write_requests": 51512797,
+          "dml_deletes": 0,
+          "dml_inserts": 6882078,
+          "dml_system_deletes": 8,
+          "dml_system_inserts": 8,
+          "dml_system_reads": 5936,
+          "dml_system_updates": 331,
+          "dml_updates": 0,
+          "file_num_open_files": 39,
+          "ibuf_merges": 0,
+          "ibuf_merges_delete": 0,
+          "ibuf_merges_delete_mark": 0,
+          "ibuf_merges_discard_delete": 0,
+          "ibuf_merges_discard_delete_mark": 0,
+          "ibuf_merges_discard_insert": 0,
+          "ibuf_merges_insert": 0,
+          "ibuf_size": 1,
+          "innodb_activity_count": 208301,
+          "innodb_dblwr_pages_written": 76,
+          "innodb_dblwr_writes": 41,
+          "innodb_page_size": 16384,
+          "innodb_rwlock_s_os_waits": 0,
+          "innodb_rwlock_s_spin_rounds": 0,
+          "innodb_rwlock_s_spin_waits": 0,
+          "innodb_rwlock_sx_os_waits": 0,
+          "innodb_rwlock_sx_spin_rounds": 0,
+          "innodb_rwlock_sx_spin_waits": 0,
+          "innodb_rwlock_x_os_waits": 0,
+          "innodb_rwlock_x_spin_rounds": 0,
+          "innodb_rwlock_x_spin_waits": 0,
+          "lock_deadlock_false_positives": 0,
+          "lock_deadlock_rounds": 1603,
+          "lock_deadlocks": 0,
+          "lock_rec_grant_attempts": 0,
+          "lock_rec_release_attempts": 45,
+          "lock_row_lock_current_waits": 0,
+          "lock_row_lock_time": 0,
+          "lock_row_lock_time_avg": 0,
+          "lock_row_lock_time_max": 0,
+          "lock_row_lock_waits": 0,
+          "lock_schedule_refreshes": 1603,
+          "lock_threads_waiting": 0,
+          "lock_timeouts": 0,
+          "log_waits": 0,
+          "log_write_requests": 861,
+          "log_writes": 48,
+          "os_data_fsyncs": 203,
+          "os_data_reads": 90577,
+          "os_data_writes": 91731,
+          "os_log_bytes_written": 90112,
+          "os_log_fsyncs": 74,
+          "os_log_pending_fsyncs": 0,
+          "os_log_pending_writes": 0,
+          "trx_rseg_history_len": 0
+        },
+        "report_path": "./configuration recommender/log/tpcds_1792057397.log.jsonl",
+        "throughput": 0.07062162163201158,
+        "timestamp": 1792058827,
+        "trial_id": "a7c52499ec9975460a4e5b35b3fc3954e4764812468303bd602aa596392fd839",
+        "valid": true
+      }
+    ]
+  ],
+  "last_result": "{\"knob1\": 268435456, \"knob10\": 15618062894, \"knob100\": 64, \"knob12\": 8, \"knob13\": 16, \"knob21\": 16, \"knob37\": 2359296, \"knob4\": 0, \"knob41\": 20000, \"knob45\": 200, \"knob48\": 65536, \"knob6\": 2097152, \"knob61\": 40000, \"knob64\": 62, \"knob67\": 1024, \"knob78\": 110000, \"knob83\": 65535, \"knob90\": 1000, \"knob93\": 2048, \"knob94\": 8}\n{\"knob1\": 536870912, \"knob10\": 15032385536, \"knob100\": 64, \"knob12\": 8, \"knob13\": 16, \"knob21\": 16, \"knob37\": 4194304, \"knob4\": 0, \"knob41\": 20000, \"knob45\": 100, \"knob48\": 131072, \"knob6\": 2097152, \"knob61\": 40000, \"knob64\": 62, \"knob67\": 1024, \"knob78\": 100000, \"knob83\": 65535, \"knob90\": 1000, \"knob93\": 1024, \"knob94\": 8}\n{\"knob1\": 268435456, \"knob10\": 15569256448, \"knob100\": 64, \"knob12\": 4, \"knob13\": 16, \"knob21\": 4, \"knob37\": 4194304, \"knob4\": 0, \"knob41\": 20000, \"knob45\": 200, \"knob48\": 65536, \"knob6\": 2097152, \"knob61\": 40000, \"knob64\": 62, \"knob67\": 1024, \"knob78\": 100000, \"knob83\": 65535, \"knob90\": 1000, \"knob93\": 1024, \"knob94\": 8}",
+  "decision_controller": {
+    "version": 1,
+    "settings": {
+      "window_size": 4,
+      "min_trials": 3,
+      "reselect_after": 6,
+      "reflect_after": 4,
+      "failure_rate_rollback": 0.35,
+      "failure_rate_shrink": 0.175,
+      "improvement_expand": 0.05,
+      "improvement_stagnant": 0.01,
+      "diversity_low": 0.5,
+      "confidence_high": 0.7,
+      "confidence_low": 0.4,
+      "benchmark_budget": 61,
+      "token_budget": 2000000,
+      "shrink_ratio": 0.5,
+      "expand_ratio": 0.25
+    },
+    "trial_history": [
+      {
+        "throughput": 0.07062162163201158,
+        "success": true,
+        "configuration": {
+          "knob6": 2097152,
+          "knob1": 268435456,
+          "knob93": 1024,
+          "knob41": 20000,
+          "knob94": 8,
+          "knob61": 40000,
+          "knob83": 65535,
+          "knob90": 1000,
+          "knob100": 64,
+          "knob37": 2097152,
+          "knob13": 16,
+          "knob48": 65536,
+          "knob10": 15032385536,
+          "knob12": 8,
+          "knob67": 1024,
+          "knob45": 200,
+          "knob4": 0,
+          "knob64": 62,
+          "knob78": 100000,
+          "knob21": 16
+        },
+        "surrogate_confidence": null,
+        "benchmark_cost": 1,
+        "token_cost": 0,
+        "metadata": {
+          "metric_count": 74
+        }
+      }
+    ],
+    "state_history": [
+      {
+        "trial_count": 1,
+        "successful_trials": 1,
+        "best_throughput": 0.07062162163201158,
+        "improvement_rate": null,
+        "failure_rate": 0.0,
+        "diversity": 1.0,
+        "surrogate_confidence": null,
+        "benchmark_used": 1,
+        "benchmark_budget": 61,
+        "benchmark_remaining": 60,
+        "tokens_used": 0,
+        "token_budget": 2000000,
+        "tokens_remaining": 2000000,
+        "budget_exhausted": false
+      }
+    ],
+    "action_history": [
+      {
+        "name": "continue_local",
+        "reason": "Only 1 successful trial(s); at least 3 are required.",
+        "rule": "sparse_history",
+        "state": {
+          "trial_count": 1,
+          "successful_trials": 1,
+          "best_throughput": 0.07062162163201158,
+          "improvement_rate": null,
+          "failure_rate": 0.0,
+          "diversity": 1.0,
+          "surrogate_confidence": null,
+          "benchmark_used": 1,
+          "benchmark_budget": 61,
+          "benchmark_remaining": 60,
+          "tokens_used": 0,
+          "token_budget": 2000000,
+          "tokens_remaining": 2000000,
+          "budget_exhausted": false
+        },
+        "params": {}
+      }
+    ]
+  },
+  "last_decision": {
+    "name": "continue_local",
+    "reason": "Only 1 successful trial(s); at least 3 are required.",
+    "rule": "sparse_history",
+    "state": {
+      "trial_count": 1,
+      "successful_trials": 1,
+      "best_throughput": 0.07062162163201158,
+      "improvement_rate": null,
+      "failure_rate": 0.0,
+      "diversity": 1.0,
+      "surrogate_confidence": null,
+      "benchmark_used": 1,
+      "benchmark_budget": 61,
+      "benchmark_remaining": 60,
+      "tokens_used": 0,
+      "token_budget": 2000000,
+      "tokens_remaining": 2000000,
+      "budget_exhausted": false
+    },
+    "params": {}
+  },
+  "reflection_state": {
+    "chars_since_summary": 1050,
+    "lesson_limit": 12,
+    "lessons": [
+      "Established baseline score 0.0706216."
+    ],
+    "objective": "maximize",
+    "pinned_limit": 6,
+    "pinned_trials": {
+      "best": [
+        {
+          "knobs": {
+            "knob1": 268435456,
+            "knob10": 15032385536,
+            "knob100": 64,
+            "knob12": 8,
+            "knob13": 16,
+            "knob21": 16,
+            "knob37": 2097152,
+            "knob4": 0,
+            "knob41": 20000,
+            "knob45": 200,
+            "knob48": 65536,
+            "knob6": 2097152,
+            "knob61": 40000,
+            "knob64": 62,
+            "knob67": 1024,
+            "knob78": 100000,
+            "knob83": 65535,
+            "knob90": 1000,
+            "knob93": 1024,
+            "knob94": 8
+          },
+          "metrics": {
+            "adaptive_hash_searches": 196649069,
+            "adaptive_hash_searches_btree": 91213949,
+            "buffer_data_reads": 1482525696,
+            "buffer_data_written": 1500697600,
+            "buffer_pages_created": 28749,
+            "buffer_pages_read": 90145,
+            "buffer_pages_written": 91604,
+            "buffer_pool_bytes_data": 1947959296,
+            "buffer_pool_bytes_dirty": 0,
+            "buffer_pool_pages_data": 118894,
+            "buffer_pool_pages_dirty": 0,
+            "buffer_pool_pages_free": 789054,
+            "buffer_pool_pages_misc": 9556,
+            "buffer_pool_pages_total": 917504,
+            "buffer_pool_read_ahead": 0,
+            "buffer_pool_read_ahead_evicted": 0,
+            "buffer_pool_read_requests": 545155119,
+            "buffer_pool_reads": 90146,
+            "buffer_pool_size": 15032385536,
+            "buffer_pool_wait_free": 0,
+            "buffer_pool_write_requests": 51512797,
+            "dml_deletes": 0,
+            "dml_inserts": 6882078,
+            "dml_system_deletes": 8,
+            "dml_system_inserts": 8,
+            "dml_system_reads": 5936,
+            "dml_system_updates": 331,
+            "dml_updates": 0,
+            "file_num_open_files": 39,
+            "ibuf_merges": 0,
+            "ibuf_merges_delete": 0,
+            "ibuf_merges_delete_mark": 0,
+            "ibuf_merges_discard_delete": 0,
+            "ibuf_merges_discard_delete_mark": 0,
+            "ibuf_merges_discard_insert": 0,
+            "ibuf_merges_insert": 0,
+            "ibuf_size": 1,
+            "innodb_activity_count": 208301,
+            "innodb_dblwr_pages_written": 76,
+            "innodb_dblwr_writes": 41,
+            "innodb_page_size": 16384,
+            "innodb_rwlock_s_os_waits": 0,
+            "innodb_rwlock_s_spin_rounds": 0,
+            "innodb_rwlock_s_spin_waits": 0,
+            "innodb_rwlock_sx_os_waits": 0,
+            "innodb_rwlock_sx_spin_rounds": 0,
+            "innodb_rwlock_sx_spin_waits": 0,
+            "innodb_rwlock_x_os_waits": 0,
+            "innodb_rwlock_x_spin_rounds": 0,
+            "innodb_rwlock_x_spin_waits": 0,
+            "lock_deadlock_false_positives": 0,
+            "lock_deadlock_rounds": 1603,
+            "lock_deadlocks": 0,
+            "lock_rec_grant_attempts": 0,
+            "lock_rec_release_attempts": 45,
+            "lock_row_lock_current_waits": 0,
+            "lock_row_lock_time": 0,
+            "lock_row_lock_time_avg": 0,
+            "lock_row_lock_time_max": 0,
+            "lock_row_lock_waits": 0,
+            "lock_schedule_refreshes": 1603,
+            "lock_threads_waiting": 0,
+            "lock_timeouts": 0,
+            "log_waits": 0,
+            "log_write_requests": 861,
+            "log_writes": 48,
+            "os_data_fsyncs": 203,
+            "os_data_reads": 90577,
+            "os_data_writes": 91731,
+            "os_log_bytes_written": 90112,
+            "os_log_fsyncs": 74,
+            "os_log_pending_fsyncs": 0,
+            "os_log_pending_writes": 0,
+            "trx_rseg_history_len": 0
+          },
+          "score": 0.07062162163201158,
+          "success": true,
+          "trial_id": "a7c52499ec9975460a4e5b35b3fc3954e4764812468303bd602aa596392fd839",
+          "turn": 1
+        }
+      ],
+      "diverse": [
+        {
+          "knobs": {
+            "knob1": 268435456,
+            "knob10": 15032385536,
+            "knob100": 64,
+            "knob12": 8,
+            "knob13": 16,
+            "knob21": 16,
+            "knob37": 2097152,
+            "knob4": 0,
+            "knob41": 20000,
+            "knob45": 200,
+            "knob48": 65536,
+            "knob6": 2097152,
+            "knob61": 40000,
+            "knob64": 62,
+            "knob67": 1024,
+            "knob78": 100000,
+            "knob83": 65535,
+            "knob90": 1000,
+            "knob93": 1024,
+            "knob94": 8
+          },
+          "metrics": {
+            "adaptive_hash_searches": 196649069,
+            "adaptive_hash_searches_btree": 91213949,
+            "buffer_data_reads": 1482525696,
+            "buffer_data_written": 1500697600,
+            "buffer_pages_created": 28749,
+            "buffer_pages_read": 90145,
+            "buffer_pages_written": 91604,
+            "buffer_pool_bytes_data": 1947959296,
+            "buffer_pool_bytes_dirty": 0,
+            "buffer_pool_pages_data": 118894,
+            "buffer_pool_pages_dirty": 0,
+            "buffer_pool_pages_free": 789054,
+            "buffer_pool_pages_misc": 9556,
+            "buffer_pool_pages_total": 917504,
+            "buffer_pool_read_ahead": 0,
+            "buffer_pool_read_ahead_evicted": 0,
+            "buffer_pool_read_requests": 545155119,
+            "buffer_pool_reads": 90146,
+            "buffer_pool_size": 15032385536,
+            "buffer_pool_wait_free": 0,
+            "buffer_pool_write_requests": 51512797,
+            "dml_deletes": 0,
+            "dml_inserts": 6882078,
+            "dml_system_deletes": 8,
+            "dml_system_inserts": 8,
+            "dml_system_reads": 5936,
+            "dml_system_updates": 331,
+            "dml_updates": 0,
+            "file_num_open_files": 39,
+            "ibuf_merges": 0,
+            "ibuf_merges_delete": 0,
+            "ibuf_merges_delete_mark": 0,
+            "ibuf_merges_discard_delete": 0,
+            "ibuf_merges_discard_delete_mark": 0,
+            "ibuf_merges_discard_insert": 0,
+            "ibuf_merges_insert": 0,
+            "ibuf_size": 1,
+            "innodb_activity_count": 208301,
+            "innodb_dblwr_pages_written": 76,
+            "innodb_dblwr_writes": 41,
+            "innodb_page_size": 16384,
+            "innodb_rwlock_s_os_waits": 0,
+            "innodb_rwlock_s_spin_rounds": 0,
+            "innodb_rwlock_s_spin_waits": 0,
+            "innodb_rwlock_sx_os_waits": 0,
+            "innodb_rwlock_sx_spin_rounds": 0,
+            "innodb_rwlock_sx_spin_waits": 0,
+            "innodb_rwlock_x_os_waits": 0,
+            "innodb_rwlock_x_spin_rounds": 0,
+            "innodb_rwlock_x_spin_waits": 0,
+            "lock_deadlock_false_positives": 0,
+            "lock_deadlock_rounds": 1603,
+            "lock_deadlocks": 0,
+            "lock_rec_grant_attempts": 0,
+            "lock_rec_release_attempts": 45,
+            "lock_row_lock_current_waits": 0,
+            "lock_row_lock_time": 0,
+            "lock_row_lock_time_avg": 0,
+            "lock_row_lock_time_max": 0,
+            "lock_row_lock_waits": 0,
+            "lock_schedule_refreshes": 1603,
+            "lock_threads_waiting": 0,
+            "lock_timeouts": 0,
+            "log_waits": 0,
+            "log_write_requests": 861,
+            "log_writes": 48,
+            "os_data_fsyncs": 203,
+            "os_data_reads": 90577,
+            "os_data_writes": 91731,
+            "os_log_bytes_written": 90112,
+            "os_log_fsyncs": 74,
+            "os_log_pending_fsyncs": 0,
+            "os_log_pending_writes": 0,
+            "trx_rseg_history_len": 0
+          },
+          "novelty": 20,
+          "score": 0.07062162163201158,
+          "success": true,
+          "trial_id": "a7c52499ec9975460a4e5b35b3fc3954e4764812468303bd602aa596392fd839",
+          "turn": 1
+        }
+      ],
+      "failure": []
+    },
+    "recent_delta_limit": 5,
+    "recent_deltas": [
+      {
+        "knob_delta": {
+          "knob1": {
+            "from": null,
+            "to": 268435456
+          },
+          "knob10": {
+            "from": null,
+            "to": 15032385536
+          },
+          "knob100": {
+            "from": null,
+            "to": 64
+          },
+          "knob12": {
+            "from": null,
+            "to": 8
+          },
+          "knob13": {
+            "from": null,
+            "to": 16
+          },
+          "knob21": {
+            "from": null,
+            "to": 16
+          },
+          "knob37": {
+            "from": null,
+            "to": 2097152
+          },
+          "knob4": {
+            "from": null,
+            "to": 0
+          },
+          "knob41": {
+            "from": null,
+            "to": 20000
+          },
+          "knob45": {
+            "from": null,
+            "to": 200
+          },
+          "knob48": {
+            "from": null,
+            "to": 65536
+          },
+          "knob6": {
+            "from": null,
+            "to": 2097152
+          },
+          "knob61": {
+            "from": null,
+            "to": 40000
+          },
+          "knob64": {
+            "from": null,
+            "to": 62
+          },
+          "knob67": {
+            "from": null,
+            "to": 1024
+          },
+          "knob78": {
+            "from": null,
+            "to": 100000
+          },
+          "knob83": {
+            "from": null,
+            "to": 65535
+          },
+          "knob90": {
+            "from": null,
+            "to": 1000
+          },
+          "knob93": {
+            "from": null,
+            "to": 1024
+          },
+          "knob94": {
+            "from": null,
+            "to": 8
+          }
+        },
+        "metric_highlights": {
+          "adaptive_hash_searches": {
+            "value": 196649069
+          },
+          "adaptive_hash_searches_btree": {
+            "value": 91213949
+          },
+          "buffer_data_reads": {
+            "value": 1482525696
+          },
+          "buffer_data_written": {
+            "value": 1500697600
+          },
+          "buffer_pages_created": {
+            "value": 28749
+          }
+        },
+        "score": 0.07062162163201158,
+        "success": true,
+        "trial_id": "a7c52499ec9975460a4e5b35b3fc3954e4764812468303bd602aa596392fd839",
+        "turn": 1
+      }
+    ],
+    "rolling_summary": "",
+    "static_context_hash": "9d985c7248350a15ec53337b7f07d9e19ef4d11c2e28fbb657630b7e4b85fe07",
+    "summary_char_budget": 8000,
+    "summary_interval": 5,
+    "token_budget": 2000000,
+    "token_usage": {
+      "completion": 12438,
+      "prompt": 20940,
+      "total": 33378
+    },
+    "turn": 1,
+    "turns_since_summary": 1,
+    "version": 1
+  },
+  "surrogate_diagnostics": {
+    "backend": "sklearn",
+    "classifier_fitted": false,
+    "confidence": null,
+    "empirical_success_probability": 1.0,
+    "enabled": true,
+    "encoder": {
+      "feature_count": 20,
+      "feature_names": [
+        "knob1",
+        "knob4",
+        "knob6",
+        "knob10",
+        "knob12",
+        "knob13",
+        "knob21",
+        "knob37",
+        "knob41",
+        "knob45",
+        "knob48",
+        "knob61",
+        "knob64",
+        "knob67",
+        "knob78",
+        "knob83",
+        "knob90",
+        "knob93",
+        "knob94",
+        "knob100"
+      ],
+      "knob_count": 20,
+      "knobs": [
+        "knob1",
+        "knob4",
+        "knob6",
+        "knob10",
+        "knob12",
+        "knob13",
+        "knob21",
+        "knob37",
+        "knob41",
+        "knob45",
+        "knob48",
+        "knob61",
+        "knob64",
+        "knob67",
+        "knob78",
+        "knob83",
+        "knob90",
+        "knob93",
+        "knob94",
+        "knob100"
+      ]
+    },
+    "failed_samples": 0,
+    "fallback_reason": "insufficient_history",
+    "fit_error": null,
+    "history_samples": 3,
+    "mode": "fallback",
+    "regressor_fitted": false,
+    "successful_samples": 3
+  },
+  "last_token_total": 33378,
+  "pending_token_cost": 33378,
+  "search_space": {
+    "current": {
+      "knob1": {
+        "description": "The maximum size of internal in-memory temporary tables. This variable does not apply to user-created MEMORY tables. The actual limit is the smaller of tmp_table_size and max_heap_table_size. When an in-memory temporary table exceeds the limit, MySQL automatically converts it to an on-disk temporary table. The internal_tmp_disk_storage_engine option defines the storage engine used for on-disk temporary tables. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing Created_tmp_disk_tables and Created_tmp_tables values. See also Section8.4.4, “Internal Temporary Table Use in MySQL”.",
+        "max_value": 268435456,
+        "min_value": 16777216,
+        "step": 16777216,
+        "type": "integer"
+      },
+      "knob10": {
+        "description": "The size in bytes of the buffer pool, the memory area where InnoDB caches table and index data. The default value is 134217728 bytes (128MB). The maximum value depends on the CPU architecture; the maximum is 4294967295 (232-1) on 32-bit systems and 18446744073709551615 (264-1) on 64-bit systems. On 32-bit systems, the CPU architecture and operating system may impose a lower practical maximum size than the stated maximum. When the size of the buffer pool is greater than 1GB, setting innodb_buffer_pool_instances to a value greater than 1 can improve the scalability on a busy server. A larger buffer pool requires less disk I/O to access the same table data more than once. On a dedicated database server, you might set the buffer pool size to 80% of the machine's physical memory size. Be aware of the following potential issues when configuring buffer pool size, and be prepared to scale back the size of the buffer pool if necessary. When you increase or decrease buffer pool size, the operation is performed in chunks. Chunk size is defined by the innodb_buffer_pool_chunk_size variable, which has a default of 128 MB. Buffer pool size must always be equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . If you alter the buffer pool size to a value that is not equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances , buffer pool size is automatically adjusted to a value that is equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . innodb_buffer_pool_size can be set dynamically, which allows you to resize the buffer pool without restarting the server. The Innodb_buffer_pool_resize_status status variable reports the status of online buffer pool resizing operations. See Section 14.8.3.1, “Configuring InnoDB Buffer Pool Size” for more information.",
+        "max_value": 15618062894,
+        "min_value": 10307921510,
+        "step": 1073741824,
+        "type": "integer"
+      },
+      "knob100": {
+        "description": "Partitions the adaptive hash index search system. Each index is bound to a specific partition, with each partition protected by a separate latch. In earlier releases, the adaptive hash index search system was protected by a single latch (btr_search_latch) which could become a point of contention. With the introduction of the innodb_adaptive_hash_index_parts option, the search system is partitioned into 8 parts by default. The maximum setting is 512. For related information, see Section 14.5.3, “Adaptive Hash Index”.",
+        "max_value": 64,
+        "min_value": 8,
+        "step": 8,
+        "type": "integer"
+      },
+      "knob12": {
+        "description": "The number of background threads devoted to the InnoDB purge operation. Increasing the value creates additional purge threads, which can improve efficiency on systems where DML operations are performed on multiple tables. For related information, see Section 14.8.10, “Purge Configuration”.",
+        "max_value": 8,
+        "min_value": 4,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob13": {
+        "description": "The number of open tables cache instances. To improve scalability by reducing contention among sessions, the open tables cache can be partitioned into several smaller cache instances of size table_open_cache / table_open_cache_instances . A session needs to lock only one instance to access it for DML statements. This segments cache access among instances, permitting higher performance for operations that use the cache when there are many sessions accessing tables. (DDL statements still require a lock on the entire cache, but such statements are much less frequent than DML statements.) A value of 8 or 16 is recommended on systems that routinely use 16 or more cores. However, if you have many large triggers on your tables that cause a high memory load, the default setting for table_open_cache_instances might lead to excessive memory usage. In that situation, it can be helpful to set table_open_cache_instances to 1 in order to restrict memory usage.",
+        "max_value": 16,
+        "min_value": 8,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob21": {
+        "description": "The number of I/O threads for write operations in InnoDB. The default value is 4. Its counterpart for read threads is innodb_read_io_threads . For more information, see Section 14.8.6, “Configuring the Number of Background InnoDB I/O Threads”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”. Also take into consideration the value of sync_binlog , which controls synchronization of the binary log to disk. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+        "max_value": 16,
+        "min_value": 4,
+        "step": 2,
+        "type": "integer"
+      },
+      "knob37": {
+        "description": "The minimum size of the buffer that is used for plain index scans, range index scans, and joins that do not use indexes and thus perform full table scans. Normally, the best way to get fast joins is to add indexes. Increase the value of join_buffer_size to get a faster full join when adding indexes is not possible. One join buffer is allocated for each full join between two tables. For a complex join between several tables for which indexes are not used, multiple join buffers might be necessary. The default is 256KB. The maximum permissible setting for join_buffer_size is 4GB−1. Larger values are permitted for 64-bit platforms (except 64-bit Windows, for which large values are truncated to 4GB−1 with a warning). The block size is 128, and a value that is not an exact multiple of the block size is rounded down to the next lower multiple of the block size by MySQL Server before storing the value for the system variable. The parser allows values up to the maximum unsigned integer value for the platform (4294967295 or 232−1 for a 32-bit system, 18446744073709551615 or 264−1 for a 64-bit system) but the actual maximum is a block size lower. Unless a Block Nested-Loop or Batched Key Access algorithm is used, there is no gain from setting the buffer larger than required to hold each matching row, and all joins allocate at least the minimum size, so use caution in setting this variable to a large value globally. It is better to keep the global setting small and change the session setting to a larger value only in sessions that are doing large joins. Memory allocation time can cause substantial performance drops if the global size is larger than needed by most queries that use it. When Block Nested-Loop is used, a larger join buffer can be beneficial up to the point where all required columns from all rows in the first table are stored in the join buffer. This depends on the query; the optimal size may be smaller than holding all rows from the first tables. When Batched Key Access is used, the value of join_buffer_size defines how large the batch of keys is in each request to the storage engine. The larger the buffer, the more sequential access is made to the right hand table of a join operation, which can significantly improve performance. For additional information about join buffering, see Section8.2.1.6, “Nested-Loop Join Algorithms”. For information about Batched Key Access, see Section8.2.1.11, “Block Nested-Loop and Batched Key Access Joins”.",
+        "max_value": 16777216,
+        "min_value": 262144,
+        "step": 262144,
+        "type": "integer"
+      },
+      "knob4": {
+        "description": "Defines the maximum number of threads permitted inside of InnoDB. A value of 0 (the default) is interpreted as infinite concurrency (no limit). This variable is intended for performance tuning on high concurrency systems. InnoDB tries to keep the number of threads inside InnoDB less than or equal to the innodb_thread_concurrency limit. Threads waiting for locks are not counted in the number of concurrently executing threads. The correct setting depends on workload and computing environment. Consider setting this variable if your MySQL instance shares CPU resources with other applications or if your workload or number of concurrent users is growing. Test a range of values to determine the setting that provides the best performance. innodb_thread_concurrency is a dynamic variable, which permits experimenting with different settings on a live test system. If a particular setting performs poorly, you can quickly set innodb_thread_concurrency back to 0. Use the following guidelines to help find and maintain an appropriate setting: A value of 0 disables the queries inside InnoDB and queries in queue counters in the ROW OPERATIONS section of SHOW ENGINE INNODB STATUS output. For related information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+        "max_value": 128,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 8,
+        "type": "integer"
+      },
+      "knob41": {
+        "description": "The number of open tables for all threads. Increasing this value increases the number of file descriptors that mysqld requires. The effective value of this variable is the greater of the effective value of open_files_limit - 10 - the effective value of max_connections / 2, and 400; that is You can check whether you need to increase the table cache by checking the Opened_tables status variable. If the value of Opened_tables is large and you do not use FLUSH TABLES often (which just forces all tables to be closed and reopened), then you should increase the value of the table_open_cache variable. For more information about the table cache, see Section8.4.3.1, “How MySQL Opens and Closes Tables”.",
+        "max_value": 20000,
+        "min_value": 4000,
+        "step": 1000,
+        "type": "integer"
+      },
+      "knob45": {
+        "description": "This variable indicates the number of equality ranges in an equality comparison condition when the optimizer should switch from using index dives to index statistics in estimating the number of qualifying rows. It applies to evaluation of expressions that have either of these equivalent forms, where the optimizer uses a nonunique index to look up col_name values: In both cases, the expression contains N equality ranges. The optimizer can make row estimates using index dives or index statistics. If eq_range_index_dive_limit is greater than 0, the optimizer uses existing index statistics instead of index dives if there are eq_range_index_dive_limit or more equality ranges. Thus, to permit use of index dives for up to N equality ranges, set eq_range_index_dive_limit to N + 1. To disable use of index statistics and always use index dives regardless of N, set eq_range_index_dive_limit to 0. For more information, see Equality Range Optimization of Many-Valued Comparisons. To update table index statistics for best estimates, use ANALYZE TABLE.",
+        "max_value": 200,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 10,
+        "type": "integer"
+      },
+      "knob48": {
+        "description": "The size in bytes of blocks that are allocated when doing range optimization. The block size for the byte number is 1024. A value that is not an exact multiple of the block size is rounded down to the next lower multiple of the block size by MySQL Server before storing the value for the system variable. The parser allows values up to the maximum unsigned integer value for the platform (4294967295 or 232−1 for a 32-bit system, 18446744073709551615 or 264−1 for a 64-bit system) but the actual maximum is a block size lower.",
+        "max_value": 65536,
+        "min_value": 8192,
+        "step": 4096,
+        "type": "integer"
+      },
+      "knob6": {
+        "description": "Each session that must perform a sort allocates a buffer of this size. sort_buffer_size is not specific to any storage engine and applies in a general manner for optimization. At minimum the sort_buffer_size value must be large enough to accommodate fifteen tuples in the sort buffer. Also, increasing the value of max_sort_length may require increasing the value of sort_buffer_size. For more information, see Section8.2.1.14, “ORDER BY Optimization” If you see many Sort_merge_passes per second in SHOW GLOBAL STATUS output, you can consider increasing the sort_buffer_size value to speed up ORDER BY or GROUP BY operations that cannot be improved with query optimization or improved indexing. The optimizer tries to work out how much space is needed but can allocate more, up to the limit. Setting it larger than required globally slows down most queries that sort. It is best to increase it as a session setting, and only for the sessions that need a larger size. On Linux, there are thresholds of 256KB and 2MB where larger values may significantly slow down memory allocation, so you should consider staying below one of those values. Experiment to find the best value for your workload. See SectionB.3.3.5, “Where MySQL Stores Temporary Files”. The maximum permissible setting for sort_buffer_size is 4GB−1. Larger values are permitted for 64-bit platforms (except 64-bit Windows, for which large values are truncated to 4GB−1 with a warning).",
+        "max_value": 2097152,
+        "min_value": 262144,
+        "step": 262144,
+        "type": "integer"
+      },
+      "knob61": {
+        "description": "If flushing activity falls behind, InnoDB can flush more aggressively, at a higher rate of I/O operations per second (IOPS) than defined by the innodb_io_capacity variable. The innodb_io_capacity_max variable defines a maximum number of IOPS performed by InnoDB background tasks in such situations. For information about configuring the innodb_io_capacity_max variable, see Section 14.8.8, “Configuring InnoDB I/O Capacity”.",
+        "max_value": 40000,
+        "min_value": 2000,
+        "step": 1000,
+        "type": "integer"
+      },
+      "knob64": {
+        "description": "The maximum depth of search performed by the query optimizer. Values larger than the number of relations in a query result in better query plans, but take longer to generate an execution plan for a query. Values smaller than the number of relations in a query return an execution plan quicker, but the resulting plan may be far from being optimal. If set to 0, the system automatically picks a reasonable value.",
+        "max_value": 62,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob67": {
+        "description": "How many threads the server should cache for reuse. When a client disconnects, the client's threads are put in the cache if there are fewer than thread_cache_size threads there. Requests for threads are satisfied by reusing threads taken from the cache if possible, and only when the cache is empty is a new thread created. This variable can be increased to improve performance if you have a lot of new connections. Normally, this does not provide a notable performance improvement if you have a good thread implementation. However, if your server sees hundreds of connections per second you should normally set thread_cache_size high enough so that most new connections use cached threads. By examining the difference between the Connections and Threads_created status variables, you can see how efficient the thread cache is. For details, see Section5.1.9, “Server Status Variables”. The default value is based on the following formula, capped to a limit of 100: This variable has no effect for the embedded server (libmysqld) and as of MySQL 5.7.2 is no longer visible within the embedded server.",
+        "max_value": 1024,
+        "min_value": 64,
+        "step": 64,
+        "type": "integer"
+      },
+      "knob78": {
+        "description": "The number of file descriptors available to mysqld from the operating system: The effective open_files_limit value is based on the value specified at system startup (if any) and the values of max_connections and table_open_cache, using these formulas: The server attempts to obtain the number of file descriptors using the maximum of those values. If that many descriptors cannot be obtained, the server attempts to obtain as many as the system permits. The effective value is 0 on systems where MySQL cannot change the number of open files. On Unix, the value cannot be set greater than the value displayed by the ulimit -n command. On Linux systems using systemd, the value cannot be set greater than LimitNOFile (this is DefaultLimitNOFILE, if LimitNOFile is not set); otherwise, on Linux, the value of open_files_limit cannot exceed ulimit -n.",
+        "max_value": 655350,
+        "min_value": 10000,
+        "step": 10000,
+        "type": "integer"
+      },
+      "knob83": {
+        "description": "The number of outstanding connection requests MySQL can have. This comes into play when the main MySQL thread gets very many connection requests in a very short time. It then takes some time (although very little) for the main thread to check the connection and start a new thread. The back_log value indicates how many requests can be stacked during this short time before MySQL momentarily stops answering new requests. You need to increase this only if you expect a large number of connections in a short period of time. In other words, this value is the size of the listen queue for incoming TCP/IP connections. Your operating system has its own limit on the size of this queue. The manual page for the Unix listen() system call should have more details. Check your OS documentation for the maximum value for this variable. back_log cannot be set higher than your operating system limit. The default value is based on the following formula, capped to a limit of 900:",
+        "max_value": 65535,
+        "min_value": 512,
+        "step": 512,
+        "type": "integer"
+      },
+      "knob90": {
+        "description": "Non-zero values protect against the buffer pool being filled by data that is referenced only for a brief period, such as during a full table scan. Increasing this value offers more protection against full table scans interfering with data cached in the buffer pool. Specifies how long in milliseconds a block inserted into the old sublist must stay there after its first access before it can be moved to the new sublist. If the value is 0, a block inserted into the old sublist moves immediately to the new sublist the first time it is accessed, no matter how soon after insertion the access occurs. If the value is greater than 0, blocks remain in the old sublist until an access occurs at least that many milliseconds after the first access. For example, a value of 1000 causes blocks to stay in the old sublist for 1 second after the first access before they become eligible to move to the new sublist. The default value is 1000. This variable is often used in combination with innodb_old_blocks_pct . For more information, see Section 14.8.3.3, “Making the Buffer Pool Scan Resistant”. For information about buffer pool management, the LRU algorithm, and eviction policies, see Section 14.5.1, “Buffer Pool”.",
+        "max_value": 5000,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 100,
+        "type": "integer"
+      },
+      "knob93": {
+        "description": "The number of bytes to use when sorting data values. The server uses only the first max_sort_length bytes of each value and ignores the rest. Consequently, values that differ only after the first max_sort_length bytes compare as equal for GROUP BY, ORDER BY, and DISTINCT operations. Increasing the value of max_sort_length may require increasing the value of sort_buffer_size as well. For details, see Section8.2.1.14, “ORDER BY Optimization”",
+        "max_value": 8388608,
+        "min_value": 1024,
+        "step": 1024,
+        "type": "integer"
+      },
+      "knob94": {
+        "description": "The number of page cleaner threads that flush dirty pages from buffer pool instances. Page cleaner threads perform flush list and LRU flushing. A single page cleaner thread was introduced in MySQL 5.6 to offload buffer pool flushing work from the InnoDB master thread. In MySQL 5.7, InnoDB provides support for multiple page cleaner threads. A value of 1 maintains the pre-MySQL 5.7 configuration in which there is a single page cleaner thread. When there are multiple page cleaner threads, buffer pool flushing tasks for each buffer pool instance are dispatched to idle page cleaner threads. The innodb_page_cleaners default value was changed from 1 to 4 in MySQL 5.7. If the number of page cleaner threads exceeds the number of buffer pool instances, innodb_page_cleaners is automatically set to the same value as innodb_buffer_pool_instances . If your workload is write-IO bound when flushing dirty pages from buffer pool instances to data files, and if your system hardware has available capacity, increasing the number of page cleaner threads may help improve write-IO throughput. Multithreaded page cleaner support is extended to shutdown and recovery phases in MySQL 5.7. The setpriority() system call is used on Linux platforms where it is supported, and where the mysqld execution user is authorized to give page_cleaner threads priority over other MySQL and InnoDB threads to help page flushing keep pace with the current workload. setpriority() support is indicated by this InnoDB startup message: For systems where server startup and shutdown is not managed by systemd, mysqld execution user authorization can be configured in /etc/security/limits.conf. For example, if mysqld is run under the mysql user, you can authorize the mysql user by adding these lines to /etc/security/limits.conf: For systemd managed systems, the same can be achieved by specifying LimitNICE=-20 in a localized systemd configuration file. For example, create a file named override.conf in /etc/systemd/system/mysqld.service.d/override.conf and add this entry: After creating or changing override.conf, reload the systemd configuration, then tell systemd to restart the MySQL service: For more information about using a localized systemd configuration file, see Configuring systemd for MySQL. After authorizing the mysqld execution user, use the cat command to verify the configured Nice limits for the mysqld process:",
+        "max_value": 8,
+        "min_value": 4,
+        "step": 1,
+        "type": "integer"
+      }
+    },
+    "original": {
+      "knob1": {
+        "description": "The maximum size of internal in-memory temporary tables. This variable does not apply to user-created MEMORY tables. The actual limit is the smaller of tmp_table_size and max_heap_table_size. When an in-memory temporary table exceeds the limit, MySQL automatically converts it to an on-disk temporary table. The internal_tmp_disk_storage_engine option defines the storage engine used for on-disk temporary tables. Increase the value of tmp_table_size (and max_heap_table_size if necessary) if you do many advanced GROUP BY queries and you have lots of memory. You can compare the number of internal on-disk temporary tables created to the total number of internal temporary tables created by comparing Created_tmp_disk_tables and Created_tmp_tables values. See also Section8.4.4, “Internal Temporary Table Use in MySQL”.",
+        "max_value": 268435456,
+        "min_value": 16777216,
+        "step": 16777216,
+        "type": "integer"
+      },
+      "knob10": {
+        "description": "The size in bytes of the buffer pool, the memory area where InnoDB caches table and index data. The default value is 134217728 bytes (128MB). The maximum value depends on the CPU architecture; the maximum is 4294967295 (232-1) on 32-bit systems and 18446744073709551615 (264-1) on 64-bit systems. On 32-bit systems, the CPU architecture and operating system may impose a lower practical maximum size than the stated maximum. When the size of the buffer pool is greater than 1GB, setting innodb_buffer_pool_instances to a value greater than 1 can improve the scalability on a busy server. A larger buffer pool requires less disk I/O to access the same table data more than once. On a dedicated database server, you might set the buffer pool size to 80% of the machine's physical memory size. Be aware of the following potential issues when configuring buffer pool size, and be prepared to scale back the size of the buffer pool if necessary. When you increase or decrease buffer pool size, the operation is performed in chunks. Chunk size is defined by the innodb_buffer_pool_chunk_size variable, which has a default of 128 MB. Buffer pool size must always be equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . If you alter the buffer pool size to a value that is not equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances , buffer pool size is automatically adjusted to a value that is equal to or a multiple of innodb_buffer_pool_chunk_size * innodb_buffer_pool_instances . innodb_buffer_pool_size can be set dynamically, which allows you to resize the buffer pool without restarting the server. The Innodb_buffer_pool_resize_status status variable reports the status of online buffer pool resizing operations. See Section 14.8.3.1, “Configuring InnoDB Buffer Pool Size” for more information.",
+        "max_value": 15618062894,
+        "min_value": 10307921510,
+        "step": 1073741824,
+        "type": "integer"
+      },
+      "knob100": {
+        "description": "Partitions the adaptive hash index search system. Each index is bound to a specific partition, with each partition protected by a separate latch. In earlier releases, the adaptive hash index search system was protected by a single latch (btr_search_latch) which could become a point of contention. With the introduction of the innodb_adaptive_hash_index_parts option, the search system is partitioned into 8 parts by default. The maximum setting is 512. For related information, see Section 14.5.3, “Adaptive Hash Index”.",
+        "max_value": 64,
+        "min_value": 8,
+        "step": 8,
+        "type": "integer"
+      },
+      "knob12": {
+        "description": "The number of background threads devoted to the InnoDB purge operation. Increasing the value creates additional purge threads, which can improve efficiency on systems where DML operations are performed on multiple tables. For related information, see Section 14.8.10, “Purge Configuration”.",
+        "max_value": 8,
+        "min_value": 4,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob13": {
+        "description": "The number of open tables cache instances. To improve scalability by reducing contention among sessions, the open tables cache can be partitioned into several smaller cache instances of size table_open_cache / table_open_cache_instances . A session needs to lock only one instance to access it for DML statements. This segments cache access among instances, permitting higher performance for operations that use the cache when there are many sessions accessing tables. (DDL statements still require a lock on the entire cache, but such statements are much less frequent than DML statements.) A value of 8 or 16 is recommended on systems that routinely use 16 or more cores. However, if you have many large triggers on your tables that cause a high memory load, the default setting for table_open_cache_instances might lead to excessive memory usage. In that situation, it can be helpful to set table_open_cache_instances to 1 in order to restrict memory usage.",
+        "max_value": 16,
+        "min_value": 8,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob21": {
+        "description": "The number of I/O threads for write operations in InnoDB. The default value is 4. Its counterpart for read threads is innodb_read_io_threads . For more information, see Section 14.8.6, “Configuring the Number of Background InnoDB I/O Threads”. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”. Also take into consideration the value of sync_binlog , which controls synchronization of the binary log to disk. For general I/O tuning advice, see Section 8.5.8, “Optimizing InnoDB Disk I/O”.",
+        "max_value": 16,
+        "min_value": 4,
+        "step": 2,
+        "type": "integer"
+      },
+      "knob37": {
+        "description": "The minimum size of the buffer that is used for plain index scans, range index scans, and joins that do not use indexes and thus perform full table scans. Normally, the best way to get fast joins is to add indexes. Increase the value of join_buffer_size to get a faster full join when adding indexes is not possible. One join buffer is allocated for each full join between two tables. For a complex join between several tables for which indexes are not used, multiple join buffers might be necessary. The default is 256KB. The maximum permissible setting for join_buffer_size is 4GB−1. Larger values are permitted for 64-bit platforms (except 64-bit Windows, for which large values are truncated to 4GB−1 with a warning). The block size is 128, and a value that is not an exact multiple of the block size is rounded down to the next lower multiple of the block size by MySQL Server before storing the value for the system variable. The parser allows values up to the maximum unsigned integer value for the platform (4294967295 or 232−1 for a 32-bit system, 18446744073709551615 or 264−1 for a 64-bit system) but the actual maximum is a block size lower. Unless a Block Nested-Loop or Batched Key Access algorithm is used, there is no gain from setting the buffer larger than required to hold each matching row, and all joins allocate at least the minimum size, so use caution in setting this variable to a large value globally. It is better to keep the global setting small and change the session setting to a larger value only in sessions that are doing large joins. Memory allocation time can cause substantial performance drops if the global size is larger than needed by most queries that use it. When Block Nested-Loop is used, a larger join buffer can be beneficial up to the point where all required columns from all rows in the first table are stored in the join buffer. This depends on the query; the optimal size may be smaller than holding all rows from the first tables. When Batched Key Access is used, the value of join_buffer_size defines how large the batch of keys is in each request to the storage engine. The larger the buffer, the more sequential access is made to the right hand table of a join operation, which can significantly improve performance. For additional information about join buffering, see Section8.2.1.6, “Nested-Loop Join Algorithms”. For information about Batched Key Access, see Section8.2.1.11, “Block Nested-Loop and Batched Key Access Joins”.",
+        "max_value": 16777216,
+        "min_value": 262144,
+        "step": 262144,
+        "type": "integer"
+      },
+      "knob4": {
+        "description": "Defines the maximum number of threads permitted inside of InnoDB. A value of 0 (the default) is interpreted as infinite concurrency (no limit). This variable is intended for performance tuning on high concurrency systems. InnoDB tries to keep the number of threads inside InnoDB less than or equal to the innodb_thread_concurrency limit. Threads waiting for locks are not counted in the number of concurrently executing threads. The correct setting depends on workload and computing environment. Consider setting this variable if your MySQL instance shares CPU resources with other applications or if your workload or number of concurrent users is growing. Test a range of values to determine the setting that provides the best performance. innodb_thread_concurrency is a dynamic variable, which permits experimenting with different settings on a live test system. If a particular setting performs poorly, you can quickly set innodb_thread_concurrency back to 0. Use the following guidelines to help find and maintain an appropriate setting: A value of 0 disables the queries inside InnoDB and queries in queue counters in the ROW OPERATIONS section of SHOW ENGINE INNODB STATUS output. For related information, see Section 14.8.5, “Configuring Thread Concurrency for InnoDB”.",
+        "max_value": 128,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 8,
+        "type": "integer"
+      },
+      "knob41": {
+        "description": "The number of open tables for all threads. Increasing this value increases the number of file descriptors that mysqld requires. The effective value of this variable is the greater of the effective value of open_files_limit - 10 - the effective value of max_connections / 2, and 400; that is You can check whether you need to increase the table cache by checking the Opened_tables status variable. If the value of Opened_tables is large and you do not use FLUSH TABLES often (which just forces all tables to be closed and reopened), then you should increase the value of the table_open_cache variable. For more information about the table cache, see Section8.4.3.1, “How MySQL Opens and Closes Tables”.",
+        "max_value": 20000,
+        "min_value": 4000,
+        "step": 1000,
+        "type": "integer"
+      },
+      "knob45": {
+        "description": "This variable indicates the number of equality ranges in an equality comparison condition when the optimizer should switch from using index dives to index statistics in estimating the number of qualifying rows. It applies to evaluation of expressions that have either of these equivalent forms, where the optimizer uses a nonunique index to look up col_name values: In both cases, the expression contains N equality ranges. The optimizer can make row estimates using index dives or index statistics. If eq_range_index_dive_limit is greater than 0, the optimizer uses existing index statistics instead of index dives if there are eq_range_index_dive_limit or more equality ranges. Thus, to permit use of index dives for up to N equality ranges, set eq_range_index_dive_limit to N + 1. To disable use of index statistics and always use index dives regardless of N, set eq_range_index_dive_limit to 0. For more information, see Equality Range Optimization of Many-Valued Comparisons. To update table index statistics for best estimates, use ANALYZE TABLE.",
+        "max_value": 200,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 10,
+        "type": "integer"
+      },
+      "knob48": {
+        "description": "The size in bytes of blocks that are allocated when doing range optimization. The block size for the byte number is 1024. A value that is not an exact multiple of the block size is rounded down to the next lower multiple of the block size by MySQL Server before storing the value for the system variable. The parser allows values up to the maximum unsigned integer value for the platform (4294967295 or 232−1 for a 32-bit system, 18446744073709551615 or 264−1 for a 64-bit system) but the actual maximum is a block size lower.",
+        "max_value": 65536,
+        "min_value": 8192,
+        "step": 4096,
+        "type": "integer"
+      },
+      "knob6": {
+        "description": "Each session that must perform a sort allocates a buffer of this size. sort_buffer_size is not specific to any storage engine and applies in a general manner for optimization. At minimum the sort_buffer_size value must be large enough to accommodate fifteen tuples in the sort buffer. Also, increasing the value of max_sort_length may require increasing the value of sort_buffer_size. For more information, see Section8.2.1.14, “ORDER BY Optimization” If you see many Sort_merge_passes per second in SHOW GLOBAL STATUS output, you can consider increasing the sort_buffer_size value to speed up ORDER BY or GROUP BY operations that cannot be improved with query optimization or improved indexing. The optimizer tries to work out how much space is needed but can allocate more, up to the limit. Setting it larger than required globally slows down most queries that sort. It is best to increase it as a session setting, and only for the sessions that need a larger size. On Linux, there are thresholds of 256KB and 2MB where larger values may significantly slow down memory allocation, so you should consider staying below one of those values. Experiment to find the best value for your workload. See SectionB.3.3.5, “Where MySQL Stores Temporary Files”. The maximum permissible setting for sort_buffer_size is 4GB−1. Larger values are permitted for 64-bit platforms (except 64-bit Windows, for which large values are truncated to 4GB−1 with a warning).",
+        "max_value": 2097152,
+        "min_value": 262144,
+        "step": 262144,
+        "type": "integer"
+      },
+      "knob61": {
+        "description": "If flushing activity falls behind, InnoDB can flush more aggressively, at a higher rate of I/O operations per second (IOPS) than defined by the innodb_io_capacity variable. The innodb_io_capacity_max variable defines a maximum number of IOPS performed by InnoDB background tasks in such situations. For information about configuring the innodb_io_capacity_max variable, see Section 14.8.8, “Configuring InnoDB I/O Capacity”.",
+        "max_value": 40000,
+        "min_value": 2000,
+        "step": 1000,
+        "type": "integer"
+      },
+      "knob64": {
+        "description": "The maximum depth of search performed by the query optimizer. Values larger than the number of relations in a query result in better query plans, but take longer to generate an execution plan for a query. Values smaller than the number of relations in a query return an execution plan quicker, but the resulting plan may be far from being optimal. If set to 0, the system automatically picks a reasonable value.",
+        "max_value": 62,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 1,
+        "type": "integer"
+      },
+      "knob67": {
+        "description": "How many threads the server should cache for reuse. When a client disconnects, the client's threads are put in the cache if there are fewer than thread_cache_size threads there. Requests for threads are satisfied by reusing threads taken from the cache if possible, and only when the cache is empty is a new thread created. This variable can be increased to improve performance if you have a lot of new connections. Normally, this does not provide a notable performance improvement if you have a good thread implementation. However, if your server sees hundreds of connections per second you should normally set thread_cache_size high enough so that most new connections use cached threads. By examining the difference between the Connections and Threads_created status variables, you can see how efficient the thread cache is. For details, see Section5.1.9, “Server Status Variables”. The default value is based on the following formula, capped to a limit of 100: This variable has no effect for the embedded server (libmysqld) and as of MySQL 5.7.2 is no longer visible within the embedded server.",
+        "max_value": 1024,
+        "min_value": 64,
+        "step": 64,
+        "type": "integer"
+      },
+      "knob78": {
+        "description": "The number of file descriptors available to mysqld from the operating system: The effective open_files_limit value is based on the value specified at system startup (if any) and the values of max_connections and table_open_cache, using these formulas: The server attempts to obtain the number of file descriptors using the maximum of those values. If that many descriptors cannot be obtained, the server attempts to obtain as many as the system permits. The effective value is 0 on systems where MySQL cannot change the number of open files. On Unix, the value cannot be set greater than the value displayed by the ulimit -n command. On Linux systems using systemd, the value cannot be set greater than LimitNOFile (this is DefaultLimitNOFILE, if LimitNOFile is not set); otherwise, on Linux, the value of open_files_limit cannot exceed ulimit -n.",
+        "max_value": 655350,
+        "min_value": 10000,
+        "step": 10000,
+        "type": "integer"
+      },
+      "knob83": {
+        "description": "The number of outstanding connection requests MySQL can have. This comes into play when the main MySQL thread gets very many connection requests in a very short time. It then takes some time (although very little) for the main thread to check the connection and start a new thread. The back_log value indicates how many requests can be stacked during this short time before MySQL momentarily stops answering new requests. You need to increase this only if you expect a large number of connections in a short period of time. In other words, this value is the size of the listen queue for incoming TCP/IP connections. Your operating system has its own limit on the size of this queue. The manual page for the Unix listen() system call should have more details. Check your OS documentation for the maximum value for this variable. back_log cannot be set higher than your operating system limit. The default value is based on the following formula, capped to a limit of 900:",
+        "max_value": 65535,
+        "min_value": 512,
+        "step": 512,
+        "type": "integer"
+      },
+      "knob90": {
+        "description": "Non-zero values protect against the buffer pool being filled by data that is referenced only for a brief period, such as during a full table scan. Increasing this value offers more protection against full table scans interfering with data cached in the buffer pool. Specifies how long in milliseconds a block inserted into the old sublist must stay there after its first access before it can be moved to the new sublist. If the value is 0, a block inserted into the old sublist moves immediately to the new sublist the first time it is accessed, no matter how soon after insertion the access occurs. If the value is greater than 0, blocks remain in the old sublist until an access occurs at least that many milliseconds after the first access. For example, a value of 1000 causes blocks to stay in the old sublist for 1 second after the first access before they become eligible to move to the new sublist. The default value is 1000. This variable is often used in combination with innodb_old_blocks_pct . For more information, see Section 14.8.3.3, “Making the Buffer Pool Scan Resistant”. For information about buffer pool management, the LRU algorithm, and eviction policies, see Section 14.5.1, “Buffer Pool”.",
+        "max_value": 5000,
+        "min_value": 0,
+        "special_value": 0,
+        "step": 100,
+        "type": "integer"
+      },
+      "knob93": {
+        "description": "The number of bytes to use when sorting data values. The server uses only the first max_sort_length bytes of each value and ignores the rest. Consequently, values that differ only after the first max_sort_length bytes compare as equal for GROUP BY, ORDER BY, and DISTINCT operations. Increasing the value of max_sort_length may require increasing the value of sort_buffer_size as well. For details, see Section8.2.1.14, “ORDER BY Optimization”",
+        "max_value": 8388608,
+        "min_value": 1024,
+        "step": 1024,
+        "type": "integer"
+      },
+      "knob94": {
+        "description": "The number of page cleaner threads that flush dirty pages from buffer pool instances. Page cleaner threads perform flush list and LRU flushing. A single page cleaner thread was introduced in MySQL 5.6 to offload buffer pool flushing work from the InnoDB master thread. In MySQL 5.7, InnoDB provides support for multiple page cleaner threads. A value of 1 maintains the pre-MySQL 5.7 configuration in which there is a single page cleaner thread. When there are multiple page cleaner threads, buffer pool flushing tasks for each buffer pool instance are dispatched to idle page cleaner threads. The innodb_page_cleaners default value was changed from 1 to 4 in MySQL 5.7. If the number of page cleaner threads exceeds the number of buffer pool instances, innodb_page_cleaners is automatically set to the same value as innodb_buffer_pool_instances . If your workload is write-IO bound when flushing dirty pages from buffer pool instances to data files, and if your system hardware has available capacity, increasing the number of page cleaner threads may help improve write-IO throughput. Multithreaded page cleaner support is extended to shutdown and recovery phases in MySQL 5.7. The setpriority() system call is used on Linux platforms where it is supported, and where the mysqld execution user is authorized to give page_cleaner threads priority over other MySQL and InnoDB threads to help page flushing keep pace with the current workload. setpriority() support is indicated by this InnoDB startup message: For systems where server startup and shutdown is not managed by systemd, mysqld execution user authorization can be configured in /etc/security/limits.conf. For example, if mysqld is run under the mysql user, you can authorize the mysql user by adding these lines to /etc/security/limits.conf: For systemd managed systems, the same can be achieved by specifying LimitNICE=-20 in a localized systemd configuration file. For example, create a file named override.conf in /etc/systemd/system/mysqld.service.d/override.conf and add this entry: After creating or changing override.conf, reload the systemd configuration, then tell systemd to restart the MySQL service: For more information about using a localized systemd configuration file, see Configuring systemd for MySQL. After authorizing the mysqld execution user, use the cat command to verify the configured Nice limits for the mysqld process:",
+        "max_value": 8,
+        "min_value": 4,
+        "step": 1,
+        "type": "integer"
+      }
+    }
+  },
+  "record_dir": "record-p1-verify",
+  "updated_at": 1792059030,
+  "environment_snapshot_sha256": "da3f03ab80c492dc98a7d6e9d28a2f457269c53d3464e1039383a56c79916d0d"
+}

@@ -7,3 +7,6 @@
 {"request_count": 2, "node_index": 0, "prompt_tokens": 2299, "completion_tokens": 4540, "total_tokens": 6839, "estimated": false, "cumulative_total_tokens": 111176}
 {"request_count": 2, "node_index": 1, "prompt_tokens": 2299, "completion_tokens": 4508, "total_tokens": 6807, "estimated": false, "cumulative_total_tokens": 117983}
 {"request_count": 2, "node_index": 2, "prompt_tokens": 2299, "completion_tokens": 4457, "total_tokens": 6756, "estimated": false, "cumulative_total_tokens": 124739}
+{"request_count": 1, "node_index": 0, "prompt_tokens": 20804, "completion_tokens": 4825, "total_tokens": 25629, "estimated": false, "cumulative_total_tokens": 25629}
+{"request_count": 1, "node_index": 1, "prompt_tokens": 68, "completion_tokens": 3546, "total_tokens": 3614, "estimated": false, "cumulative_total_tokens": 29243}
+{"request_count": 1, "node_index": 2, "prompt_tokens": 68, "completion_tokens": 4067, "total_tokens": 4135, "estimated": false, "cumulative_total_tokens": 33378}

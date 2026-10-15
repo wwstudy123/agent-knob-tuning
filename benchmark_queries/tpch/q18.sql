@@ -32,9 +32,5 @@ group by
 	o_totalprice
 order by
 	o_totalprice desc,
-<<<<<<< HEAD
-	o_orderdate;
+	o_orderdate
 limit 100;
-=======
-	o_orderdate limit 100;
->>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

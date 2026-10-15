@@ -8,12 +8,12 @@ select
 from
 	(
 		select
-			substring(c_phone from 1 for 2) as cntrycode,
+			substring(c_phone, 1, 2) as cntrycode,
 			c_acctbal
 		from
 			customer
 		where
-			substring(c_phone from 1 for 2) in
+			substring(c_phone, 1, 2) in
 				('22', '17', '30', '23', '15', '25', '19')
 			and c_acctbal > (
 				select
@@ -22,7 +22,7 @@ from
 					customer
 				where
 					c_acctbal > 0.00
-					and substring(c_phone from 1 for 2) in
+					and substring(c_phone, 1, 2) in
 						('22', '17', '30', '23', '15', '25', '19')
 			)
 			and not exists (
@@ -38,7 +38,3 @@ group by
 	cntrycode
 order by
 	cntrycode;
-<<<<<<< HEAD
-limit -1;
-=======
->>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

@@ -39,9 +39,5 @@ group by
 	s_name
 order by
 	numwait desc,
-<<<<<<< HEAD
-	s_name;
+	s_name
 limit 100;
-=======
-	s_name limit 100;
->>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8

@@ -18,7 +18,3 @@ where
 		where
 			l_partkey = p_partkey
 	);
-<<<<<<< HEAD
-limit -1;
-=======
->>>>>>> e25738c028a8ecabb540f79af544ad70c48ac9e8
