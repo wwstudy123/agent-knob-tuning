@@ -110,6 +110,7 @@ class ControllerAction:
     reason: str
     rule: str
     state: ControllerState
+    params: Dict[str, Any] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         if self.name not in ACTIONS:
@@ -124,6 +125,9 @@ class ControllerAction:
     def from_dict(cls, data: Mapping[str, Any]) -> "ControllerAction":
         values = dict(data)
         values["state"] = ControllerState.from_dict(values["state"])
+        # params is optional for backward compatibility
+        if "params" not in values:
+            values["params"] = {}
         return cls(**values)
 
 
@@ -149,6 +153,8 @@ class DecisionController:
         "confidence_low",
         "benchmark_budget",
         "token_budget",
+        "shrink_ratio",
+        "expand_ratio",
     )
 
     def __init__(
@@ -166,6 +172,8 @@ class DecisionController:
         confidence_low: float = 0.40,
         benchmark_budget: Optional[int] = None,
         token_budget: Optional[int] = None,
+        shrink_ratio: float = 0.5,
+        expand_ratio: float = 0.25,
     ) -> None:
         self.window_size = int(window_size)
         self.min_trials = int(min_trials)
@@ -182,6 +190,8 @@ class DecisionController:
             None if benchmark_budget is None else int(benchmark_budget)
         )
         self.token_budget = None if token_budget is None else int(token_budget)
+        self.shrink_ratio = float(shrink_ratio)
+        self.expand_ratio = float(expand_ratio)
         self._validate_settings()
         self.trial_history: List[TrialResult] = []
         self.state_history: List[ControllerState] = []
@@ -198,6 +208,8 @@ class DecisionController:
             "diversity_low",
             "confidence_high",
             "confidence_low",
+            "shrink_ratio",
+            "expand_ratio",
         ):
             if not 0.0 <= getattr(self, name) <= 1.0:
                 raise ValueError("%s must be between 0 and 1" % name)
@@ -314,7 +326,17 @@ class DecisionController:
 
         state = self.state
         name, rule, reason = self._apply_policy(state)
-        action = ControllerAction(name=name, reason=reason, rule=rule, state=state)
+
+        # Attach params for range-modifying actions
+        params = {}
+        if name == "shrink_ranges":
+            params = {"ratio": getattr(self, "shrink_ratio", 0.5)}
+        elif name == "expand_ranges":
+            params = {"ratio": getattr(self, "expand_ratio", 0.25)}
+
+        action = ControllerAction(
+            name=name, reason=reason, rule=rule, state=state, params=params
+        )
         self.state_history.append(state)
         self.action_history.append(action)
         return action

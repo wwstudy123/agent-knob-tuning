@@ -1,0 +1,2 @@
+[stmt#10] 10/103 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')
+[stmt#38] 38/103 failed after 180.0s: (3024, 'Query execution was interrupted, maximum statement execution time exceeded')

@@ -1,3 +1,9 @@
 {"request_count": 1, "node_index": 0, "prompt_tokens": 20875, "completion_tokens": 4756, "total_tokens": 25631, "estimated": false, "cumulative_total_tokens": 25631}
 {"request_count": 1, "node_index": 1, "prompt_tokens": 20875, "completion_tokens": 4585, "total_tokens": 25460, "estimated": false, "cumulative_total_tokens": 51091}
 {"request_count": 1, "node_index": 2, "prompt_tokens": 20875, "completion_tokens": 3634, "total_tokens": 24509, "estimated": false, "cumulative_total_tokens": 75600}
+{"request_count": 2, "node_index": 0, "prompt_tokens": 5627, "completion_tokens": 2157, "total_tokens": 7784, "estimated": false, "cumulative_total_tokens": 83384}
+{"request_count": 2, "node_index": 1, "prompt_tokens": 5627, "completion_tokens": 5351, "total_tokens": 10978, "estimated": false, "cumulative_total_tokens": 94362}
+{"request_count": 2, "node_index": 2, "prompt_tokens": 5627, "completion_tokens": 4348, "total_tokens": 9975, "estimated": false, "cumulative_total_tokens": 104337}
+{"request_count": 2, "node_index": 0, "prompt_tokens": 2299, "completion_tokens": 4540, "total_tokens": 6839, "estimated": false, "cumulative_total_tokens": 111176}
+{"request_count": 2, "node_index": 1, "prompt_tokens": 2299, "completion_tokens": 4508, "total_tokens": 6807, "estimated": false, "cumulative_total_tokens": 117983}
+{"request_count": 2, "node_index": 2, "prompt_tokens": 2299, "completion_tokens": 4457, "total_tokens": 6756, "estimated": false, "cumulative_total_tokens": 124739}

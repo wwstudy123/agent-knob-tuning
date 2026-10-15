@@ -8,6 +8,7 @@ from config_rank import sort_list
 import configparser
 from reflection_memory import ReflectionMemory
 from surrogate import CanonicalConfigEncoder, SurrogateModel, load_history_jsonl
+from search_space import SearchSpace
 
 # Auto-detect: use Anthropic SDK if env vars are set, otherwise OpenAI SDK
 _use_anthropic = bool(os.environ.get("ANTHROPIC_AUTH_TOKEN") or os.environ.get("ANTHROPIC_API_KEY"))
@@ -28,20 +29,12 @@ database_scale=config['knob selector']['database_scale']
 
 knob_list_path = config['range pruner']['output_file']
 with open(knob_list_path,"r") as f:
-    knobs = json.load(f) 
+    knobs = json.load(f)
 knob_metadata = knobs
 knobs = json.dumps(knob_metadata, indent=4)
-compact_knobs = json.dumps(
-    {
-        key: {
-            field: value
-            for field, value in meta.items()
-            if field in ('min_value', 'max_value', 'step', 'type', 'enum_values', 'special_value')
-        }
-        for key, meta in knob_metadata.items()
-    },
-    separators=(',', ':'),
-)
+
+# Initialize dynamic search space (P1.3)
+search_space = SearchSpace(knob_metadata)
 
 metric_path = config['configuration recommender']['metric_file']
 with open(metric_path, "r") as f:
@@ -215,13 +208,24 @@ def _surrogate_select(json_strings, request_number):
 
 
 def extract_key_value_pairs(json_string):
-    # match "key": value 
+    # match "key": value (numeric, possibly decimal)
     pattern = re.compile(r'"(\w+)":\s*([\d.]+)')
     matches = pattern.findall(json_string)
-    data = {key: int(value) for key, value in matches}
+    data = {}
+    for key, value in matches:
+        try:
+            data[key] = int(float(value))
+        except (ValueError, TypeError):
+            # Non-integer numeric (e.g. a fraction) is kept as float rather
+            # than dropping the whole key-value pair.
+            data[key] = float(value)
     return data
 
 def convert_to_bytes(value):
+    """Convert a byte-size spec to int bytes. Returns None if not a spec.
+
+    Supports forms: ``16GB``, ``1.5GB``, ``0.75*16GB``, ``0.75x16GB``.
+    """
     units = {
         'B': 1,
         'KB': 1024,
@@ -229,18 +233,34 @@ def convert_to_bytes(value):
         'GB': 1024**3,
         'TB': 1024**4
     }
-    match = re.match(r'(\d+)([KMGT]B)', value)
-    if match:
-        number = int(match.group(1))
-        unit = match.group(2)
-        return number * units[unit]
-    return int(value)
+    if value is None:
+        return None
+    text = str(value).strip()
+    m = re.match(
+        r'^\s*(\d+(?:\.\d+)?)\s*(?:[*\u00d7]\s*(\d+(?:\.\d+)?)\s*)?([KMGT]B)\s*$',
+        text,
+        re.IGNORECASE,
+    )
+    if not m:
+        return None
+    base = float(m.group(1))
+    factor = float(m.group(2)) if m.group(2) else 1.0
+    unit = m.group(3).upper()
+    return int(base * factor * units[unit])
 
 def replace_units(json_string):
     def replace_match(match):
-        return str(convert_to_bytes(match.group(0)))
-    
-    json_string = re.sub(r'\d+[KMGT]B', replace_match, json_string)
+        converted = convert_to_bytes(match.group(0))
+        # Leave the original substring untouched if it is not a byte spec,
+        # so we never crash or silently drop valid tokens.
+        return str(converted) if converted is not None else match.group(0)
+
+    json_string = re.sub(
+        r'\d+(?:\.\d+)?\s*(?:[*\u00d7]\s*\d+(?:\.\d+)?\s*)?[KMGT]B',
+        replace_match,
+        json_string,
+        flags=re.IGNORECASE,
+    )
     return json_string
 
 
@@ -250,6 +270,96 @@ def remove_comments(json_string):
     json_string = re.sub(r',\s*}', '}', json_string)
     json_string = re.sub(r',\s*]', ']', json_string)
     return json_string
+
+def _balanced_brace_blocks(text):
+    """Return all top-level (depth-0) balanced ``{...}`` substrings.
+
+    Tracks string literals and backslash escapes so braces inside keys,
+    values or arrays do not break detection. Supports nested objects.
+    """
+    blocks = []
+    depth = 0
+    start = None
+    in_string = False
+    escape = False
+    for i, ch in enumerate(text):
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == '\\':
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == '{':
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == '}':
+            if depth > 0:
+                depth -= 1
+                if depth == 0 and start is not None:
+                    blocks.append(text[start:i + 1])
+                    start = None
+    return blocks
+
+
+def extract_config_json(text):
+    """Parse one or more knob JSON objects from LLM output, robustly.
+
+    Strategy:
+    1. Strip ```json / ``` code fences and remove comments.
+    2. Replace byte-size units (e.g. ``2GB``) with integers.
+    3. Try ``json.loads`` on the whole text first.
+    4. Fallback: isolate balanced ``{...}`` blocks (nested-friendly) and
+       parse each, keeping the dicts that decode successfully.
+    5. Last resort: the legacy flat ``key: number`` extractor.
+
+    Common envelopes such as ``{"recommendations": [...]}`` are unwrapped so
+    each inner object is returned as a separate candidate.
+    """
+    if not text:
+        return []
+    cleaned = text
+    fence = re.search(r'```(?:json)?\s*(.*?)\s*```', cleaned, re.DOTALL | re.IGNORECASE)
+    if fence:
+        cleaned = fence.group(1)
+    cleaned = remove_comments(cleaned)
+    cleaned = replace_units(cleaned)
+
+    raw = []
+    try:
+        obj = json.loads(cleaned)
+        raw = obj if isinstance(obj, list) else [obj]
+    except (json.JSONDecodeError, ValueError):
+        for block in _balanced_brace_blocks(cleaned):
+            try:
+                obj = json.loads(block)
+            except (json.JSONDecodeError, ValueError):
+                continue
+            if isinstance(obj, (dict, list)):
+                raw.append(obj)
+
+    results = []
+    for o in raw:
+        if isinstance(o, list):
+            results.extend(x for x in o if isinstance(x, dict))
+        elif isinstance(o, dict):
+            if isinstance(o.get('recommendations'), list):
+                results.extend(
+                    x for x in o['recommendations'] if isinstance(x, dict)
+                )
+            else:
+                results.append(o)
+
+    if not results:
+        flat = extract_key_value_pairs(cleaned)
+        if flat:
+            results = [flat]
+    return results
+
 
 def call_open_source_llm(model, messages, filename):
     usage = {
@@ -315,37 +425,33 @@ def call_open_source_llm(model, messages, filename):
         usage['total_tokens'] = usage['prompt_tokens'] + usage['completion_tokens']
         usage['estimated'] = True
 
-    pattern = r'\{[^{}]+\}'
-    match = re.search(pattern, content_text, re.DOTALL)
-
-    if match:
-        json_str = match.group(0)
-        json_str = replace_units(json_str)
-        config_dict = extract_key_value_pairs(json_str)
-        #json_str = remove_comments(json_str)
-        #config_dict = json.loads(json_str)
-        print(config_dict)
-        if not config_dict:
-            return usage
-        config_dict = json.dumps(config_dict)
-        with open(filename, 'r') as f:
-            data_str = f.read()
-
-        # Split the data into individual JSON strings
-        json_strings = data_str.strip().split('\n')
-
-        # # Prepare the final structured JSON format
-        # for json_str in json_strings:
-        #     d = json.loads(json_str)
-        if config_dict in json_strings :
-            return usage
-        with open(filename, 'a') as f:
-            print("sucess recommendation!")
-            f.write('\n')
-            f.write(config_dict)
-
-    else:
+    configs = extract_config_json(content_text)
+    print(f"parsed {len(configs)} config candidate(s) from LLM output")
+    if not configs:
         print("No JSON configuration found in the input.")
+        return usage
+
+    existing = set()
+    if os.path.exists(filename):
+        with open(filename, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    existing.add(line)
+
+    written = 0
+    with open(filename, 'a', encoding='utf-8') as f:
+        for cfg in configs:
+            cfg_str = json.dumps(cfg, sort_keys=True, ensure_ascii=False)
+            if cfg_str in existing:
+                continue
+            f.write('\n')
+            f.write(cfg_str)
+            existing.add(cfg_str)
+            written += 1
+
+    if written:
+        print(f"success recommendation! wrote {written} new config(s)")
     return usage
 
 history_top = []
@@ -357,7 +463,7 @@ request_count = 0
 @app.route('/restore', methods=['POST'])
 def restore_state():
     """Restore LLM_server in-memory state from DB_client checkpoint."""
-    global request_count, history_top, last_result, reflection_memory
+    global request_count, history_top, last_result, reflection_memory, search_space
     data = request.get_json() or {}
     request_count = int(data.get('request_count', 0))
     last_result = data.get('last_result', '') or ''
@@ -370,6 +476,14 @@ def restore_state():
     restored_reflection = data.get('reflection_state')
     if restored_reflection:
         reflection_memory = ReflectionMemory.from_dict(restored_reflection)
+    # Restore search space (P1.3)
+    restored_search_space = data.get('search_space')
+    if restored_search_space:
+        try:
+            search_space = SearchSpace.from_dict(restored_search_space)
+            print(f'LLM_server restored search_space')
+        except Exception as e:
+            print(f'Warning: failed to restore search_space: {e}')
     print(f'LLM_server restored: request_count={request_count}, history_top={len(history_top)}')
     return jsonify({'ok': True, 'request_count': request_count, 'history_size': len(history_top)})
 
@@ -382,6 +496,7 @@ def process_data():
     global history_top
     global last_result
     global reflection_memory
+    global search_space
     request_count += 1
     filename = os.path.join(RECORD_DIR, f'turn_{request_count}')
     file = open(filename, 'w')
@@ -454,7 +569,27 @@ def process_data():
             )
         else:
             history_context = "\n\n".join(history_entries)
-        knob_context = knobs if request_count == 1 else compact_knobs
+
+        # Apply decision to search space (P1.3) - only on first item of the batch
+        if item_index == 0:
+            best_knob = payload.get('best_knob') or item.get('knob')
+            decision_name = decision.get('name', 'continue_local')
+            decision_params = decision.get('params', {})
+
+            if decision_name == 'shrink_ranges':
+                ratio = decision_params.get('ratio', 0.5)
+                report = search_space.shrink(center=best_knob, ratio=ratio)
+                print(f'search_space shrink: changed={report["changed"]}, skipped={report["skipped"]}')
+            elif decision_name == 'expand_ranges':
+                ratio = decision_params.get('ratio', 0.25)
+                report = search_space.expand(ratio=ratio)
+                print(f'search_space expand: changed={report["changed"]}')
+            elif decision_name == 'rollback_safe':
+                search_space.reset()
+                print(f'search_space reset (rollback_safe)')
+
+        # Use dynamic search space for compact knob representation (P1.3)
+        knob_context = knobs if request_count == 1 else search_space.compact_json()
         decision_instruction = (
             f"Adaptive controller action: {decision.get('name', 'continue_local')}. "
             f"Reason: {decision.get('reason', 'none')}."
@@ -539,6 +674,7 @@ def process_data():
         'last_result': last_result,
         'reflection_state': reflection_memory.to_dict(),
         'surrogate_diagnostics': surrogate_diagnostics,
+        'search_space': search_space.to_dict(),  # P1.3: include search space state
     })
 
 if __name__ == '__main__':

@@ -1057,8 +1057,9 @@ if __name__ == "__main__":
                 response_json.get('last_result') or '',
                 response_json.get('reflection_state') or {},
                 response_json.get('surrogate_diagnostics') or {},
+                response_json.get('search_space') or {},  # P1.4: include search_space
             )
-        return response_json, 0, [], '', {}, {}
+        return response_json, 0, [], '', {}, {}, {}
 
     def restore_llm_server(process_url, ckpt_data):
         restore_url = process_url.rsplit('/process', 1)[0] + '/restore'
@@ -1067,6 +1068,7 @@ if __name__ == "__main__":
             'history_top': ckpt_data.get('history_top', []),
             'last_result': ckpt_data.get('last_result', ''),
             'reflection_state': ckpt_data.get('reflection_state', {}),
+            'search_space': ckpt_data.get('search_space', {}),  # P1.4: restore search_space
         }
         try:
             r = requests.post(restore_url, json=payload, timeout=30)
@@ -1245,6 +1247,7 @@ if __name__ == "__main__":
             last_result,
             reflection_state,
             surrogate_diagnostics,
+            search_space_state,  # P1.4: unpack search_space
         ) = parse_llm_response(response_json)
         new_token_total = int(
             (reflection_state.get('token_usage') or {}).get('total', 0)
@@ -1259,6 +1262,7 @@ if __name__ == "__main__":
         best_knob = knob
         best_metric = metric
         best_throughput = float(throughput) if isinstance(throughput, (int, float)) else 0.0
+        search_space_state = search_space_state  # P1.4: use search_space from parse_llm_response
 
         save_checkpoint({
             'status': 'running',
@@ -1272,12 +1276,13 @@ if __name__ == "__main__":
             'request_count': request_count,
             'history_top': history_top,
             'last_result': last_result,
-            'decision_controller': controller.to_dict(),
+            'decision_controller': controller.to_dict() if decision else {},
             'last_decision': decision.to_dict() if decision else {},
             'reflection_state': reflection_state,
             'surrogate_diagnostics': surrogate_diagnostics,
             'last_token_total': last_token_total,
             'pending_token_cost': pending_token_cost,
+            'search_space': search_space_state,  # P1.4: persist search_space
         })
     else:
         print(
@@ -1303,6 +1308,7 @@ if __name__ == "__main__":
         last_result = ckpt.get('last_result') or ''
         reflection_state = ckpt.get('reflection_state') or {}
         surrogate_diagnostics = ckpt.get('surrogate_diagnostics') or {}
+        search_space_state = ckpt.get('search_space') or {}  # P1.4: restore search_space
         last_token_total = int(ckpt.get('last_token_total') or 0)
         pending_token_cost = int(ckpt.get('pending_token_cost') or 0)
 
@@ -1343,6 +1349,7 @@ if __name__ == "__main__":
                     'surrogate_diagnostics': surrogate_diagnostics,
                     'last_token_total': last_token_total,
                     'pending_token_cost': pending_token_cost,
+                    'search_space': search_space_state,  # P1.4
                 })
                 continue
 
@@ -1434,6 +1441,8 @@ if __name__ == "__main__":
             json={
                 'trials': data_list,
                 'decision': decision.to_dict() if decision else {},
+                'best_knob': best_knob,  # P1.4: pass best_knob for search_space shrink
+                'search_space': search_space_state,  # P1.4: pass current search_space state
             },
             timeout=300,
         )
@@ -1446,6 +1455,7 @@ if __name__ == "__main__":
             last_result,
             reflection_state,
             surrogate_diagnostics,
+            search_space_state,  # P1.4: unpack updated search_space
         ) = parse_llm_response(response_json)
         new_token_total = int(
             (reflection_state.get('token_usage') or {}).get('total', last_token_total)
@@ -1475,6 +1485,7 @@ if __name__ == "__main__":
             'surrogate_diagnostics': surrogate_diagnostics,
             'last_token_total': last_token_total,
             'pending_token_cost': pending_token_cost,
+            'search_space': search_space_state,  # P1.4
         })
 
     with open(OPTIMAL_PATH, "w", encoding="utf-8") as f:
@@ -1500,5 +1511,6 @@ if __name__ == "__main__":
         'last_token_total': last_token_total,
         'pending_token_cost': pending_token_cost,
         'stop_reason': 'adaptive_controller' if stopped_by_controller else 'iteration_limit',
+        'search_space': search_space_state,  # P1.4
     })
     print(f'Done. Results saved under {RECORD_DIR}')
